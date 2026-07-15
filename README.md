@@ -15,7 +15,7 @@ Set `COMMIT` to a full commit whose container workflow completed successfully:
 
 ```bash
 export COMMIT=REPLACE_WITH_FULL_COMMIT_SHA
-export IMAGE=ghcr.io/bogoconic1/aimo-proof-pilot-inference:sha-${COMMIT:0:7}
+export IMAGE=ghcr.io/fieldsmodelorg/aimo-proof-pilot:sha-${COMMIT:0:7}
 
 docker pull "$IMAGE"
 test "$(docker image inspect "$IMAGE" \
@@ -38,7 +38,7 @@ run:
 ```bash
 mkdir -p "$PWD/workspace"
 curl -fsSL \
-  "https://raw.githubusercontent.com/bogoconic1/aimo-proof-pilot-inference/$COMMIT/config.yaml" \
+  "https://raw.githubusercontent.com/fieldsmodelorg/AIMO-Proof-Pilot/$COMMIT/config.yaml" \
   -o "$PWD/workspace/config.yaml"
 ```
 

@@ -7,7 +7,7 @@ FROM nvidia/cuda:13.0.3-devel-ubuntu24.04
 ARG DEBIAN_FRONTEND=noninteractive
 ARG VCS_REF=unknown
 
-LABEL org.opencontainers.image.source="https://github.com/bogoconic1/aimo-proof-pilot-inference"
+LABEL org.opencontainers.image.source="https://github.com/fieldsmodelorg/AIMO-Proof-Pilot"
 LABEL org.opencontainers.image.revision="$VCS_REF"
 LABEL org.opencontainers.image.title="AIMO Proof Pilot Inference"
 LABEL org.opencontainers.image.description="OPD-32B generate-verify-refine inference for 8x H200"
