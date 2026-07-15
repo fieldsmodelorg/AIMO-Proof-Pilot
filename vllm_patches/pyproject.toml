@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aimo-olmo3-sink-vllm"
+version = "0.2.0"
+description = "Out-of-tree vLLM model plugin for Proof Pilot OLMo3Sink checkpoints"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "vllm>=0.23.1rc1.dev699,<0.26",
+]
+
+[project.entry-points."vllm.general_plugins"]
+olmo3_sink = "olmo3_sink_vllm:register"
+
+[tool.setuptools.packages.find]
+where = ["src"]

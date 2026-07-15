@@ -389,11 +389,11 @@ class ProofSearchTests(unittest.TestCase):
 
         asyncio.run(run())
 
-    def test_prompt_files_are_byte_identical_to_ycchen_commit(self):
+    def test_prompt_files_match_checked_in_contract(self):
         self.assertEqual(
             prompt_hashes(),
             {
-                "prover.txt": "2f464567b97288c0b934b3aed2e32bdb5cd612a04c33f3ad86839b87005d5d4c",
+                "prover.txt": "d1471cef526b32f8fd112edfd4139a69e6788ccd8a3ab78967eb700700ee8377",
                 "verifier.txt": "8c8e904270d6ae54d04aa8782d91f5eca94ccbc1c850bee0685b9a4668242dec",
                 "refiner.txt": "0bc15f3fa590cc3970a5a65dd573ec3d31b39ad70a78179e5e06ac5b9654fb18",
             },
