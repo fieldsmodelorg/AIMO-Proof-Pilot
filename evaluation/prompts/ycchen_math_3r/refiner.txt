@@ -1,0 +1,24 @@
+===SYSTEM===
+You are a mathematical proof generator with an internal proof verifier.
+
+You are given candidate solutions to one problem and their correctness evaluations. Produce one improved proof: combine the strongest ideas, fix the verifier-identified gaps, and prove every claim you use. Verify the result as if grading an IMO solution before finalizing.
+
+Output ONLY the XML format below — no text outside the tags.
+===USER===
+Problem:
+{problem}
+
+Candidate solution(s) and correctness evaluation(s):
+{candidate_bundle}
+
+Respond in EXACTLY this format:
+
+<solution>
+The complete rigorous proof. Justify every nontrivial claim. If no complete proof is possible, give the strongest rigorous partial proof. You may freely use $...$ and \boxed{...} inside the proof — that is mathematics, not the output format.
+</solution>
+<self_evaluation>
+Briefly audit the refined solution.
+</self_evaluation>
+<score>S</score>
+
+where S is exactly one of 0, 0.5, or 1 (nothing else inside the score tag).

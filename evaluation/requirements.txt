@@ -1,0 +1,7 @@
+flash-attn-4[cu13]==4.0.0b15
+httpx>=0.27,<1
+nvidia-cutlass-dsl==4.5.2
+nvidia-cutlass-dsl-libs-base==4.5.2
+nvidia-cutlass-dsl-libs-cu13==4.5.2
+pyyaml>=6,<7
+quack-kernels==0.5.0

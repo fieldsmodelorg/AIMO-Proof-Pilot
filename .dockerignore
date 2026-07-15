@@ -1,0 +1,11 @@
+.git
+.github
+.codex
+.agents
+.env
+**/__pycache__
+**/*.pyc
+submission_artifacts
+submission.csv
+models
+*.ipynb
