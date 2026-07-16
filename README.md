@@ -16,6 +16,10 @@ For the read-only NII Singularity image, use
 runtime, download the current checkpoint once, and validate the eight-node
 controller before loading any model on GPU.
 
+For general NII command routing, one-node shared-filesystem operations, and
+command-history inspection, see
+[NII_CONTROL_PANEL.md](NII_CONTROL_PANEL.md).
+
 ## Docker usage
 
 ### Select the harness commit

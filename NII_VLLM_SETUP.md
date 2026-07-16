@@ -22,16 +22,90 @@ their own import check.
 
 ## Install and download
 
-Submit the checked-in setup script to all nodes through the durable GitHub
-operator. It preserves `/app/entrypoint.sh`, operator processes, relay daemons,
-and the active training process.
+Use the project Gradio relay. The setup launcher discovers the eight connected
+node labels, derives each node rank from labels such as `node3-hnode077`, and
+submits one rank-specific background process per node. `/ui_send` only
+acknowledges submission, so the setup runs under `nohup` and writes durable
+rank-specific PID, status, and log files under `/tmp`.
+
+The launcher downloads only the public setup script before starting it. Rank 0
+then fetches the complete repository, installs the shared runtime, and downloads
+the model; ranks 1-7 wait on the shared readiness markers.
+
+```python
+import re
+import time
+
+from gradio_client import Client
+from huggingface_hub import get_token
+
+SPACE = "imo2026-challenge/control-panel-nguyen"
+ROOT = "/tmp/aimo-proof-pilot-inference-runtime"
+SETUP_URL = (
+    "https://raw.githubusercontent.com/nguyen599/"
+    "aimo-proof-pilot-inference/main/scripts/setup_nii_vllm.sh"
+)
+session = f"nii-vllm-setup-{time.time_ns()}"
+client = Client(SPACE, token=get_token())
+
+# Broadcast is used only to discover the currently connected labels.
+reply = client.predict(
+    session=f"{session}-discover",
+    command="echo nii-vllm-node-ready",
+    timeout=120,
+    api_name="/ui_broadcast",
+)
+message = reply[0] if isinstance(reply, tuple) else str(reply)
+labels = re.findall(r"`([^`]+)`", message)
+nodes = {}
+for label in labels:
+    match = re.match(r"node(\d+)-", label)
+    if match:
+        nodes[int(match.group(1))] = label
+if set(nodes) != set(range(8)):
+    raise RuntimeError(f"Expected ranks 0-7, discovered: {nodes}")
+
+for rank, label in sorted(nodes.items()):
+    bootstrap = f"{ROOT}/bootstrap/setup-rank-{rank}.sh"
+    log = f"{ROOT}/logs/setup-rank-{rank}.log"
+    pidfile = f"{ROOT}/logs/setup-rank-{rank}.pid"
+    status = f"{ROOT}/logs/setup-rank-{rank}.status"
+    command = f'''set -eu
+mkdir -p "{ROOT}/bootstrap" "{ROOT}/logs"
+curl -fL --retry 8 --retry-all-errors --connect-timeout 20 \
+  "{SETUP_URL}" -o "{bootstrap}.tmp"
+mv "{bootstrap}.tmp" "{bootstrap}"
+chmod 0755 "{bootstrap}"
+rm -f "{status}"
+nohup bash -lc 'set +e; AIMO_NODE_RANK={rank} bash "{bootstrap}"; \
+rc=$?; printf "%s\\n" "$rc" > "{status}"; exit "$rc"' \
+  > "{log}" 2>&1 < /dev/null &
+echo $! > "{pidfile}"
+echo "rank={rank} pid=$(cat '{pidfile}') log={log} status={status}"'''
+    print(
+        client.predict(
+            client_label=label,
+            session=session,
+            command=command,
+            timeout=120,
+            api_name="/ui_send",
+        )
+    )
+```
+
+Do not put Hugging Face or other credentials in the relay command. The setup
+uses authentication already cached on the nodes. Do not stop
+`/app/entrypoint.sh`, either relay daemon, or unrelated training/inference
+processes while monitoring or cleaning up this setup.
+
+Poll progress with short `/ui_send` commands or inspect the same files from the
+relay UI. For rank 3, for example:
 
 ```bash
-python ../aimo-proof-pilot/scripts/operator_client.py \
-  --backend github \
-  --repo nguyen599/command \
-  --nodes 0,1,2,3,4,5,6,7 \
-  send --file scripts/setup_nii_vllm.sh
+PID=$(cat /tmp/aimo-proof-pilot-inference-runtime/logs/setup-rank-3.pid 2>/dev/null || true)
+if [ -n "$PID" ] && kill -0 "$PID" 2>/dev/null; then echo RUNNING; else echo STOPPED; fi
+cat /tmp/aimo-proof-pilot-inference-runtime/logs/setup-rank-3.status 2>/dev/null || echo pending
+tail -n 80 /tmp/aimo-proof-pilot-inference-runtime/logs/setup-rank-3.log
 ```
 
 Defaults:
@@ -66,15 +140,66 @@ and never creates a CUDA tensor.
 
 Choose one new run ID and submit the command to every node:
 
-```bash
-SMOKE_ID="nii-vllm0251-$(date -u +%Y%m%dT%H%M%SZ)"
-python ../aimo-proof-pilot/scripts/operator_client.py \
-  --backend github \
-  --repo nguyen599/command \
-  --nodes 0,1,2,3,4,5,6,7 \
-  send --command "cd /tmp/aimo-proof-pilot-inference-runtime/repo && \
-NII_SMOKE_RUN_ID=$SMOKE_ID bash scripts/smoke_nii_multinode.sh"
+```python
+import re
+import time
+
+from gradio_client import Client
+from huggingface_hub import get_token
+
+SPACE = "imo2026-challenge/control-panel-nguyen"
+ROOT = "/tmp/aimo-proof-pilot-inference-runtime"
+session = f"nii-vllm-smoke-{time.time_ns()}"
+smoke_id = time.strftime("nii-vllm0251-%Y%m%dT%H%M%SZ", time.gmtime())
+client = Client(SPACE, token=get_token())
+
+reply = client.predict(
+    session=f"{session}-discover",
+    command="echo nii-vllm-smoke-ready",
+    timeout=120,
+    api_name="/ui_broadcast",
+)
+message = reply[0] if isinstance(reply, tuple) else str(reply)
+labels = re.findall(r"`([^`]+)`", message)
+nodes = {}
+for label in labels:
+    match = re.match(r"node(\d+)-", label)
+    if match:
+        nodes[int(match.group(1))] = label
+if set(nodes) != set(range(8)):
+    raise RuntimeError(f"Expected ranks 0-7, discovered: {nodes}")
+
+for rank, label in sorted(nodes.items()):
+    log = f"{ROOT}/logs/smoke-{smoke_id}-rank-{rank}.log"
+    pidfile = f"{ROOT}/logs/smoke-{smoke_id}-rank-{rank}.pid"
+    status = f"{ROOT}/logs/smoke-{smoke_id}-rank-{rank}.status"
+    command = f'''set -eu
+mkdir -p "{ROOT}/logs"
+rm -f "{status}"
+nohup bash -lc 'set +e; cd "{ROOT}/repo" && \
+AIMO_NODE_RANK={rank} WORLD_SIZE=8 NII_SMOKE_RUN_ID={smoke_id} \
+bash scripts/smoke_nii_multinode.sh; rc=$?; \
+printf "%s\\n" "$rc" > "{status}"; exit "$rc"' \
+  > "{log}" 2>&1 < /dev/null &
+echo $! > "{pidfile}"
+echo "rank={rank} pid=$(cat '{pidfile}') log={log} status={status}"'''
+    print(
+        client.predict(
+            client_label=label,
+            session=session,
+            command=command,
+            timeout=120,
+            api_name="/ui_send",
+        )
+    )
+
+print(f"smoke_id={smoke_id}; poll rank-specific files under {ROOT}/logs")
 ```
+
+`/ui_send` returns before the smoke output is available. Use a new relay session
+to poll `smoke-<smoke_id>-rank-<rank>.status` and tail the matching log. A status
+of `0` means the rank completed successfully. Keeping polling in a separate
+session ensures a slow or failed smoke cannot block subsequent relay work.
 
 Every node must print one JSON object with `"status": "ok"`, the same run ID,
 `world_size: 8`, and its own candidate assignment. Rank 0 should report
