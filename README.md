@@ -6,20 +6,6 @@ writes `submission.csv` without calling an external grader. The checked-in
 configuration uses eight H200 GPUs as four TP2 replicas, BF16 target and draft
 weights, DFlash speculative decoding, and FlashAttention 3.
 
-The standalone vLLM harness at `evaluation/harness_vllm/run.py` also supports
-one process per node with a local TP/DP server on every node. See
-[RUN_PY_MULTINODE.md](RUN_PY_MULTINODE.md) for the eight-node `TP=2, DP=4`
-launch contract.
-
-For the read-only NII Singularity image, use
-[NII_VLLM_SETUP.md](NII_VLLM_SETUP.md) to create the shared `/tmp` vLLM 0.25.1
-runtime, download the current checkpoint once, and validate the eight-node
-controller before loading any model on GPU.
-
-For general NII command routing, one-node shared-filesystem operations, and
-command-history inspection, see
-[NII_CONTROL_PANEL.md](NII_CONTROL_PANEL.md).
-
 ## Docker usage
 
 ### Select the harness commit
@@ -132,9 +118,6 @@ FA4: page_size=128 and deterministic_inference=false
 ```
 
 The configured server context is a total input-plus-output limit.
-
-For FP8 KV-cache A/B validation and required target/draft scale markers, see
-[SGLANG_FP8_KV.md](SGLANG_FP8_KV.md).
 
 ## Resume and outputs
 
