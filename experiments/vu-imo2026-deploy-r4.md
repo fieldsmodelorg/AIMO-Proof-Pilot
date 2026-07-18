@@ -7,6 +7,10 @@ harness (bogoconic1 fork + our changes) on the trusted deploy checkpoint, at the
 same model + budget Geremie is running live, so the only variables are our harness
 changes.
 
+> **Why these harness changes?** Full reasoning (prompting + refinement topology
+> vs Geremie, with evidence) in
+> [`vu-harness-design-rationale.md`](vu-harness-design-rationale.md).
+
 ## TL;DR
 
 | | |
