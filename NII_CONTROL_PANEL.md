@@ -6,32 +6,38 @@ command immediately; read its output from command history afterward.
 
 ## Node ownership
 
-Human-facing node numbers are one-based, while relay client ranks are
-zero-based:
+UI node numbers and relay client ranks are both zero-based:
 
 | Member | Human nodes | Relay clients |
 |---|---:|---|
-| `vu` | 1-2 | `node0`, `node1` |
-| `bogo` | 3-4 | `node2`, `node3` |
-| `yi` | 5-6 | `node4`, `node5` |
-| `nguyen` | 7-8 | `node6`, `node7` |
+| `vu` | 0 | `node0` |
+| `bogo` | 1 | `node1` |
+| `yi` | 2 | `node2` |
+| `nguyen` | 3 | `node3` |
+| `all` | 0-3 | `node0` through `node3` |
+
+Choose `all` when cluster administration requires access to every node. It
+lists all registered containers and makes **Run on member node** an all-online
+broadcast. Continue to run shared-file mutations on one selected node only.
 
 The nodes share the main filesystem. Run package installs, downloads,
 repository updates, and other shared-file mutations on exactly one node. Run a
-command on both member nodes only when each node must perform local work, such
-as checking GPUs or starting one rank-specific server per node.
+member-routed command only for node-local work, such as checking GPUs or
+starting one rank-specific server.
 
 ## Use the web UI
 
 1. Open the private `control-panel-nguyen` Space and hard-refresh after a Space
    rebuild.
-2. Select your team member and one of its two containers.
+2. Select your team member. The container dropdown is automatically limited to
+   that member's assigned node.
 3. Give the command a session name. Reusing a session preserves its shell
    working directory and exported variables.
 4. Choose the correct scope:
    - **Run on selected node**: installs, downloads, shared-file changes, or a
      command intended for one node.
-   - **Run on member nodes**: node-local work on the member's assigned pair.
+   - **Run on member node**: the member's assigned node, or every online node
+     when `all` is selected.
    - **Broadcast to all online**: cluster-wide diagnostics only.
 5. Read output in **Selected node history** or **Member history**.
 
@@ -53,20 +59,20 @@ SPACE = "imo2026-challenge/control-panel-nguyen"
 client = Client(SPACE, token=get_token())
 ```
 
-Inspect the two clients assigned to a member:
+Inspect the client assigned to a member:
 
 ```python
-pair = client.predict(member="nguyen", api_name="/ui_team_clients")
-print(pair)
+assignment = client.predict(member="nguyen", api_name="/ui_team_clients")
+print(assignment)
 
-online = [item["client_id"] for item in pair["clients"] if item["online"]]
+online = [item["client_id"] for item in assignment["clients"] if item["online"]]
 if not online:
     raise RuntimeError("No Nguyen node is online")
 one_node = online[0]
 ```
 
 Use the returned full client ID when possible. A unique short label such as
-`node6` also works, but the full ID makes logs and handoffs unambiguous.
+`node3` also works, but the full ID makes logs and handoffs unambiguous.
 
 ## Run on one node
 
@@ -88,9 +94,9 @@ print(reply)
 
 `/ui_send` returns an acknowledgement, not the final command output.
 
-## Run on both member nodes
+## Run on the member node
 
-Use member routing only when both nodes must execute the command independently:
+Use member routing to execute a command on the selected member's assigned node:
 
 ```python
 import time
@@ -119,7 +125,7 @@ start = history.rfind(marker)
 print(history[start:] if start >= 0 else history)
 ```
 
-Read combined history for both member nodes with `/ui_team_history`:
+Read the member node's combined view with `/ui_team_history`:
 
 ```python
 history = client.predict(member="nguyen", api_name="/ui_team_history")

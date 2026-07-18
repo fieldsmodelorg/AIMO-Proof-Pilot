@@ -133,6 +133,9 @@ FA4: page_size=128 and deterministic_inference=false
 
 The configured server context is a total input-plus-output limit.
 
+For FP8 KV-cache A/B validation and required target/draft scale markers, see
+[SGLANG_FP8_KV.md](SGLANG_FP8_KV.md).
+
 ## Resume and outputs
 
 Search state is stored in `/workspace/submission_artifacts`. If a run stops
