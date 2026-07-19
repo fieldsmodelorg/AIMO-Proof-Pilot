@@ -39,10 +39,18 @@ Same 4× opus-4.8/xhigh panel vs the `chankhavu/IMO2026-GPT-5.6-Sol-Markscheme`
 rubric, averaged. Compare per-problem + total against deploy (**19.25/42**) and
 step-225.
 
-## Results — *pending*
+## Results — ✅ 20.0 / 42 (complete, 6/6)
 | P1 | P2 | P3 | P4 | P5 | P6 | Total |
 |---|---|---|---|---|---|---|
-| — | — | — | — | — | — | **/42** |
+| 7 | 0 | 0 | 7 | **6.0** | 0 | **20.0** |
+
+4× opus-4.8/xhigh markscheme panel per problem, averaged. **Beats deploy (19.25)**;
+the whole delta is **P5** (6.0 vs deploy's 5.25 — closes part of the Case-2 gap; all
+four graders "partial", unanimous 6.0). P1/P4 = unanimous full solves; P2/P3/P6 = 0
+(P3 self-score 0.47 did **not** convert — general answer wrong; P6 self 0.34 → 0).
+**Loses to step-225 (21.0)**, whose P5 is a (near-)full solve. Ran all 4 rounds on
+P2/P3/P6, early-stopped P1 (R1) and P4/P5 (R3). No truncation on P1–P5; ~17% of P6
+generations truncated at the 128k cap (expected; P6 hopeless).
 
 ## Notes
 - If sglang125 crashes: **clean-stop first** — `pkill -9 -f sglang.launch_server`
