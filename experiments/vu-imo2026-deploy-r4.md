@@ -1,6 +1,6 @@
 # Experiment: `imo2026-deploy-r4` (vu)
 
-**Owner:** vu (node0) · **Started:** 2026-07-18 (UTC) · **Status:** running · **Hardware:** 8×H200 (NII node0)
+**Owner:** vu (node0) · **Started:** 2026-07-18 (UTC) · **Status:** ✅ COMPLETE — **19.25 / 42** · **Hardware:** 8×H200 (NII node0)
 
 OPD-32B generate–verify–refine on the **IMO-2026** problems — a baseline of *our*
 harness (bogoconic1 fork + our changes) on the trusted deploy checkpoint, at the
@@ -107,3 +107,39 @@ Traces appearing under `imo2026-deploy-r4/` on HF confirm the run is streaming.
 - **Server needs no HF token** — it loads local model dirs (`/tmp/chankhavu/models`).
 - Runtime = ycchen's prebuilt patched-SGLang venv at `/tmp/chankhavu/venvs/infervenv`
   (installer: `install/install_infervenv.sh` in the harness repo).
+
+## RESULTS — 19.25 / 42 (final)
+
+Every proof graded against **our own `chankhavu/IMO2026-GPT-5.6-Sol-Markscheme`
+rubric** (the exact `grading_scheme`, byte-identical) by a **panel of 4
+independent opus-4.8 graders at xhigh reasoning**, scores averaged. Each grader
+was told to ignore the model's self-score and verify the crux itself.
+
+| Problem | Markscheme grade | Self-verifier | Note |
+|---|---|---|---|
+| P1 (Confucius gcd/lcm) | **7 / 7** | 1.0 | real solve (unanimous 4×7) |
+| P2 (geometry OM=ON) | **0 / 7** | 0.09 | reaches OM=ON via a *false* lemma (A,K,L,M,N concyclic) |
+| P3 (Liu Bang game) | **0 / 7** | 0.19 | only n=1 right; wrong general answer (`1/2` vs `2ⁿ/(2ⁿ⁺¹−1)`) |
+| P4 (Shan-Yu/Mulan game) | **7 / 7** | 1.0 | real solve (unanimous 4×7) |
+| P5 (functional eq) | **5.25 / 7** | 0.94 | right answer, gap in Case 2 (fixed-vs-shifted separation) |
+| P6 (gcd sequence) | **0 / 7** | 0.56 | falsely claims the sequence is arithmetic (refuted by a₁=15) |
+| **Total** | **19.25 / 42** | | **past ycchen's 12.75** |
+
+- **Two genuine full solves (P1, P4)** + a strong partial (P5). Calibration note:
+  the self-verifier is reliable at the extremes (1.0 = real, ≤0.2 = wrong) but
+  **over-optimistic in the 0.9+ band** (P5 self-0.94 was really 5.25/7).
+
+### Leak audit — clean (no IMO-2026 contamination, high confidence)
+A 3-angle opus-xhigh panel audited whether the model saw IMO-2026 problems/
+solutions/markschemes in training. **No leak:**
+- **Provenance:** all training data = local repo CSVs; IMO source = `imo_data_1959_2024.csv` (no 2026); zero hits for the 2026 problem names; teacher only ever solves the 1959–2024 set → structurally can't emit 2026 targets.
+- **Timeline:** IMO-2026 papers July 15–16, 2026; every training input predates that (Olmo-3.1 cutoff Dec 2024; DeepSeek teacher Nov 2025 / Apr 2026; training repo pushed July 9). Leak temporally impossible via base/teacher.
+- **Forensics:** P1/P4 reasoning traces (20k / 55k tokens) show genuine derivation — for P4 the model derives the *wrong* answer, builds a counterexample, and self-corrects. Impossible under recall.
+
+### Operational notes (for the sweep)
+- Mid-run the SGLang server was SIGKILLed (exit 137) — traced via `dmesg` to a
+  `py-spy dump --native` on the scheduler tripping its watchdog, **not** OOM.
+  Restarted + resumed cleanly (P1–P4 skipped via `final.json`); one manual purge
+  of 26 poisoned (transient-error) call records was needed, now **auto-recovered**
+  by a harness fix (`CallStore` skips `error` records on resume).
+- `submission.csv` also rides along to HF as of the code update mid-run.
