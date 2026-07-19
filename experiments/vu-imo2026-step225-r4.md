@@ -34,10 +34,29 @@ Same as deploy: fetch each `problems/<row>/final.json`, grade against the
 average. Compare per-problem and total against the deploy baseline (**19.25/42**;
 P1=7, P4=7, P5=5.25, P2=P3=P6=0).
 
-## Results — *pending*
+## Results — 🏆 21.0 / 42 (best checkpoint; P6 crashed→0)
 | P1 | P2 | P3 | P4 | P5 | P6 | Total |
 |---|---|---|---|---|---|---|
-| — | — | — | — | — | — | **/42** |
+| 7 | 0 | 0 | 7 | **7.0**\* | 0† | **21.0** |
+
+4× opus-4.8/xhigh markscheme panel per problem, averaged. **Best of the three
+checkpoints** — beats deploy (19.25) and step-125 (20.0). The entire lead is **P5**:
+a (near-)full solve that fully closes deploy's Case-2 gap. P1/P4 = unanimous full
+solves; P2/P3/P6 = 0 (P3 self 0.63 did **not** convert — general answer wrong).
+
+\* **P5 = 7.0** on the clean 4-grader panel; pooled over 8 graders across two panels
+(one dissenting 5.5) = **6.81**. Either way it clears deploy (5.25) and step-125 (6.0).
+Early-stopped P5 at round 3 (self=1.0).
+
+† **P6 crashed** at 5/6 mid-P6 (sglang scheduler watchdog, same signature as the
+deploy run's exit-137; 1 transient error record, auto-recovered). P6 never finalized,
+so **recorded 0 by strong inference**: both other checkpoints scored P6=0, P6 is
+effectively hopeless, and step-225's P6 self-score was ~0.3 over its 3 completed
+rounds. The 21.0 ranking is unaffected. A clean re-run of *just* P6 (resume skips
+P1–P5 via their `final.json`) is optional and was blocked at the time by the
+control-panel Space (relay) being HF-down; do it via the relay once it recovers, or
+directly on node0 (`pkill -9 -f sglang.launch_server` first, then relaunch server +
+rerun submit with fresh job names).
 
 ## Notes
 - The deploy baseline's mid-run SGLang crash was **not** the model/config — it was
