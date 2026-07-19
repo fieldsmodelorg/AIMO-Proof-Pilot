@@ -13,13 +13,40 @@ rubric, and compare checkpoints. Reference bar: ycchen's original OPD = **12.75/
 
 | Experiment | Checkpoint | Node | Status | Score (markscheme) |
 |---|---|---|---|---|
-| [`vu-imo2026-deploy-r4`](vu-imo2026-deploy-r4.md) | `opd-32b-deploy` | node0 | ✅ done | **19.25 / 42** |
-| [`vu-imo2026-step225-r4`](vu-imo2026-step225-r4.md) | `opd-32b-bf16-step-225` | node0 | 🟢 running | pending |
-| [`vu-imo2026-step125-r4`](vu-imo2026-step125-r4.md) | `opd-32b-bf16-step-125` | node1 | 🟢 running | pending |
-| (maybe) step-250 | `opd-32b-bf16-step-250` | — | not started | — |
+| [`vu-imo2026-deploy-r4`](vu-imo2026-deploy-r4.md) | `opd-32b-deploy` | node0 | ✅ done | 19.25 / 42 |
+| [`vu-imo2026-step225-r4`](vu-imo2026-step225-r4.md) | `opd-32b-bf16-step-225` | node0 | ✅ done (P6 crashed→0) | **🏆 21.0 / 42** |
+| [`vu-imo2026-step125-r4`](vu-imo2026-step125-r4.md) | `opd-32b-bf16-step-125` | node1 | ✅ done | 20.0 / 42 |
+| (maybe) step-250 | `opd-32b-bf16-step-250` | — | not run | — |
 
-step-225 and step-125 run **in parallel** (nodes share `/tmp/chankhavu`, so each
+**Result — checkpoint selection: `step-225` wins (21.0).** All three beat ycchen's
+12.75 bar. Per-problem, the *entire* spread is **P5**: both step checkpoints close
+deploy's Case-2 gap (deploy 5.25 → step-125 6.0 → step-225 7.0). P1/P4 are unanimous
+full solves on every checkpoint; P2/P3/P6 are 0 on every checkpoint.
+
+| checkpoint | P1 | P2 | P3 | P4 | P5 | P6 | **Total** |
+|---|---|---|---|---|---|---|---|
+| deploy | 7 | 0 | 0 | 7 | 5.25 | 0 | **19.25** |
+| step-125 | 7 | 0 | 0 | 7 | 6.0 | 0 | **20.0** |
+| **step-225** | 7 | 0 | 0 | 7 | **7.0**\* | 0† | **21.0** |
+
+\* step-225 P5: clean 4-grader panel = 7.0; pooled over 8 graders (one dissent at 5.5) = 6.81 — either way > deploy/step-125.
+† step-225 P6 **crashed mid-run** (sglang watchdog, at 5/6) and its P6 never finalized; recorded **0** by strong inference (both other checkpoints scored P6=0; P6 is effectively hopeless; step-225's P6 self-score was only ~0.3 over its 3 completed rounds). The ranking holds regardless of P6. Optional clean re-run of just P6 is pending relay recovery.
+
+step-225 and step-125 ran **in parallel** (nodes share `/tmp/chankhavu`, so each
 just needed `git pull` + launch; separate trace subfolders per run).
+
+## Trace analysis (rollout health, all 3 runs)
+Script `analyze_calls_2026.py` over all 18 (run×problem) `calls.jsonl`. **No bugs:**
+0 errors (1 transient at the step-225 crash), verifier coverage = full **16/16** on
+every proof that parses, all verifications `accepted`. **Truncation is confined to
+P3/P6:** P1/P2/P4/P5 essentially never hit the 128k completion cap; on **P6 ~10–20%
+of generations truncate** (`finish_reason=length`) → invalid XML → 0 verifications
+(exact 1:1 chain — so "missing verifier" = truncated proofs correctly discarded, not
+a bug). **Low checkpoint sensitivity** (P1 ≈ 21k tokens on all three; step-125
+marginally most verbose). Early-stop works as designed (P1 stops after round 1; P5
+step-checkpoints stop at round 3 with self=1.0 vs deploy running all 4 at 0.94). Only
+suggested lever: **raise the 128k cap on P3/P6** to recover truncated-and-discarded
+proofs.
 
 ### Deploy baseline detail (19.25/42)
 | P1 | P2 | P3 | P4 | P5 | P6 |
