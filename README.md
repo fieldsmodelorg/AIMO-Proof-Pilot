@@ -10,20 +10,29 @@ weights, DFlash speculative decoding, and FlashAttention 3.
 
 ### Select the harness commit
 
-Every pushed commit receives an immutable `sha-<7-character-commit>` image tag.
-Set `COMMIT` to a full commit whose container workflow completed successfully:
+The image is built on demand (a `v*` release tag or a manual **Run workflow** in
+the Actions tab — the baked image is ~19 GB, so it is not built per commit) and
+published to **`ghcr.io/hav4ik/imo-inference`** and the Docker Hub mirror
+**`docker.io/chankhavu/imo-inference`**, each tagged `sha-<7-character-commit>`.
+Set `COMMIT` to the full commit of a build that completed successfully:
 
 ```bash
 export COMMIT=REPLACE_WITH_FULL_COMMIT_SHA
-export IMAGE=ghcr.io/fieldsmodelorg/aimo-proof-pilot:sha-${COMMIT:0:7}
+export IMAGE=ghcr.io/hav4ik/imo-inference:sha-${COMMIT:0:7}   # or docker.io/chankhavu/imo-inference:sha-${COMMIT:0:7}
 
 docker pull "$IMAGE"
 test "$(docker image inspect "$IMAGE" \
   --format "{{ index .Config.Labels \"org.opencontainers.image.revision\" }}")" = "$COMMIT"
 ```
 
-The image and runtime dataset are public. No registry, GitHub, Kaggle, OpenAI,
-or other credentials are required for submission generation.
+The runtime venv (patched SGLang + kernels) is **baked into the image** at
+`/opt/pp`. It is downloaded, sha256-verified, relocated, and topped with the
+pinned PyPI deps once at build time (from a revision-pinned mirror), so the
+final image is self-contained: **no runtime download and no `HF_TOKEN` for the
+runtime**, and every image tag carries an identical, frozen SGLang. Only the
+(public) model weights are fetched at boot -- so a plain
+`docker run ... submission` needs no secrets at all. At boot the entrypoint just
+applies the checked-in SGLang patches (fast, in-place) and resolves the models.
 
 ### Prepare persistent storage
 
@@ -38,9 +47,15 @@ run:
 ```bash
 mkdir -p "$PWD/workspace"
 curl -fsSL \
-  "https://raw.githubusercontent.com/fieldsmodelorg/AIMO-Proof-Pilot/$COMMIT/config.yaml" \
+  "https://raw.githubusercontent.com/hav4ik/imo-inference/$COMMIT/config.yaml" \
   -o "$PWD/workspace/config.yaml"
 ```
+
+`config.yaml` is the base (8×H200, DFlash, selector **off**). For the LLM
+final-solution selector and the 2× search width used in the `imo2026-*-2x`
+experiments, start from `config-nii-2x.yaml` (deploy) / `config-nii-2x-step225.yaml`
+in the repo root instead, or set `search.llm_selector: true` (+ `selection_*`
+knobs) in your copy. See `evaluation/EXPERIMENTS.md` and `CHANGES_VS_UPSTREAM.md`.
 
 `CONFIG` is mandatory. The container has no fallback configuration. It validates
 the supplied YAML but never copies, rewrites, clamps, or overrides its values.

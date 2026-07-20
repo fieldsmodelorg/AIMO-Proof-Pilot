@@ -6,6 +6,8 @@ import asyncio
 import hashlib
 import json
 import os
+import random
+from collections import Counter
 from collections.abc import Awaitable, Callable
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -13,18 +15,40 @@ from statistics import mean
 from typing import Any
 
 from async_client import AsyncChatClient
+from loop_detect import is_degenerate
 from proof_prompts import (
     generation_messages,
     parse_generation,
+    parse_selected_id,
     parse_verification,
     refinement_messages,
+    selection_bundle,
+    selector_messages,
     verification_messages,
 )
+
+# The final LLM selector is a discrete pick-an-id task -> low temperature for format
+# stability (ycchen ran select/ at low temp), independent of the search temperature.
+SELECTION_TEMPERATURE = 0.3
 
 
 def stable_seed(base: int, *parts: str) -> int:
     material = "\0".join([str(base), *parts]).encode()
     return int.from_bytes(hashlib.sha256(material).digest()[:8], "big") % (2**31 - 1)
+
+
+def majority_winner(votes: list[str | None], rank_order: list[str]) -> str | None:
+    """The most-voted id; ties broken by rank_order (earliest = highest-ranked wins).
+    None if there are no non-null votes. Pure helper so it can be unit-tested."""
+    valid = [v for v in votes if v is not None]
+    if not valid:
+        return None
+    counts = Counter(valid)
+    top = max(counts.values())
+    for proof_id in rank_order:
+        if counts.get(proof_id, 0) == top:
+            return proof_id
+    return None
 
 
 def atomic_json(path: Path, value: Any) -> None:
@@ -104,6 +128,15 @@ class CallStore:
                 if not line.strip():
                     continue
                 record = json.loads(line)
+                if record.get("error") is not None:
+                    # A persisted FAILED call -- typically a transient failure
+                    # (e.g. the SGLang server crashed mid-run, leaving every
+                    # in-flight call recorded with a RemoteProtocolError). Skip
+                    # it so a resume RE-ATTEMPTS the call instead of re-raising
+                    # the old error and aborting again. The failed line stays in
+                    # calls.jsonl as an audit trail; a later success for the same
+                    # sample_id supersedes it (loaded below).
+                    continue
                 sample_id = record["sample_id"]
                 if sample_id in self.records:
                     raise RuntimeError(f"duplicate persisted sample ID: {sample_id}")
@@ -135,6 +168,10 @@ class CallStore:
         temperature: float,
         top_p: float,
         spec: CallSpec,
+        lenient: bool = True,
+        stream_detect: bool = False,
+        filter_degenerate: bool = True,
+        selection_continuation_tokens: int = 2048,
     ) -> dict:
         existing = self.records.get(spec.sample_id)
         if existing is not None:
@@ -144,18 +181,37 @@ class CallStore:
                 )
             return existing
         prompt_sha256 = self._save_prompt(spec.messages)
+        is_proof_generation = spec.stage.endswith("/generate")
+        is_verification = "/verify/" in spec.stage
+        is_selection = spec.stage.endswith("/select")
         try:
             async with semaphore:
-                response = await client.chat_raw(
-                    spec.messages,
-                    max_completion_tokens=max_completion_tokens,
-                    temperature=temperature,
-                    top_p=top_p,
-                    seed=spec.seed,
-                    request_id=spec.sample_id,
-                )
-                is_proof_generation = spec.stage.endswith("/generate")
-                is_verification = "/verify/" in spec.stage
+                if stream_detect and (is_proof_generation or is_verification):
+                    # Stream the completion and abort+salvage on a live degenerate
+                    # loop (real-time detection). Same record shape as chat_raw.
+                    response = await client.chat_stream(
+                        spec.messages,
+                        max_completion_tokens=max_completion_tokens,
+                        temperature=temperature,
+                        top_p=top_p,
+                        seed=spec.seed,
+                        request_id=spec.sample_id,
+                        role="solution" if is_proof_generation else "verifier",
+                        salvage_max_tokens=(
+                            solution_continuation_tokens
+                            if is_proof_generation
+                            else verifier_continuation_tokens
+                        ),
+                    )
+                else:
+                    response = await client.chat_raw(
+                        spec.messages,
+                        max_completion_tokens=max_completion_tokens,
+                        temperature=temperature,
+                        top_p=top_p,
+                        seed=spec.seed,
+                        request_id=spec.sample_id,
+                    )
                 parser = (
                     parse_generation
                     if is_proof_generation
@@ -167,12 +223,20 @@ class CallStore:
                 xml_error = None
                 if parser is not None:
                     try:
-                        parser(content)
+                        parser(content, lenient=lenient)
                     except ValueError as error:
                         xml_error = str(error)
                     else:
                         xml_valid = True
-                if was_length and not xml_valid:
+                elif is_selection:
+                    # "valid" for the parserless selector = a <selected_id> is present.
+                    xml_valid = parse_selected_id(content) is not None
+                # Length-recovery: force-close the reasoning and continue so a call that
+                # rambled to the token budget can still yield its structured answer.
+                # Generate/verify re-validate via `parser`; the selector re-checks for a
+                # <selected_id>. A parserless, non-selector stage has nothing to recover,
+                # so it is skipped (keeps a normal unparseable record, never parser(None)).
+                if was_length and not xml_valid and (parser is not None or is_selection):
                     if is_proof_generation:
                         response = await client.continue_solution_raw(
                             response,
@@ -193,25 +257,50 @@ class CallStore:
                             seed=spec.seed,
                             request_id=spec.sample_id,
                         )
+                    elif is_selection:
+                        response = await client.continue_selection_raw(
+                            response,
+                            spec.messages,
+                            max_new_tokens=selection_continuation_tokens,
+                            temperature=temperature,
+                            top_p=top_p,
+                            seed=spec.seed,
+                            request_id=spec.sample_id,
+                        )
                     content = response["message"].get("content") or ""
-                    try:
-                        parser(content)
-                    except ValueError as error:
-                        xml_valid = False
-                        xml_error = str(error)
-                    else:
-                        xml_valid = True
-                        xml_error = None
+                    if parser is not None:
+                        try:
+                            parser(content, lenient=lenient)
+                        except ValueError as error:
+                            xml_valid = False
+                            xml_error = str(error)
+                        else:
+                            xml_valid = True
+                            xml_error = None
+                    elif is_selection:
+                        xml_valid = parse_selected_id(content) is not None
+                        xml_error = None if xml_valid else "no <selected_id> after force-close"
                 if was_length and xml_valid:
                     response["finish_reason"] = "stop"
                     response["xml_complete_after_length"] = True
                 response["xml_valid"] = xml_valid
                 response["xml_error"] = xml_error
                 if is_verification:
-                    if response["finish_reason"] == "stop" and xml_valid:
+                    # A verifier whose output is a degenerate loop is dropped here (at
+                    # disposition time) so mean_score, the _verify_proof filter, AND the
+                    # final.json valid/invalid tally all read ONE source of truth (the
+                    # disposition) and stay consistent.
+                    degenerate = filter_degenerate and is_degenerate(
+                        (response["message"].get("reasoning_content") or "")
+                        + "\n"
+                        + (response["message"].get("content") or "")
+                    )
+                    if response["finish_reason"] == "stop" and xml_valid and not degenerate:
                         disposition = "accepted"
                     elif not xml_valid:
                         disposition = "skipped_invalid_xml"
+                    elif degenerate:
+                        disposition = "skipped_degenerate"
                     else:
                         disposition = "skipped_non_stop"
                     response["verification_disposition"] = disposition
@@ -289,16 +378,31 @@ class ProblemSearch:
             seed=stable_seed(self.config["seed"], self.problem_id, sample_id),
         )
 
-    async def _perform(self, spec: CallSpec) -> dict:
+    async def _perform(self, spec: CallSpec, temperature: float | None = None) -> dict:
+        # The selector gets its own (smaller) reasoning budget; a ballot that rambles to
+        # it is force-closed (</think> + <selected_id>) and continued so it still votes,
+        # instead of burning the full max_completion_tokens and returning a null ballot.
+        is_selection = spec.stage.endswith("/select")
+        max_completion_tokens = (
+            int(self.config.get("selection_max_tokens", self.config["max_completion_tokens"]))
+            if is_selection
+            else self.config["max_completion_tokens"]
+        )
         return await self.calls.perform(
             self.client,
             self.semaphore,
-            self.config["max_completion_tokens"],
+            max_completion_tokens,
             self.config["solution_continuation_tokens"],
             self.config["verifier_continuation_tokens"],
-            self.config["temperature"],
+            self.config["temperature"] if temperature is None else temperature,
             self.config["top_p"],
             spec,
+            lenient=self.config.get("lenient_parsing", True),
+            stream_detect=self.config.get("stream_detect", False),
+            filter_degenerate=self.config.get("filter_degenerate", True),
+            selection_continuation_tokens=int(
+                self.config.get("selection_continuation_tokens", 2048)
+            ),
         )
 
     def _rank_key(self, proof: Proof) -> tuple[float, int, float, int]:
@@ -313,6 +417,61 @@ class ProblemSearch:
             if len(proof.verifications) >= required
         ]
         return sorted(verified, key=self._rank_key, reverse=True)
+
+    async def _select_final(self, ranked: list[Proof]) -> dict | None:
+        """ycchen-style LLM final selector with shuffled-ballot majority voting.
+
+        Each of ``selection_votes`` voters sees the top ``selection_candidates`` proofs in an
+        INDEPENDENTLY shuffled order under fresh display IDs (P1, P2, ...), picks one via
+        ``<selected_id>`` at low temperature, and we majority-vote the CANONICAL proof_ids
+        (so position/label bias is averaged out). Returns the vote breakdown, or None when
+        there is nothing to choose or no valid ballot — in which case solve() keeps
+        ranked[0] (the current verifier-score behaviour). Selector-call failures degrade
+        to a null ballot; they never abort the run.
+        """
+        votes_n = int(self.config.get("selection_votes", 16))
+        # The selector model was only trained to re-rank a SMALL set (ycchen's regime
+        # is ~4); feeding it top_proofs (the refinement pool, e.g. 16) is out of
+        # distribution. Cap at selection_candidates, decoupled from top_proofs.
+        n_cand = int(self.config.get("selection_candidates", 4))
+        candidates = ranked[:n_cand]
+        if votes_n < 1 or len(candidates) < 2:
+            return None
+        rank_order = [p.proof_id for p in candidates]
+
+        async def _one_vote(i: int) -> str | None:
+            rng = random.Random(
+                stable_seed(self.config["seed"], self.problem_id, "select-shuffle", str(i))
+            )
+            order = list(candidates)
+            rng.shuffle(order)
+            id_map = {f"P{j + 1}": p.proof_id for j, p in enumerate(order)}
+            bundle = selection_bundle(
+                [(f"P{j + 1}", p.proof) for j, p in enumerate(order)]
+            )
+            spec = self._spec(
+                f"round-final/select/s{i:02d}",
+                "round-final/select",
+                selector_messages(self.problem, bundle),
+            )
+            try:
+                record = await self._perform(spec, temperature=SELECTION_TEMPERATURE)
+            except Exception:  # a broken selector ballot must not kill the run
+                return None
+            return id_map.get(parse_selected_id(record.get("content") or ""))
+
+        votes = list(await asyncio.gather(*(_one_vote(i) for i in range(votes_n))))
+        winner_id = majority_winner(votes, rank_order)
+        if winner_id is None:
+            return None
+        counts = Counter(v for v in votes if v is not None)
+        return {
+            "winner_id": winner_id,
+            "votes": votes,
+            "counts": dict(counts),
+            "valid_votes": sum(1 for v in votes if v is not None),
+            "total_votes": votes_n,
+        }
 
     async def _emit_round_checkpoint(self, summary: dict) -> None:
         if self.on_round_complete is None:
@@ -332,26 +491,84 @@ class ProblemSearch:
             }
         )
 
-    def _selected_reviews(
+    def _stratified_parents(
         self,
-        proof: Proof,
+        pool: list[Proof],
+        parents_per_call: int,
+        n_calls: int,
         round_index: int,
-    ) -> list[Verification]:
-        limit = self.config["analyses_per_refinement"]
-        ranked = sorted(
-            proof.verifications,
-            key=lambda verification: (
-                verification.score,
-                stable_seed(
-                    self.config["seed"],
-                    self.problem_id,
-                    proof.proof_id,
-                    f"round-{round_index}",
-                    verification.sample_id,
-                ),
+    ) -> list[list[Proof]]:
+        """Assign `parents_per_call` distinct parents to each of `n_calls` refine
+        calls, drawn from `pool`, so every pool member is used ~equally (stratified)
+        and never over- or under-represented. Deterministic: a seeded permutation of
+        the pool, then a rotating window -- so the parents are pseudo-random but the
+        coverage is even and reproducible."""
+        size = len(pool)
+        order = sorted(
+            range(size),
+            key=lambda idx: stable_seed(
+                self.config["seed"],
+                self.problem_id,
+                f"refine-parents-round-{round_index}",
+                pool[idx].proof_id,
             ),
         )
-        return ranked[:limit]
+        shuffled = [pool[k] for k in order]
+        groups: list[list[Proof]] = []
+        for call in range(n_calls):
+            base = (call * parents_per_call) % size
+            # parents_per_call <= size, so these indices are distinct within a call
+            groups.append(
+                [shuffled[(base + j) % size] for j in range(parents_per_call)]
+            )
+        return groups
+
+    def _select_reviews(
+        self,
+        proof: Proof,
+        limit: int,
+        round_index: int,
+        call_index: int,
+        strategy: str,
+    ) -> list[Verification]:
+        """Up to `limit` of the proof's reviews for a refine bundle.
+
+        strategy "worst" (Geremie's original): the lowest-scoring reviews,
+        deterministic (score, then seeded tie-break). May include ideal (score 1)
+        reviews when the proof has fewer than `limit` non-ideal ones. The same
+        parent contributes the same worst reviews to every call it appears in.
+
+        strategy "random_nonideal" (default): a seeded random sample of the
+        non-ideal (score < 1) reviews, varied per call; fewer than `limit` if the
+        proof has fewer non-ideal reviews, empty if every review scored 1.
+        """
+        if strategy == "worst":
+            ranked = sorted(
+                proof.verifications,
+                key=lambda v: (
+                    v.score,
+                    stable_seed(
+                        self.config["seed"],
+                        self.problem_id,
+                        proof.proof_id,
+                        f"refine-worst-round-{round_index}",
+                        v.sample_id,
+                    ),
+                ),
+            )
+            return ranked[:limit]
+        nonideal = [v for v in proof.verifications if v.score < 1.0]
+        order = sorted(
+            range(len(nonideal)),
+            key=lambda idx: stable_seed(
+                self.config["seed"],
+                self.problem_id,
+                proof.proof_id,
+                f"refine-reviews-round-{round_index}-call-{call_index}",
+                nonideal[idx].sample_id,
+            ),
+        )
+        return [nonideal[k] for k in order[:limit]]
 
     def _round_candidates(self, round_index: int) -> list[Candidate]:
         stage = f"round-{round_index:02d}/generate"
@@ -371,41 +588,61 @@ class ProblemSearch:
                     )
                 )
         else:
-            parents = [
+            # Pool of refinement parents: the top-ranked verified proofs from
+            # earlier rounds (cumulative). Each refine call merges refine_parents
+            # of them (stratified for even coverage), each contributing up to
+            # reviews_per_refine_parent random non-ideal reviews.
+            pool = [
                 proof
                 for proof in self.ranked()
                 if proof.round_index < round_index
             ][: self.config["top_proofs"]]
-            if not parents:
+            if not pool:
                 raise RuntimeError(f"{self.problem_id} has no verified proof to refine")
-            proof_index = 0
-            for parent in parents:
-                reviews = self._selected_reviews(parent, round_index)
-                if len(reviews) != self.config["analyses_per_refinement"]:
-                    raise RuntimeError(
-                        f"{parent.proof_id} has too few verifier analyses to refine"
-                    )
-                for review in reviews:
-                    proof_id = f"r{round_index:02d}-p{proof_index:04d}"
-                    messages = refinement_messages(
-                        self.problem,
+            # Gold drops the prover self-evaluation from the refiner bundle
+            # (v2/pool_loop.py: with_self_eval=False, "unreliable ~92% self-score 1").
+            refiner_self_eval = self.config.get("refiner_sees_self_evaluation", False)
+            n_calls = self.config["proofs_per_round"]  # keep round width
+            parents_per_call = min(self.config["refine_parents"], len(pool))
+            reviews_per_parent = self.config["reviews_per_refine_parent"]
+            review_strategy = self.config.get(
+                "refine_review_strategy", "random_nonideal"
+            )
+            groups = self._stratified_parents(
+                pool, parents_per_call, n_calls, round_index
+            )
+            for call_index in range(n_calls):
+                proof_id = f"r{round_index:02d}-p{call_index:04d}"
+                bundle = [
+                    (
                         parent.proof_id,
                         parent.proof,
-                        parent.self_evaluation,
-                        review.score,
-                        review.analysis,
+                        parent.self_evaluation if refiner_self_eval else "",
+                        [
+                            (review.score, review.analysis)
+                            for review in self._select_reviews(
+                                parent,
+                                reviews_per_parent,
+                                round_index,
+                                call_index,
+                                review_strategy,
+                            )
+                        ],
                     )
-                    candidates.append(
-                        Candidate(
-                            proof_id=proof_id,
-                            round_index=round_index,
-                            parent_id=parent.proof_id,
-                            generation=self._spec(
-                                f"{stage}/{proof_id}", stage, messages
-                            ),
-                        )
+                    for parent in groups[call_index]
+                ]
+                messages = refinement_messages(self.problem, bundle)
+                candidates.append(
+                    Candidate(
+                        proof_id=proof_id,
+                        round_index=round_index,
+                        # multi-parent ancestry (audit only), comma-joined
+                        parent_id=",".join(parent.proof_id for parent in groups[call_index]),
+                        generation=self._spec(
+                            f"{stage}/{proof_id}", stage, messages
+                        ),
                     )
-                    proof_index += 1
+                )
         return candidates
 
     def _admit_candidate(self, candidate: Candidate, record: dict) -> Proof | None:
@@ -413,9 +650,19 @@ class ProblemSearch:
             return self.proofs[candidate.proof_id]
         if record["finish_reason"] != "stop":
             return None
+        # Reject degenerate (looping) generations: a proof that fell into a
+        # repetition/enumeration loop and stopped at the token cap must not enter
+        # the pool or seed refinements. gzip-based, so distribution-neutral (see
+        # loop_detect); truncated loops are already dropped by the check above.
+        # Gated by search.filter_degenerate (default on).
+        if self.config.get("filter_degenerate", True) and is_degenerate(
+            (record.get("reasoning_content") or "") + "\n" + (record.get("content") or "")
+        ):
+            return None
         try:
             proof_text, self_evaluation, self_score = parse_generation(
-                record["content"]
+                record["content"],
+                lenient=self.config.get("lenient_parsing", True),
             )
         except ValueError:
             return None
@@ -433,10 +680,20 @@ class ProblemSearch:
 
     async def _verify_proof(self, proof: Proof) -> dict:
         stage = f"round-{proof.round_index:02d}/verify/{proof.proof_id}"
+        # The verifier was trained with the candidate's self-evaluation in its
+        # prompt (training/opd_v2 build_verify passes proof.self_eval), so the
+        # default feeds it. Setting verifier_sees_self_evaluation=false blanks it
+        # to test the anchoring hypothesis -- but that prompt shape is off the
+        # verifier's training distribution.
+        self_evaluation = (
+            proof.self_evaluation
+            if self.config.get("verifier_sees_self_evaluation", True)
+            else ""
+        )
         messages = verification_messages(
             self.problem,
             proof.proof,
-            proof.self_evaluation,
+            self_evaluation,
         )
         specs = [
             self._spec(f"{stage}/v{index:03d}", stage, messages)
@@ -448,10 +705,18 @@ class ProblemSearch:
         verifications: list[Verification] = []
         invalid_sample_ids: list[str] = []
         for spec, record in zip(specs, records, strict=True):
+            # Any disposition other than 'accepted' is dropped -- including
+            # 'skipped_degenerate' (set in perform when filter_degenerate is on), so
+            # mean_score AND the final.json valid/invalid tally read the same source
+            # and stay consistent. A dropped verification's score must not pollute
+            # mean_score.
             if record["verification_disposition"] != "accepted":
                 invalid_sample_ids.append(spec.sample_id)
                 continue
-            analysis, score = parse_verification(record["content"])
+            analysis, score = parse_verification(
+                record["content"],
+                lenient=self.config.get("lenient_parsing", True),
+            )
             verifications.append(
                 Verification(
                     sample_id=spec.sample_id,
@@ -577,6 +842,19 @@ class ProblemSearch:
                 f"{minimum} valid verifications"
             )
         winner = ranked[0]
+        final_source = "verification_pool"
+        selection = None
+        if self.config.get("llm_selector", False):
+            selection = await self._select_final(ranked)
+            if selection is not None:
+                chosen = self.proofs.get(selection["winner_id"])
+                if chosen is not None:
+                    winner = chosen
+                    final_source = (
+                        f"llm_selector:{selection['winner_id']}("
+                        f"{selection['counts'].get(selection['winner_id'], 0)}/"
+                        f"{selection['total_votes']})"
+                    )
         verification_records = [
             record
             for record in self.calls.records.values()
@@ -585,7 +863,7 @@ class ProblemSearch:
         final = {
             "schema_version": 2,
             "problem_id": self.problem_id,
-            "final_source": "verification_pool",
+            "final_source": final_source,
             "selected_proof_id": winner.proof_id,
             "final_proof": winner.proof,
             "mean_verifier_score": winner.mean_score,
@@ -607,5 +885,7 @@ class ProblemSearch:
                 for record in verification_records
             ),
         }
+        if selection is not None:
+            final["selection"] = selection
         atomic_json(final_path, final)
         return final

@@ -14,11 +14,13 @@ model:
   kv_cache_dtype: auto
 
 server:
-  # FA4 profile: fa4, page 128, nondeterministic.
-  # FA3 profile: fa3, page 1, deterministic.
+  # FA3 profile: fa3, page 1. deterministic_inference optional: false (default,
+  #   matches Yi-Chia's DFlash rollouts — faster) or true (batch-invariant
+  #   reproducibility at a throughput cost; DFlash is distribution-preserving either
+  #   way). FA4 profile: fa4, page 128, always nondeterministic.
   attention_backend: fa3
   page_size: 1
-  deterministic_inference: true
+  deterministic_inference: false
   host: 127.0.0.1
   port: 30000
   context_length: 262144
@@ -27,6 +29,11 @@ server:
   swa_full_tokens_ratio: 0.2
   chunked_prefill_size: 2048
   stream_interval: 16
+  # SGLang scheduler watchdog: max seconds a forward pass may make NO progress
+  # before the server SIGQUITs itself. SGLang's default (300) killed the whole
+  # server when a degenerate generation ran ~880s on IMO-2026 P6; 1200 gives a
+  # legitimately-slow long forward headroom. See evaluation/DEGENERATE_FILTER.md.
+  watchdog_timeout: 1200
   prefill_cuda_graph_backend: tc_piecewise
   dflash_block_size: 8
   dflash_num_draft_tokens: 8
@@ -36,9 +43,21 @@ search:
   proofs_per_round: 32
   verifications_per_proof: 16
   top_proofs: 8
-  refinements_per_proof: 4
-  analyses_per_refinement: 4
-  max_rounds: 16
+  # Refinement (gold-style merge, stratified): each of proofs_per_round refine
+  # calls merges refine_parents random parents from the top_proofs pool
+  # (stratified = even coverage), each with up to reviews_per_refine_parent
+  # random NON-ideal (score<1) reviews. Defaults = Yi-Chia's numbers (4 parents,
+  # <=3 reviews).
+  refine_parents: 4
+  reviews_per_refine_parent: 3
+  # Which reviews go to the refiner: 'random_nonideal' (default) = random
+  # reviews with score<1; 'worst' = Geremie's lowest-scoring reviews
+  # (deterministic, may include ideal ones if too few non-ideal).
+  refine_review_strategy: random_nonideal
+  # Total rounds: round 1 = initial 32-proof generation, rounds 2..N = self-
+  # refinement. 4 => 1 generation + up to 3 refinement rounds (matches Geremie's
+  # live IMO-2026 run). Bump to 16 for a max-quality (non-comparable) sweep.
+  max_rounds: 4
   early_stop_threshold: 0.99999
   temperature: 1.0
   top_p: 0.95
@@ -46,6 +65,75 @@ search:
   solution_continuation_tokens: 16384
   verifier_continuation_tokens: 16384
   min_valid_verifications: 4
+  # GOLD STANDARD -- keep true. Gold feeds the prover self_evaluation TEXT into
+  # the verifier prompt at BOTH training and Kaggle inference, so true is
+  # in-distribution. false blanks it (off gold, off the verifier's training).
+  verifier_sees_self_evaluation: true
+  # GOLD STANDARD -- keep false. Gold's Kaggle inference drops the parent
+  # self-eval from the refiner bundle (self-score is ~92% "1", unreliable noise);
+  # gold TRAINING included it, so false is a deliberate train/inference choice
+  # gold validated. true restores it (more context, off gold's inference standard).
+  refiner_sees_self_evaluation: false
+  # Parser leniency (gold search-based extraction). true = recover missing
+  # </solution>, tolerate surrounding text, ignore tag case, allow empty
+  # self-eval/suggestions. false = Geremie's strict whole-document XML.
+  # (The float-score and empty-suggestions fixes apply in both.)
+  lenient_parsing: true
+  # Degenerate-loop filter (gzip-based, distribution-neutral -- NOT a repetition
+  # penalty). true = drop any generation or verification whose text is a
+  # degenerate repetition/enumeration loop, so it never enters the proof pool,
+  # seeds a refine, or scores a proof. Detector (loop_detect.is_degenerate): a
+  # zlib sliding-window compression ratio (HARD abort <0.05, SOFT abort <0.18 for
+  # >=20 consecutive checks) plus a 25-char/1500-char local-density backstop --
+  # thresholds verbatim from Yi-Chia's v2, which Geremie's fork dropped. Legit
+  # long math (enumerations that recover) is spared. false = disable ALL
+  # degenerate filtering. Full write-up + measured stats: evaluation/DEGENERATE_FILTER.md.
+  filter_degenerate: true
+  # Real-time (streaming) degenerate detection + salvage. true = stream every
+  # generation and verification, run the SAME loop detector live, and on a loop
+  # ABORT the request and salvage a proof from the clean pre-loop prefix (Yi-Chia's
+  # v2 behavior) -- reclaiming the wasted compute and preventing the server stall,
+  # not merely discarding the output after the fact. false = plain blocking calls
+  # (filter_degenerate above still applies as the post-hoc backstop). Requires an
+  # SGLang server that streams /chat/completions. See evaluation/DEGENERATE_FILTER.md.
+  stream_detect: true
+  # Final LLM solution selector (ycchen gold "select-by-id" stage), OPTIONAL keys.
+  # When llm_selector is true, after the last round `selection_votes` voters each see
+  # the top `selection_candidates` proofs in an independently shuffled order and pick one
+  # via <selected_id>; the majority-voted proof becomes the submission (ties -> higher rank),
+  # falling back to the top verifier-scored proof if no valid ballot. When absent/false,
+  # the final proof is the top verifier-scored one (unchanged). See evaluation/EXPERIMENTS.md.
+  # selection_candidates: how many top proofs the selector re-ranks. The model was only
+  # trained to choose among a small set (~4), so keep this small and DECOUPLED from
+  # top_proofs (which sizes the refinement pool). Defaults to 4 when absent.
+  llm_selector: false
+  selection_votes: 16
+  selection_candidates: 4
+  # Per-ballot selector reasoning budget. A ballot that rambles to this cap is
+  # force-closed (</think> + <selected_id>) and continued for selection_continuation_tokens
+  # so it still votes, instead of burning max_completion_tokens and returning a null ballot.
+  # Set above the natural conclusion length (~32k observed) so real deliberation is untouched
+  # and only runaways are force-closed. Offline analog of gold's time-derived selector cap.
+  selection_max_tokens: 56000
+  selection_continuation_tokens: 2048
   request_timeout_seconds: 86400
   concurrency: 96
   seed: 0
+
+# Optional: periodically push the whole artifacts tree (reasoning traces) to a HF
+# dataset. Auth: secrets_file (a JSON/YAML file with an hf_token) OR, if
+# secrets_file is "", the ambient HF token (HF_TOKEN env or `hf auth login`).
+# Upload runs every interval_seconds and once at shutdown; errors never abort the
+# run. Remove this whole section to disable.
+traces:
+  enabled: true
+  # Alias-prefixed so it doesn't collide with teammates' datasets in the org.
+  dataset_repo: imo2026-challenge/chankhavu-imo-reasoning-traces
+  # "" -> use the ambient HF token (HF_TOKEN env or `hf auth login`).
+  secrets_file: ""
+  interval_seconds: 600
+  # Applied only when the dataset is first CREATED (team competition traces).
+  private: true
+  # Subfolder per experiment. "" -> derive from the target model folder; set an
+  # explicit name to label each experiment.
+  run_name: ""

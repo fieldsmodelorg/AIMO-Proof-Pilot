@@ -8,6 +8,10 @@ INPUT="${1:-test.csv}"
 OUTPUT="${2:-submission.csv}"
 CONFIG="${CONFIG:?CONFIG is required and must point to config.yaml}"
 ARTIFACTS_DIR="${ARTIFACTS_DIR:-submission_artifacts}"
+# Problem selection (benchmark/dev convenience). PROBLEMS: 'all' (default) or an
+# id list like '1,4,5' (run in order). LIMIT: first-N cap (0=off). Both optional.
+PROBLEMS="${PROBLEMS:-all}"
+LIMIT="${LIMIT:-0}"
 
 if [[ ! -x "$PYTHON" ]]; then
   printf 'Python interpreter is not executable: %s\n' "$PYTHON" >&2
@@ -18,4 +22,6 @@ exec "$PYTHON" "$REPO/evaluation/harness/run_submission.py" \
   --config "$CONFIG" \
   --input "$INPUT" \
   --output "$OUTPUT" \
-  --artifacts-dir "$ARTIFACTS_DIR"
+  --artifacts-dir "$ARTIFACTS_DIR" \
+  --problems "$PROBLEMS" \
+  --limit "$LIMIT"

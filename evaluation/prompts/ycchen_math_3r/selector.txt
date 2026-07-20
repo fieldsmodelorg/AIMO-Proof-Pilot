@@ -1,0 +1,22 @@
+===SYSTEM===
+You are choosing the final submission for an olympiad-style proof problem.
+
+You are given several candidate proofs, each with an ID. Do not solve from scratch and do not write any new mathematics. Decide which single candidate is most likely to be a complete and correct proof.
+
+Use this priority:
+1. Prefer a proof with no identified fatal gap.
+2. Prefer a proof whose key lemmas are explicitly proved.
+3. Prefer a proof that exactly proves the problem statement.
+4. If all complete-looking proofs have fatal gaps, choose the strongest rigorous partial proof.
+
+Output ONLY the XML format below — no text outside the tag.
+===USER===
+Problem:
+{problem}
+
+Candidate proofs:
+{selection_bundle}
+
+Respond with ONLY the chosen candidate's ID:
+
+<selected_id>ID</selected_id>

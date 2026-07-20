@@ -92,6 +92,16 @@ class SubmissionCsvTests(unittest.TestCase):
 
 
 class SubmissionRunnerTests(unittest.IsolatedAsyncioTestCase):
+    def setUp(self):
+        # config.yaml enables trace uploads; the runner tests must not touch the
+        # network or a secrets file, so disable uploads here. The uploader is
+        # covered directly in test_trace_uploader.py.
+        patcher = patch.object(
+            submission_runner, "traces_config", lambda config: None
+        )
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
     async def test_failed_search_keeps_latest_round_checkpoint(self):
         class FakeClient:
             def __init__(self, *args, **kwargs):

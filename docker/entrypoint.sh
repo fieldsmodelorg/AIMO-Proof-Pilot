@@ -3,7 +3,9 @@ set -Eeuo pipefail
 
 REPO="${REPO:-/opt/aimo-proof-pilot-inference}"
 WORKSPACE=/workspace
-RUNTIME_ROOT=/workspace/pp
+# The SGLang runtime is baked into the image at /opt/pp; overridable for the
+# legacy download-at-boot path (RUNTIME_ROOT=/workspace/pp).
+RUNTIME_ROOT="${RUNTIME_ROOT:-/opt/pp}"
 HF_HOME="${HF_HOME:-/workspace/.hf_home}"
 VENV="${VENV:-$RUNTIME_ROOT/venv}"
 STATE_DIR=/workspace/.proof-pilot
@@ -14,7 +16,20 @@ TARGET_MODEL=
 DRAFT_MODEL=
 MODEL_REPO="${MODEL_REPO:-fieldsmodelorg/Olmo-3.1-32B-Think-OPD-ProofPilot}"
 MODEL_REVISION="${MODEL_REVISION:-87707b8030800b1e531b78c9823cb80a63d66e5e}"
-RUNTIME_DATASET="${RUNTIME_DATASET:-threerabbits/proof-pilot-env}"
+# Runtime venv (patched SGLang + kernels). Pinned so every deployment materializes
+# an IDENTICAL SGLang: a revision-locked HF mirror we control, verified by sha256.
+# SGLang is never pip-installed -- it lives inside this archive -- so this pin is
+# what makes the SGLang version reproducible.
+RUNTIME_HF_REPO="${RUNTIME_HF_REPO:-chankhavu/proof-pilot-env}"
+RUNTIME_HF_REVISION="${RUNTIME_HF_REVISION:-5c0bf00bcc38c91b336f99d68aaab6b66aa93c1d}"
+# sha256 of proof-pilot-env.bin (the gzip'd venv tar). Boot dies on mismatch.
+# Set empty to disable the check (e.g. when deliberately using a different archive).
+RUNTIME_ARCHIVE_SHA256="${RUNTIME_ARCHIVE_SHA256:-71190f4f2554c29ec6b99ae6bda7af64f1348876b85cfbdfa1d102f9dfa8c831}"
+RUNTIME_BIN="${RUNTIME_BIN:-/workspace/proof-pilot-env.bin}"
+# Legacy override: set to a Kaggle dataset (e.g. threerabbits/proof-pilot-env) to
+# fetch from there instead of the pinned HF mirror. NOT revision-pinned; the
+# sha256 check still applies, so an upstream re-upload fails loud rather than drifting.
+RUNTIME_DATASET="${RUNTIME_DATASET:-}"
 RUNTIME_ARCHIVE="${RUNTIME_ARCHIVE:-/workspace/proof-pilot-env.zip}"
 CONFIG_SOURCE="${CONFIG:-}"
 SERVER_HOST=
@@ -90,6 +105,60 @@ validate_gpus() {
 }
 
 
+verify_runtime_sha256() {
+    # Pins the SGLang runtime by content: proof-pilot-env.bin must hash to the
+    # pinned sha256, or we refuse to boot. This is what guarantees an identical
+    # SGLang across deployments regardless of where the archive came from.
+    local file="$1"
+    if [[ -z "$RUNTIME_ARCHIVE_SHA256" ]]; then
+        log "runtime sha256 check disabled (RUNTIME_ARCHIVE_SHA256 empty)"
+        return
+    fi
+    log "verifying runtime archive sha256"
+    local actual
+    actual="$(sha256sum "$file" | awk '{print $1}')"
+    [[ "$actual" == "$RUNTIME_ARCHIVE_SHA256" ]] || die \
+        "runtime archive sha256 mismatch: got $actual, expected $RUNTIME_ARCHIVE_SHA256 "\
+"(the pinned SGLang runtime changed upstream; update RUNTIME_HF_REVISION + "\
+"RUNTIME_ARCHIVE_SHA256 together, or clear the sha to override)"
+}
+
+fetch_runtime_payload() {
+    # Produces the pinned proof-pilot-env.bin at $RUNTIME_BIN.
+    if [[ -f "$RUNTIME_BIN" ]]; then
+        log "using cached runtime payload $RUNTIME_BIN"
+        return
+    fi
+
+    if [[ -n "$RUNTIME_DATASET" ]]; then
+        # Override: unpinned Kaggle dataset -> pull its zip and extract the .bin.
+        log "downloading runtime dataset $RUNTIME_DATASET (Kaggle override; not revision-pinned)"
+        [[ -f "$RUNTIME_ARCHIVE" ]] || kaggle datasets download "$RUNTIME_DATASET" --path "$WORKSPACE"
+        unzip -tq "$RUNTIME_ARCHIVE" >/dev/null || die "runtime archive failed ZIP integrity validation"
+        local extract_root
+        extract_root="$(mktemp -d /workspace/.proof-pilot-archive.XXXXXX)"
+        TEMP_PATHS+=("$extract_root")
+        unzip -q "$RUNTIME_ARCHIVE" -d "$extract_root"
+        local extracted
+        extracted="$(find "$extract_root" -type f -name proof-pilot-env.bin -print -quit)"
+        [[ -n "$extracted" ]] || die "proof-pilot-env.bin is missing from $RUNTIME_ARCHIVE"
+        mv "$extracted" "$RUNTIME_BIN"
+        rm -rf "$extract_root"
+    else
+        # Default: revision-pinned HF mirror we control (immutable at the commit).
+        log "downloading pinned runtime $RUNTIME_HF_REPO@${RUNTIME_HF_REVISION:0:12}"
+        local hf_dir="$WORKSPACE/.proof-pilot-hf"
+        rm -rf "$hf_dir"; mkdir -p "$hf_dir"; TEMP_PATHS+=("$hf_dir")
+        hf download "$RUNTIME_HF_REPO" proof-pilot-env.bin \
+            --repo-type dataset --revision "$RUNTIME_HF_REVISION" \
+            --local-dir "$hf_dir" \
+            || die "failed to download the pinned runtime from $RUNTIME_HF_REPO "\
+"(set HF_TOKEN if the mirror is private, or set RUNTIME_DATASET to use Kaggle)"
+        mv "$hf_dir/proof-pilot-env.bin" "$RUNTIME_BIN"
+        rm -rf "$hf_dir"
+    fi
+}
+
 ensure_runtime() {
     if [[ -x "$VENV/bin/python" && -x "$RUNTIME_ROOT/pybase/bin/python3" ]]; then
         log "using existing runtime at $RUNTIME_ROOT"
@@ -97,33 +166,20 @@ ensure_runtime() {
     fi
     [[ ! -e "$RUNTIME_ROOT" ]] || die "$RUNTIME_ROOT exists but is incomplete; move or remove it before retrying"
 
-    if [[ ! -f "$RUNTIME_ARCHIVE" ]]; then
-        log "downloading runtime dataset $RUNTIME_DATASET"
-        kaggle datasets download "$RUNTIME_DATASET" --path "$WORKSPACE"
-    fi
+    fetch_runtime_payload
+    verify_runtime_sha256 "$RUNTIME_BIN"
 
-    log "checking runtime archive $RUNTIME_ARCHIVE"
-    unzip -tq "$RUNTIME_ARCHIVE" >/dev/null || die "runtime archive failed ZIP integrity validation"
-
-    local extract_root
     local stage_root
-    local payload
-    extract_root="$(mktemp -d /workspace/.proof-pilot-archive.XXXXXX)"
     stage_root="$(mktemp -d /workspace/.proof-pilot-runtime.XXXXXX)"
-    TEMP_PATHS+=("$extract_root" "$stage_root")
-
-    unzip -q "$RUNTIME_ARCHIVE" -d "$extract_root"
-    payload="$(find "$extract_root" -type f -name proof-pilot-env.bin -print -quit)"
-    [[ -n "$payload" ]] || die "proof-pilot-env.bin is missing from $RUNTIME_ARCHIVE"
+    TEMP_PATHS+=("$stage_root")
 
     log "extracting the relocatable runtime"
-    tar -xzf "$payload" -C "$stage_root" --strip-components=1
+    tar -xzf "$RUNTIME_BIN" -C "$stage_root" --strip-components=1
     [[ -x "$stage_root/venv/bin/python" ]] || die "extracted runtime has no venv Python"
     [[ -x "$stage_root/pybase/bin/python3" ]] || die "extracted runtime has no base Python"
 
-    sed -i 's|^home = .*|home = /workspace/pp/pybase/bin|' "$stage_root/venv/pyvenv.cfg"
+    sed -i "s|^home = .*|home = $RUNTIME_ROOT/pybase/bin|" "$stage_root/venv/pyvenv.cfg"
     mv "$stage_root" "$RUNTIME_ROOT"
-    TEMP_PATHS=("$extract_root")
     log "runtime installed at $RUNTIME_ROOT"
 }
 
@@ -152,7 +208,8 @@ install_dependencies_and_patches() {
     fi
 
     log "applying the checked-in SGLang patch set"
-    bash "$REPO/sglang_patches/apply_patches.sh" "$VENV"
+    bash "$REPO/sglang_patches/apply_patches.sh" "$VENV" \
+        "$RUNTIME_ROOT/proof-pilot/deploy/w4a8/humming_w4a8.py"
 }
 
 require_config_file() {
@@ -245,6 +302,10 @@ start_server() {
     rm -f "$STATE_DIR/server-ready"
     : > "$SERVER_LOG"
     log "starting production server on $SERVER_HOST:$SERVER_PORT"
+    # Point the humming (W4A8) helpers at the runtime root (baked at /opt/pp),
+    # not launch_server.py's /workspace/pp default. Inert for the BF16 path.
+    export HUMMING_PATH="${HUMMING_PATH:-$RUNTIME_ROOT}"
+    export W4A8_HELPER_DIR="${W4A8_HELPER_DIR:-$RUNTIME_ROOT/proof-pilot/deploy/w4a8}"
     "$VENV/bin/python" "$REPO/evaluation/harness/launch_server.py" \
         --config "$CONFIG_SOURCE" \
         > >(tee -a "$SERVER_LOG") 2>&1 &

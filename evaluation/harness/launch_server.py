@@ -31,7 +31,26 @@ def attention_arguments(server: dict) -> list[str]:
     ]
     if server["deterministic_inference"]:
         arguments.append("--enable-deterministic-inference")
+    if server["attention_backend"] == "triton":
+        # sglang's default (8) under-occupies sm120 at bs=1 long-context decode;
+        # 32 is Yi-Chia's tuned Blackwell value.
+        arguments += ["--triton-attention-num-kv-splits", "32"]
     return arguments
+
+
+def flashinfer_cuda_arch() -> str:
+    """FLASHINFER_CUDA_ARCH_LIST for the installed GPU. Proven values: Hopper
+    (sm90) -> 9.0a, Blackwell sm120 -> 12.0f. Falls back to 9.0a if detection
+    fails; always overridable via the env var."""
+    proven = {"9.0": "9.0a", "12.0": "12.0f"}
+    try:
+        cap = subprocess.run(
+            ["nvidia-smi", "--query-gpu=compute_cap", "--format=csv,noheader"],
+            capture_output=True, text=True, check=True,
+        ).stdout.splitlines()[0].strip()
+    except (OSError, subprocess.CalledProcessError, IndexError):
+        return "9.0a"
+    return proven.get(cap, f"{cap}a")
 
 
 def main() -> None:
@@ -52,7 +71,9 @@ def main() -> None:
             "model.tensor_parallel_size * model.data_parallel_size"
         )
 
-    env["FLASHINFER_CUDA_ARCH_LIST"] = env.get("FLASHINFER_CUDA_ARCH_LIST", "9.0a")
+    env["FLASHINFER_CUDA_ARCH_LIST"] = env.get(
+        "FLASHINFER_CUDA_ARCH_LIST", flashinfer_cuda_arch()
+    )
     env["FLASHINFER_USE_CUDA_NORM"] = "1"
     env["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
     env["SGLANG_ALLOW_OVERWRITE_LONGER_CONTEXT_LEN"] = "1"
@@ -106,6 +127,7 @@ def main() -> None:
         "--chunked-prefill-size", str(server["chunked_prefill_size"]),
         "--context-length", str(server["context_length"]), "--kv-cache-dtype", model.kv_cache_dtype,
         "--stream-interval", str(server["stream_interval"]),
+        "--watchdog-timeout", str(server["watchdog_timeout"]),
         "--swa-full-tokens-ratio", str(server["swa_full_tokens_ratio"]),
         "--max-running-requests", str(server["max_running_requests"]),
         "--cuda-graph-max-bs-decode", str(server["max_running_requests"]),

@@ -8,6 +8,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 import yaml
 
@@ -132,6 +133,45 @@ class RuntimeConfigTests(unittest.TestCase):
             model = active_model(load_config(path))
         self.assertEqual(model.data_parallel_size, 7)
 
+    def test_data_parallel_size_auto_derives_from_gpu_count(self):
+        def configure(config):
+            config["model"]["tensor_parallel_size"] = 2
+            config["model"]["data_parallel_size"] = "auto"
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = self.write_config(directory, configure)
+            config = load_config(path)  # 'auto' passes validation unresolved
+            with mock.patch.dict(os.environ, {"PP_GPU_COUNT": "4"}):
+                model = active_model(config)
+        self.assertEqual(model.data_parallel_size, 2)  # 4 GPUs / tp 2
+
+    def test_data_parallel_size_auto_requires_divisible_gpu_count(self):
+        def configure(config):
+            config["model"]["tensor_parallel_size"] = 4
+            config["model"]["data_parallel_size"] = "auto"
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = self.write_config(directory, configure)
+            config = load_config(path)
+            with mock.patch.dict(os.environ, {"PP_GPU_COUNT": "6"}):
+                with self.assertRaisesRegex(ValueError, "not divisible"):
+                    active_model(config)
+
+    def test_dynamic_profile_config_validates_and_resolves(self):
+        # config-dynamic.yaml is the shipped auto-dp + fp8-KV profile; it must
+        # validate against the same strict schema and resolve across node sizes.
+        path = REPO / "config-dynamic.yaml"
+        config = load_config(path)
+        self.assertEqual(config["model"]["kv_cache_dtype"], "fp8_e4m3")
+        self.assertEqual(config["model"]["data_parallel_size"], "auto")
+        for gpus, expected_dp in (("2", 1), ("4", 2), ("8", 4)):
+            with self.subTest(gpus=gpus):
+                with mock.patch.dict(os.environ, {"PP_GPU_COUNT": gpus}):
+                    model = active_model(config)
+                self.assertEqual(model.tensor_parallel_size, 2)
+                self.assertEqual(model.data_parallel_size, expected_dp)
+                self.assertEqual(model.kv_cache_dtype, "fp8_e4m3")
+
     def test_search_completion_budget_is_not_coupled_to_server_context(self):
         def configure(config):
             config["server"]["context_length"] = 1048576
@@ -139,8 +179,8 @@ class RuntimeConfigTests(unittest.TestCase):
                 proofs_per_round=32,
                 verifications_per_proof=8,
                 top_proofs=8,
-                refinements_per_proof=4,
-                analyses_per_refinement=4,
+                refine_parents=4,
+                reviews_per_refine_parent=3,
                 max_completion_tokens=32768,
                 solution_continuation_tokens=8192,
                 verifier_continuation_tokens=4096,
@@ -239,11 +279,10 @@ class RuntimeConfigTests(unittest.TestCase):
 
     def test_search_shape_validation_rejects_inconsistent_profiles(self):
         invalid_values = (
-            ("proofs_per_round", 31),
-            ("analyses_per_refinement", 3),
-            ("verifications_per_proof", 3),
-            ("min_valid_verifications", 3),
-            ("min_valid_verifications", 17),
+            ("top_proofs", 33),                 # > proofs_per_round
+            ("refine_parents", 9),              # > top_proofs
+            ("reviews_per_refine_parent", 17),  # > verifications_per_proof
+            ("min_valid_verifications", 17),    # > verifications_per_proof
         )
         for key, value in invalid_values:
             with (
@@ -255,8 +294,8 @@ class RuntimeConfigTests(unittest.TestCase):
                         proofs_per_round=32,
                         verifications_per_proof=16,
                         top_proofs=8,
-                        refinements_per_proof=4,
-                        analyses_per_refinement=4,
+                        refine_parents=4,
+                        reviews_per_refine_parent=3,
                         min_valid_verifications=4,
                     )
                     config["search"][key] = value
@@ -310,15 +349,17 @@ class RuntimeConfigTests(unittest.TestCase):
 
         launcher = (HARNESS / "launch_server.py").read_text()
         self.assertIn("str(server[\"attention_backend\"])", launcher)
-        self.assertNotIn("triton", launcher)
+        # triton is now supported (Blackwell sm120): the launcher adds its kv-splits.
+        self.assertIn("--triton-attention-num-kv-splits", launcher)
+        # DFlash's ring worker still restricts the DRAFT backend to fa3/fa4, so
+        # DFlash is unavailable with a triton draft (Blackwell) -- documented.
         worker = (REPO / "sglang_patches/dflash_worker_v2_ring.py").read_text()
         self.assertIn("draft_backend not in {\"fa3\", \"fa4\"}", worker)
 
     def test_attention_backend_validation_rejects_invalid_profiles(self):
         invalid_values = (
-            ("attention_backend", "triton"),
-            ("page_size", 128),
-            ("deterministic_inference", False),
+            ("attention_backend", "flashinfer"),  # not one of fa3/fa4/triton
+            ("page_size", 128),                    # fa3 requires page_size=1
         )
         for key, value in invalid_values:
             with (
@@ -338,6 +379,57 @@ class RuntimeConfigTests(unittest.TestCase):
                 )
                 with self.assertRaises(ValueError):
                     load_config(path)
+
+    def test_fa3_allows_either_determinism(self):
+        # fa3 no longer forces deterministic_inference: Yi-Chia's DFlash rollouts run
+        # fa3 nondeterministic, so both true and false are valid (page_size stays 1).
+        for det in (True, False):
+            def configure(config, det=det):
+                config["server"].update(
+                    attention_backend="fa3", page_size=1, deterministic_inference=det
+                )
+            with tempfile.TemporaryDirectory() as directory:
+                path = self.write_config(directory, configure, name="fa3.yaml")
+                server = load_config(path)["server"]
+            self.assertEqual(server["deterministic_inference"], det)
+
+    def test_triton_backend_profile_is_accepted(self):
+        # Blackwell: triton is valid with page_size=1; deterministic optional.
+        def configure(config):
+            config["server"].update(attention_backend="triton", page_size=1)
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = self.write_config(directory, configure, name="triton.yaml")
+            server = load_config(path)["server"]
+        self.assertEqual(server["attention_backend"], "triton")
+        # triton with a non-1 page_size is rejected
+        with tempfile.TemporaryDirectory() as directory:
+            path = self.write_config(
+                directory,
+                lambda c: c["server"].update(
+                    attention_backend="triton", page_size=128
+                ),
+                name="triton_bad.yaml",
+            )
+            with self.assertRaises(ValueError):
+                load_config(path)
+
+    def test_flashinfer_arch_mapping(self):
+        from launch_server import flashinfer_cuda_arch
+        from unittest import mock
+        import subprocess as sp
+
+        def fake(cap):
+            m = mock.Mock()
+            m.stdout = cap + "\n"
+            return m
+
+        with mock.patch.object(sp, "run", return_value=fake("9.0")):
+            self.assertEqual(flashinfer_cuda_arch(), "9.0a")   # Hopper
+        with mock.patch.object(sp, "run", return_value=fake("12.0")):
+            self.assertEqual(flashinfer_cuda_arch(), "12.0f")  # Blackwell sm120
+        with mock.patch.object(sp, "run", side_effect=OSError):
+            self.assertEqual(flashinfer_cuda_arch(), "9.0a")   # fallback
 
 
 if __name__ == "__main__":

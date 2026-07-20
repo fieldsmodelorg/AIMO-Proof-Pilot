@@ -3,6 +3,7 @@
 .codex
 .agents
 .env
+install
 **/__pycache__
 **/*.pyc
 submission_artifacts

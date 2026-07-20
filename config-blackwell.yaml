@@ -1,0 +1,101 @@
+# Blackwell profile: 8x RTX PRO 6000 Blackwell (sm120), no NVLink/InfiniBand.
+#
+# Differs from config.yaml (the canonical 8xH200 profile) in exactly two fields:
+#   - data_parallel_size: auto  -> derived as (visible GPUs) / tensor_parallel_size,
+#       so this one file fits 2xH200 (dp=1), 4xH200 (dp=2), 8xH200 (dp=4), etc.
+#       The node's GPU count must be divisible by tensor_parallel_size (=2 here).
+#   - kv_cache_dtype: fp8_e4m3  -> fp8 KV cache at default (unit) scaling. The BF16
+#       checkpoint carries no k_scale/v_scale, so sglang runs fp8 KV without descale
+#       (same scale-1.0 fp8 KV as the Kaggle submission and V33 rollouts). Roughly
+#       halves KV memory, buying back the concurrency lost to fewer GPUs. Mildly
+#       lossy vs bf16 KV -- acceptable in this pipeline, but the reason it's a
+#       separate profile rather than the default.
+#
+# Everything else is identical to config.yaml. Select with CONFIG=<path-to-this>.
+schema_version: 12
+
+models:
+  bf16_target: /workspace/models/opd-32b-deploy
+  quantized_target: /workspace/original/models/opd-32b-v33-s200-gptq-w4a16
+  bf16_draft: /workspace/models/dflash-32b-draft-v2test-phaseL
+  quantized_draft: /workspace/original/models/dflash-32b-draft-v2test-phaseL-int4mlp
+
+model:
+  tensor_parallel_size: 2
+  data_parallel_size: auto
+  quantized: false
+  # DFlash is OFF on Blackwell: it needs a triton draft attention backend (sm120's
+  # only sink-correct one), but Geremie's DFlash ring worker
+  # (dflash_worker_v2_ring.py) hard-requires fa3/fa4 for the draft, and Yi-Chia's
+  # triton-capable draft is TP=1-only. So TP=2 + DFlash + triton is supported by no
+  # existing code path -- run without speculation until that's built + validated.
+  dflash: false
+  kv_cache_dtype: fp8_e4m3
+
+server:
+  # Blackwell needs triton -- the ONLY sink-correct attention backend on sm120
+  # (fa3 is Hopper-only). launch_server auto-sets FLASHINFER_CUDA_ARCH_LIST=12.0f
+  # and passes --triton-attention-num-kv-splits 32. Deterministic is supported by
+  # triton; set false if sm120 has trouble (Yi-Chia's Kaggle Blackwell ran non-det).
+  attention_backend: triton
+  page_size: 1
+  deterministic_inference: false
+  host: 127.0.0.1
+  port: 30000
+  context_length: 262144
+  mem_fraction_static: 0.82
+  max_running_requests: 64
+  swa_full_tokens_ratio: 0.2
+  chunked_prefill_size: 2048
+  stream_interval: 16
+  # sglang scheduler watchdog (seconds); SGLang default 300 crashed on a long P6 gen. See evaluation/DEGENERATE_FILTER.md
+  watchdog_timeout: 1200
+  prefill_cuda_graph_backend: tc_piecewise
+  dflash_block_size: 8
+  dflash_num_draft_tokens: 8
+  dflash_window_size: 512
+
+search:
+  proofs_per_round: 32
+  verifications_per_proof: 16
+  top_proofs: 8
+  # Refinement (gold-style merge, stratified): each of proofs_per_round refine
+  # calls merges refine_parents random parents from the top_proofs pool
+  # (stratified = even coverage), each with up to reviews_per_refine_parent
+  # random NON-ideal (score<1) reviews. Defaults = Yi-Chia's numbers (4 parents,
+  # <=3 reviews).
+  refine_parents: 4
+  reviews_per_refine_parent: 3
+  # Which reviews go to the refiner: 'random_nonideal' (default) = random
+  # reviews with score<1; 'worst' = Geremie's lowest-scoring reviews
+  # (deterministic, may include ideal ones if too few non-ideal).
+  refine_review_strategy: random_nonideal
+  max_rounds: 16
+  early_stop_threshold: 0.99999
+  temperature: 1.0
+  top_p: 0.95
+  max_completion_tokens: 128000
+  solution_continuation_tokens: 16384
+  verifier_continuation_tokens: 16384
+  min_valid_verifications: 4
+  # GOLD STANDARD -- keep true. Gold feeds the prover self_evaluation TEXT into
+  # the verifier prompt at BOTH training and Kaggle inference, so true is
+  # in-distribution. false blanks it (off gold, off the verifier's training).
+  verifier_sees_self_evaluation: true
+  # GOLD STANDARD -- keep false. Gold's Kaggle inference drops the parent
+  # self-eval from the refiner bundle (self-score is ~92% "1", unreliable noise);
+  # gold TRAINING included it, so false is a deliberate train/inference choice
+  # gold validated. true restores it (more context, off gold's inference standard).
+  refiner_sees_self_evaluation: false
+  # Parser leniency (gold search-based extraction). true = recover missing
+  # </solution>, tolerate surrounding text, ignore tag case, allow empty
+  # self-eval/suggestions. false = Geremie's strict whole-document XML.
+  # (The float-score and empty-suggestions fixes apply in both.)
+  lenient_parsing: true
+  # gzip degenerate-loop filter (distribution-neutral, not a repetition penalty); false disables. See evaluation/DEGENERATE_FILTER.md
+  filter_degenerate: true
+  # real-time streaming loop detection + salvage; false = plain blocking calls (post-hoc filter still applies). See evaluation/DEGENERATE_FILTER.md
+  stream_detect: true
+  request_timeout_seconds: 86400
+  concurrency: 96
+  seed: 0
