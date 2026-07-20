@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+import contextlib
 import hashlib
 import json
 import time
 from typing import Any
 
 import httpx
+
+import loop_detect
 
 
 _FORCE_SOLUTION_STEER = (
@@ -22,6 +25,26 @@ _FORCE_VERIFICATION_STEER = (
     "No planning, no meta-commentary, and no restatement of the task."
     "\n</think>\n\n<evaluation>\n"
 )
+
+_FORCE_SELECTION_STEER = (
+    "\n\nI must finalize now. I will output ONLY the chosen candidate's ID in the "
+    "required tag, with no further reasoning or commentary."
+    "\n</think>\n\n<selected_id>"
+)
+
+# role -> (opening XML tag, force-close steer, whether to preserve untagged content),
+# used by the streaming salvage force-close (same mapping continue_*_raw applies).
+_ROLE_TAG = {
+    "solution": "<solution>",
+    "verifier": "<evaluation>",
+    "selector": "<selected_id>",
+}
+_ROLE_STEER = {
+    "solution": _FORCE_SOLUTION_STEER,
+    "verifier": _FORCE_VERIFICATION_STEER,
+    "selector": _FORCE_SELECTION_STEER,
+}
+_ROLE_PRESERVE = {"solution": False, "verifier": True, "selector": False}
 
 
 def _usage(data: dict) -> dict:
@@ -175,6 +198,227 @@ class AsyncChatClient:
             "segments": [segment],
             "latency_s": latency,
         }
+
+    async def _abort_request(self, rid: str) -> None:
+        """Best-effort server-side abort of a streamed request. Closing the stream
+        already disconnects (SGLang aborts on client disconnect); this is
+        belt-and-suspenders and swallows any error."""
+        with contextlib.suppress(Exception):
+            await self._client.post(
+                f"{self.native_base_url}/abort_request", json={"rid": rid}
+            )
+
+    async def _consume_sse(self, lines, detector) -> dict:
+        """Consume OpenAI-style SSE `data:` lines, accumulating reasoning/content
+        and feeding each delta to `detector`. Stops on detector abort, the stream's
+        finish, or `[DONE]`. Factored out so it is unit-testable without a live
+        server (pass any async iterator of lines)."""
+        reasoning_parts: list[str] = []
+        content_parts: list[str] = []
+        finish_reason = None
+        usage_data: dict = {}
+        verdict = None
+        aborted = False
+        async for line in lines:
+            if not line or not line.startswith("data:"):
+                continue
+            data = line[5:].strip()
+            if data == "[DONE]":
+                break
+            try:
+                chunk = json.loads(data)
+            except json.JSONDecodeError:
+                continue
+            if chunk.get("usage"):
+                usage_data = chunk["usage"]
+            for choice in chunk.get("choices") or []:
+                if choice.get("finish_reason"):
+                    finish_reason = choice["finish_reason"]
+                delta = choice.get("delta") or {}
+                for text, sink in (
+                    (delta.get("reasoning_content"), reasoning_parts),
+                    (delta.get("content"), content_parts),
+                ):
+                    if not text:
+                        continue
+                    sink.append(text)
+                    verdict = detector.feed(text)
+                    if verdict.abort:
+                        aborted = True
+                        break
+                if aborted:
+                    break
+            if aborted:
+                break
+        return {
+            "reasoning": "".join(reasoning_parts),
+            "content": "".join(content_parts),
+            "finish_reason": finish_reason,
+            "usage": usage_data,
+            "aborted": aborted,
+            "verdict": verdict,
+        }
+
+    async def chat_stream(
+        self,
+        messages: list[dict],
+        *,
+        max_completion_tokens: int,
+        temperature: float,
+        top_p: float,
+        seed: int,
+        request_id: str,
+        role: str,
+        salvage_max_tokens: int,
+    ) -> dict:
+        """Streaming variant of chat_raw with real-time degenerate-loop detection.
+        Streams the completion, feeds it live to a RunawayDetector, and on a loop
+        aborts the request and salvages a proof from the clean pre-loop prefix
+        (Yi-Chia's v2 behavior). Returns a record with the SAME shape as chat_raw,
+        plus stop_reason / stream_aborted / salvaged."""
+        payload = {
+            "model": self.model,
+            "messages": messages,
+            "max_completion_tokens": max_completion_tokens,
+            "temperature": temperature,
+            "top_p": top_p,
+            "seed": seed,
+            "rid": request_id,
+            "return_cached_tokens_details": True,
+            "stream": True,
+            "stream_options": {"include_usage": True},
+        }
+        detector = loop_detect.RunawayDetector()
+        started = time.monotonic()
+        url = f"{self.base_url}/chat/completions"
+        async with self._client.stream("POST", url, json=payload) as response:
+            response.raise_for_status()
+            state = await self._consume_sse(response.aiter_lines(), detector)
+        latency = round(time.monotonic() - started, 3)
+        if state["aborted"]:
+            await self._abort_request(request_id)
+        reasoning, content = state["reasoning"], state["content"]
+        if state["usage"]:
+            usage = _usage({"usage": state["usage"]})
+        else:
+            usage = {
+                "prompt_tokens": None,
+                "cached_prompt_tokens": None,
+                # no usage chunk arrives on abort -> estimate ~4 chars/token
+                "completion_tokens": (len(reasoning) + len(content)) // 4
+                if state["aborted"]
+                else None,
+                "reasoning_tokens": None,
+            }
+        finish_reason = state["finish_reason"]
+        segment = {
+            "kind": "chat_stream",
+            "request_id": request_id,
+            "finish_reason": finish_reason,
+            **usage,
+            "requested_max_completion_tokens": max_completion_tokens,
+            "latency_s": latency,
+            "stream_aborted": state["aborted"],
+        }
+        record = {
+            "message": {"content": content, "reasoning_content": reasoning},
+            "finish_reason": finish_reason,
+            **usage,
+            "requested_max_completion_tokens": max_completion_tokens,
+            "logical_max_completion_tokens": max_completion_tokens,
+            "physical_request_count": 1,
+            "physical_prompt_tokens": usage["prompt_tokens"],
+            "segments": [segment],
+            "latency_s": latency,
+            "stop_reason": "loop" if state["aborted"] else finish_reason,
+            "stream_aborted": state["aborted"],
+            "salvaged": False,
+        }
+        if not state["aborted"]:
+            return record
+        return await self._salvage_stream_loop(
+            record,
+            messages,
+            reasoning,
+            content,
+            state["verdict"],
+            role=role,
+            salvage_max_tokens=salvage_max_tokens,
+            temperature=temperature,
+            top_p=top_p,
+            seed=seed,
+            request_id=request_id,
+        )
+
+    async def _salvage_stream_loop(
+        self,
+        record: dict,
+        messages: list[dict],
+        reasoning: str,
+        content: str,
+        verdict,
+        *,
+        role: str,
+        salvage_max_tokens: int,
+        temperature: float,
+        top_p: float,
+        seed: int,
+        request_id: str,
+    ) -> dict:
+        """A loop aborted the stream. Force-close a finalize from the CLEAN pre-loop
+        prefix. If the loop is in the CONTENT (a <solution> body was being written),
+        keep that clean prefix and CONTINUE it so its closing `</solution>...<score>`
+        gets written (a bare truncation has no <score> and would fail to parse); if
+        the loop is in the REASONING, drop the looping tail and force-close a fresh
+        solution. The cut is a verbatim loop-cut where possible, else the zlib onset
+        estimate -- we never DISCARD an already-written clean solution on a semantic
+        (non-verbatim) loop (audit finding #1)."""
+        opening_tag = _ROLE_TAG[role]
+        # Loop in the content: keep the clean <solution> prefix and continue it.
+        if content.strip():
+            cut = loop_detect.find_loop_cut(content)
+            if cut is None:
+                cut = loop_detect.loop_onset(content, verdict)
+            clean_content = content[:cut]
+            if opening_tag in clean_content.lower() and clean_content.strip():
+                initial = {
+                    **record,
+                    "message": {"content": clean_content, "reasoning_content": reasoning},
+                }
+                salvaged = await self._continue_xml_raw(
+                    initial, messages, max_new_tokens=salvage_max_tokens,
+                    temperature=temperature, top_p=top_p, seed=seed, request_id=request_id,
+                    role=role, opening_tag=opening_tag, force_steer=_ROLE_STEER[role],
+                    preserve_untagged_content=_ROLE_PRESERVE[role],
+                )
+                return self._finalize_salvage(salvaged, opening_tag)
+        # Loop in the reasoning (or no usable <solution> written yet): force-close fresh.
+        clean_reasoning = reasoning[: loop_detect.loop_onset(reasoning, verdict)]
+        initial = {**record, "message": {"content": "", "reasoning_content": clean_reasoning}}
+        salvaged = await self._continue_xml_raw(
+            initial, messages, max_new_tokens=salvage_max_tokens,
+            temperature=temperature, top_p=top_p, seed=seed, request_id=request_id,
+            role=role, opening_tag=opening_tag, force_steer=_ROLE_STEER[role],
+            preserve_untagged_content=_ROLE_PRESERVE[role],
+        )
+        return self._finalize_salvage(salvaged, opening_tag)
+
+    def _finalize_salvage(self, salvaged: dict, opening_tag: str) -> dict:
+        """Common post-processing for a force-closed salvage: flag it, cut a
+        force-close that itself looped, and mark finish_reason=stop once a real
+        solution body exists (judge on the recovered <solution>, not the cap)."""
+        salvaged["stop_reason"] = "loop"
+        salvaged["salvaged"] = True
+        salvaged["stream_aborted"] = True
+        recovered = salvaged["message"].get("content") or ""
+        if loop_detect.is_degenerate(recovered):  # a force-close can itself loop -> cut
+            second_cut = loop_detect.find_loop_cut(recovered)
+            if second_cut is not None:
+                salvaged["message"]["content"] = recovered[:second_cut]
+                recovered = salvaged["message"]["content"]
+        if opening_tag in recovered.lower() and len(recovered) > 500:
+            salvaged["finish_reason"] = "stop"
+        return salvaged
 
     def _continuation_input_ids(
         self,
@@ -362,4 +606,31 @@ class AsyncChatClient:
             opening_tag="<evaluation>",
             force_steer=_FORCE_VERIFICATION_STEER,
             preserve_untagged_content=True,
+        )
+
+    async def continue_selection_raw(
+        self,
+        initial: dict,
+        messages: list[dict],
+        *,
+        max_new_tokens: int,
+        temperature: float,
+        top_p: float,
+        seed: int,
+        request_id: str,
+    ) -> dict:
+        # Force-close a selector ballot that rambled to the token budget: inject
+        # </think> + <selected_id> and continue just far enough to emit the chosen id.
+        return await self._continue_xml_raw(
+            initial,
+            messages,
+            max_new_tokens=max_new_tokens,
+            temperature=temperature,
+            top_p=top_p,
+            seed=seed,
+            request_id=request_id,
+            role="selector",
+            opening_tag="<selected_id>",
+            force_steer=_FORCE_SELECTION_STEER,
+            preserve_untagged_content=False,
         )

@@ -13,17 +13,26 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 PATCH_ROOT = REPO_ROOT / "vllm_patches"
 sys.path.insert(0, str(PATCH_ROOT / "src"))
 
-plugin = import_module("olmo3_sink_vllm")
-model_module = import_module("olmo3_sink_vllm.model")
-dflash_module = import_module("olmo3_sink_vllm.dflash")
-register = plugin.register
-Olmo3SinkForCausalLM = model_module.Olmo3SinkForCausalLM
-Olmo3SinkDFlashForCausalLM = dflash_module.Olmo3SinkDFlashForCausalLM
-_draft_sliding_window = dflash_module._draft_sliding_window
-_rope_parameters_for_layer = model_module._rope_parameters_for_layer
-_select_sink_shard = model_module._select_sink_shard
+# vLLM is an OPTIONAL fallback backend (the shipped harness uses SGLang). Guard the
+# plugin imports so this module still imports and skips cleanly under both pytest and
+# unittest when vllm is not installed, instead of aborting collection of the whole suite.
+try:
+    plugin = import_module("olmo3_sink_vllm")
+    model_module = import_module("olmo3_sink_vllm.model")
+    dflash_module = import_module("olmo3_sink_vllm.dflash")
+    register = plugin.register
+    Olmo3SinkForCausalLM = model_module.Olmo3SinkForCausalLM
+    Olmo3SinkDFlashForCausalLM = dflash_module.Olmo3SinkDFlashForCausalLM
+    _draft_sliding_window = dflash_module._draft_sliding_window
+    _rope_parameters_for_layer = model_module._rope_parameters_for_layer
+    _select_sink_shard = model_module._select_sink_shard
+    _VLLM_PLUGIN_AVAILABLE = True
+except Exception:  # pragma: no cover - depends on the optional vllm install
+    model_module = None
+    _VLLM_PLUGIN_AVAILABLE = False
 
 
+@unittest.skipUnless(_VLLM_PLUGIN_AVAILABLE, "vllm optional fallback backend not installed")
 class VllmOlmo3SinkPluginTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:

@@ -1,0 +1,101 @@
+# NII-node run config for the IMO-2026 "2x" scaled experiment — DEPLOY checkpoint.
+# = config-nii-r4.yaml (deploy baseline) but with the search doubled ("2x") and the
+# optional LLM final-solution selector enabled. Ran on node0 (hnode495), 8xH200.
+# The step-225 twin is config-nii-2x-step225.yaml (identical except models.bf16_target
+# and traces.run_name). See evaluation/EXPERIMENTS.md for the full write-up.
+schema_version: 12
+
+models:
+  bf16_target: /tmp/chankhavu/models/opd-32b-deploy
+  # quantized_* are inactive (quantized: false); paths must be absolute per schema.
+  quantized_target: /tmp/chankhavu/models/opd-32b-v33-s200-gptq-w4a16
+  bf16_draft: /tmp/chankhavu/models/dflash-32b-draft-v2test-phaseL
+  quantized_draft: /tmp/chankhavu/models/dflash-32b-draft-v2test-phaseL-int4mlp
+
+model:
+  tensor_parallel_size: 2
+  data_parallel_size: 4
+  quantized: false
+  dflash: true
+  kv_cache_dtype: auto
+
+server:
+  attention_backend: fa3
+  page_size: 1
+  deterministic_inference: false
+  host: 127.0.0.1
+  port: 30000
+  context_length: 262144
+  mem_fraction_static: 0.82
+  max_running_requests: 64
+  swa_full_tokens_ratio: 0.2
+  chunked_prefill_size: 2048
+  stream_interval: 16
+  # sglang scheduler watchdog (seconds); SGLang default 300 crashed on a long P6 gen. See evaluation/DEGENERATE_FILTER.md
+  watchdog_timeout: 1200
+  prefill_cuda_graph_backend: tc_piecewise
+  dflash_block_size: 8
+  dflash_num_draft_tokens: 8
+  dflash_window_size: 512
+
+search:
+  # "2x": every search-width knob doubled vs config-nii-r4.yaml.
+  proofs_per_round: 64          # r4: 32
+  verifications_per_proof: 32    # r4: 16
+  top_proofs: 16                 # r4: 8  (refinement parent pool; NOT the selector pool)
+  # Gold-style refinement: each of proofs_per_round refine calls merges
+  # refine_parents stratified-random parents from the top_proofs pool, each with
+  # up to reviews_per_refine_parent random non-ideal reviews.
+  refine_parents: 8              # r4: 4
+  reviews_per_refine_parent: 3
+  refine_review_strategy: random_nonideal
+  # Round 1 = initial 64-proof generation, rounds 2..8 = self-refinement.
+  max_rounds: 8                  # r4: 4
+  early_stop_threshold: 0.99999
+  temperature: 1.0
+  top_p: 0.95
+  max_completion_tokens: 128000
+  solution_continuation_tokens: 16384
+  verifier_continuation_tokens: 16384
+  min_valid_verifications: 4
+  # GOLD: feed prover self-eval to the verifier (in-distribution). Keep true.
+  verifier_sees_self_evaluation: true
+  # GOLD: drop parent self-eval from the refiner bundle (unreliable). Keep false.
+  refiner_sees_self_evaluation: false
+  # GOLD: search-based lenient extraction (recovers missing </solution> etc).
+  lenient_parsing: true
+  # gzip degenerate-loop filter (distribution-neutral, not a repetition penalty); false disables. See evaluation/DEGENERATE_FILTER.md
+  filter_degenerate: true
+  # real-time streaming loop detection + salvage; false = plain blocking calls (post-hoc filter still applies). See evaluation/DEGENERATE_FILTER.md
+  stream_detect: true
+  request_timeout_seconds: 86400
+  concurrency: 96
+  seed: 0
+  # --- Optional LLM final-solution selector (ycchen gold "select-by-id" stage) ---
+  # After the last round, `selection_votes` voters each see the top
+  # `selection_candidates` proofs in an independently shuffled order and pick one via
+  # <selected_id> (temp 0.3); the majority-voted proof is submitted (ties -> higher
+  # verifier rank), falling back to the top verifier-scored proof if no valid ballot.
+  # selection_candidates is DECOUPLED from top_proofs (the model was trained to
+  # re-rank a small set ~4). A ballot that reasons to selection_max_tokens is
+  # force-closed (</think> + <selected_id>) and continued for
+  # selection_continuation_tokens so it still votes instead of nulling.
+  llm_selector: true
+  selection_votes: 16
+  selection_candidates: 4
+  selection_max_tokens: 56000
+  selection_continuation_tokens: 2048
+
+# Periodic reasoning-trace upload to the imo2026-challenge team org. Auth = the
+# node's built-in `hf auth login` (secrets_file "" -> ambient token). NOTE: the
+# run command must export HF_TOKEN before sourcing activate-env.sh, which
+# redirects HF_HOME and would otherwise hide a file-based login token.
+traces:
+  enabled: true
+  dataset_repo: imo2026-challenge/chankhavu-imo-reasoning-traces
+  secrets_file: ""
+  interval_seconds: 600
+  private: true
+  # The live run used a timestamped run_name (imo2026-deploy-2x-20260720-041639) so
+  # each launch gets a unique HF trace subfolder; set a fresh timestamp per run.
+  run_name: imo2026-deploy-2x

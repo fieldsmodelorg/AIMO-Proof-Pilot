@@ -1,10 +1,13 @@
 name: Publish Docker image
 
 on:
-  push:
-    branches:
-      - "**"
+  # Build + publish the image ONLY on demand: click "Run workflow" in the
+  # Actions tab (workflow_dispatch) or push a release tag. No longer runs on
+  # every commit -- the baked image is ~19 GB, so per-commit builds are wasteful.
   workflow_dispatch:
+  push:
+    tags:
+      - "v*"
 
 permissions:
   contents: read
@@ -17,6 +20,10 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    # Docker Hub push is best-effort: it runs only when a DOCKERHUB_TOKEN secret is
+    # present (so a fork/org without it still publishes to GHCR). GHCR always runs.
+    env:
+      HAS_DOCKERHUB: ${{ secrets.DOCKERHUB_TOKEN != '' }}
     steps:
       - name: Check out source
         uses: actions/checkout@v4
@@ -26,7 +33,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install test dependencies
-        run: python -m pip install "httpx>=0.27,<1" "pyyaml>=6,<7"
+        run: python -m pip install "httpx>=0.27,<1" "pyyaml>=6,<7" "huggingface-hub>=0.20"
 
       - name: Run submission regression tests
         run: >-
@@ -36,6 +43,18 @@ jobs:
           tests.test_runtime_config
           tests.test_submission_runner
 
+
+      - name: Free up runner disk
+        # The baked image is ~19 GB (4.4 GB runtime .bin -> ~19 GB extracted venv
+        # layer). GitHub's runner ships ~25 GB of preinstalled toolchains we do not
+        # need for a Docker build; reclaiming them prevents ENOSPC during the bake.
+        run: |
+          echo "before:"; df -h / | tail -1
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
+            /opt/hostedtoolcache/CodeQL /usr/local/share/boost \
+            /usr/local/share/powershell /usr/share/swift || true
+          sudo docker image prune -af || true
+          echo "after:"; df -h / | tail -1
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -47,11 +66,21 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Log in to Docker Hub
+        if: env.HAS_DOCKERHUB == 'true'
+        uses: docker/login-action@v3
+        with:
+          username: chankhavu
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Generate image metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository }}
+          # GHCR always; Docker Hub only when its secret is present.
+          images: |
+            ghcr.io/${{ github.repository }}
+            ${{ env.HAS_DOCKERHUB == 'true' && 'docker.io/chankhavu/imo-inference' || '' }}
           tags: |
             type=ref,event=branch
             type=sha,prefix=sha-
@@ -68,7 +97,16 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             VCS_REF=${{ github.sha }}
+          # The build bakes the runtime venv from the pinned mirror. If the mirror
+          # is private, set an HF_TOKEN repo secret; if it is public (default), no
+          # secret is passed and the build downloads anonymously. Passing an empty
+          # `hf_token=` is an invalid-secret warning, so omit the line entirely when
+          # the secret is absent.
+          secrets: |
+            ${{ secrets.HF_TOKEN != '' && format('hf_token={0}', secrets.HF_TOKEN) || '' }}
+          # cache-from only: a `mode=max` cache export doubles on-disk usage (image
+          # + full cache) and tips the runner into ENOSPC on this ~19 GB image.
+          # Release builds are on-demand, so a warm cache is not worth the disk.
           cache-from: type=gha
-          cache-to: type=gha,mode=max
           provenance: mode=max
           sbom: true

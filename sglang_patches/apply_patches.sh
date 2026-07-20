@@ -22,10 +22,15 @@
 #   patch_humming_sm90_config.py (script) pin the H200 Humming helper to the
 #       numerically verified M=256 kernel configuration for every row count
 #
-# Usage: bash apply_patches.sh <venv_path>
+# Usage: bash apply_patches.sh <venv_path> [w4a8_helper_path]
+#   w4a8_helper_path defaults to the in-image location and may also be supplied
+#   as $W4A8_HELPER. Override it when the runtime lives somewhere other than
+#   /workspace/pp (e.g. baked into the image at /opt/pp).
 set -euo pipefail
 
-VENV="${1:?usage: apply_patches.sh <venv_path>}"
+VENV="${1:?usage: apply_patches.sh <venv_path> [w4a8_helper_path]}"
+HELPER="${2:-${W4A8_HELPER:-/workspace/pp/proof-pilot/deploy/w4a8/humming_w4a8.py}}"
+[ -f "$HELPER" ] || { echo "ERROR: humming helper not found: $HELPER"; exit 1; }
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SROOT="$(echo "$VENV"/lib/python*/site-packages/sglang/srt | awk '{print $1}')"
 [ -d "$SROOT" ] || { echo "ERROR: sglang/srt not found under $VENV"; exit 1; }
@@ -51,8 +56,6 @@ find "$SROOT/models" "$SROOT/speculative" -name '*.pyc' -delete 2>/dev/null || t
 "$VENV/bin/python" "$SRC/patch_dflash_sampling.py" "$VENV"
 "$VENV/bin/python" "$SRC/patch_speculative_finish.py" "$VENV"
 "$VENV/bin/python" "$SRC/patch_w4a8_runtime_marker.py" "$VENV"
-"$VENV/bin/python" "$SRC/patch_humming_target_scope.py" \
-  /workspace/pp/proof-pilot/deploy/w4a8/humming_w4a8.py
-"$VENV/bin/python" "$SRC/patch_humming_sm90_config.py" \
-  /workspace/pp/proof-pilot/deploy/w4a8/humming_w4a8.py
+"$VENV/bin/python" "$SRC/patch_humming_target_scope.py" "$HELPER"
+"$VENV/bin/python" "$SRC/patch_humming_sm90_config.py" "$HELPER"
 echo "[patch] done"
