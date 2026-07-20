@@ -7,7 +7,7 @@
 #
 # The source repos are PUBLIC, so no HuggingFace token is needed. The shared
 # DFlash draft is always fetched (every config uses it). Budget on disk: roughly
-# ~64 GB per BF16 target checkpoint plus ~14 GB for the draft.
+# ~64 GB per BF16 target checkpoint plus ~5 GB for the draft.
 #
 # The download layout matches the config model paths, e.g. after running this the
 # step-225 config finds its weights at <MODELS_DIR>/opd-32b-bf16-step-225.

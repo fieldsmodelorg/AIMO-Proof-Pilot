@@ -82,15 +82,20 @@ search:
   selection_max_tokens: 56000
   selection_continuation_tokens: 2048
 
-# Optional: periodically upload artifacts/reasoning traces to a HuggingFace
-# dataset. DISABLED by default for a self-contained run. To enable, set
-# enabled: true and dataset_repo to a dataset you can write to (auth via
-# HF_TOKEN or `hf auth login`; with no token the upload is simply skipped and
-# the run still writes submission.csv + artifacts locally).
+# Optional: periodically push the whole artifacts tree (reasoning traces) to a HF
+# dataset. Auth: secrets_file (a JSON/YAML file with an hf_token) OR, if
+# secrets_file is "", the ambient HF token (HF_TOKEN env or `hf auth login`).
+# Upload runs every interval_seconds and once at shutdown; errors never abort the
+# run. Remove this whole section to disable.
 traces:
-  enabled: false
-  dataset_repo: your-org/proof-pilot-traces
+  enabled: true
+  # Alias-prefixed so it doesn't collide with teammates' datasets in the org.
+  dataset_repo: imo2026-challenge/chankhavu-imo-reasoning-traces
+  # "" -> use the ambient HF token (HF_TOKEN env or `hf auth login`).
   secrets_file: ""
   interval_seconds: 600
+  # Applied only when the dataset is first CREATED (team competition traces).
   private: true
+  # Subfolder per experiment. "" -> derive from the target model folder; set an
+  # explicit name to label each experiment.
   run_name: imo2026-step225-budget-high

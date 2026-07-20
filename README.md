@@ -19,9 +19,14 @@ downloaded models and all run outputs, and persists across restarts):
 ```bash
 mkdir -p data
 docker run --rm -it --gpus all --ipc=host --shm-size=32g \
+  --entrypoint bash \
   -v "$PWD/data:/workspace" \
-  ghcr.io/hav4ik/imo-inference:<TAG> bash        # see "Docker usage" for the current <TAG>
+  ghcr.io/fieldsmodelorg/aimo-proof-pilot:<TAG>   # see "Docker usage" for the current <TAG>
 ```
+
+(`--entrypoint bash` opens a shell in the repo directory; the automated
+`serve` / `submission` entrypoints in [Docker usage](#docker-usage) require a
+`CONFIG` instead.)
 
 **2. Download the model weights** (public repos, no token needed):
 
@@ -67,8 +72,8 @@ un-gated HuggingFace repos (pinned to a fixed revision for reproducibility):
 
 `./download_models.sh` (default `all`) fetches both targets + draft; pass `step225`
 for just the step-225 target + draft, or `deploy` for just the deploy target +
-draft. Budget on disk: roughly ~64 GB per target checkpoint plus ~14 GB for the
-draft (so ~140 GB for the default `all`).
+draft. Budget on disk: roughly ~64 GB per target checkpoint plus ~5 GB for the
+draft (so ~135 GB for the default `all`).
 
 ### Production configs
 
@@ -94,13 +99,13 @@ budget (exact knobs in [Budget presets](#budget-presets)):
 
 The image is built on demand (a `v*` release tag or a manual **Run workflow** in
 the Actions tab — the baked image is ~19 GB, so it is not built per commit) and
-published to **`ghcr.io/hav4ik/imo-inference`** and the Docker Hub mirror
+published to **`ghcr.io/fieldsmodelorg/aimo-proof-pilot`** and the Docker Hub mirror
 **`docker.io/chankhavu/imo-inference`**, each tagged `sha-<7-character-commit>`.
 Set `COMMIT` to the full commit of a build that completed successfully:
 
 ```bash
 export COMMIT=REPLACE_WITH_FULL_COMMIT_SHA
-export IMAGE=ghcr.io/hav4ik/imo-inference:sha-${COMMIT:0:7}   # or docker.io/chankhavu/imo-inference:sha-${COMMIT:0:7}
+export IMAGE=ghcr.io/fieldsmodelorg/aimo-proof-pilot:sha-${COMMIT:0:7}   # or docker.io/chankhavu/imo-inference:sha-${COMMIT:0:7}
 
 docker pull "$IMAGE"
 test "$(docker image inspect "$IMAGE" \
@@ -129,15 +134,15 @@ run:
 ```bash
 mkdir -p "$PWD/workspace"
 curl -fsSL \
-  "https://raw.githubusercontent.com/hav4ik/imo-inference/$COMMIT/config.yaml" \
+  "https://raw.githubusercontent.com/fieldsmodelorg/AIMO-Proof-Pilot/$COMMIT/config.yaml" \
   -o "$PWD/workspace/config.yaml"
 ```
 
-`config.yaml` is the base (8×H200, DFlash, selector **off**). For the LLM
-final-solution selector and the 2× search width used in the `imo2026-*-2x`
-experiments, start from `config-nii-2x.yaml` (deploy) / `config-nii-2x-step225.yaml`
-in the repo root instead, or set `search.llm_selector: true` (+ `selection_*`
-knobs) in your copy. See `evaluation/EXPERIMENTS.md` and `CHANGES_VS_UPSTREAM.md`.
+`config.yaml` is the minimal base (8×H200, DFlash, selector **off**). For the LLM
+final-solution selector and the tuned search budgets, use the production configs —
+the `config-model-{deploy,step225}-budget-{medium,high,xhigh}.yaml` presets in the
+repo root (see [Budget presets](#budget-presets)) — or set `search.llm_selector: true`
+(+ `selection_*` knobs) in your own copy.
 
 `CONFIG` is mandatory. The container has no fallback configuration. It validates
 the supplied YAML but never copies, rewrites, clamps, or overrides its values.
@@ -193,11 +198,11 @@ The current `main` defaults are:
 | Hardware | 8 x NVIDIA H200 |
 | Model mode | BF16 target and BF16 DFlash draft |
 | Parallelism | TP2 x DP4 |
-| Attention | FA3, page size 1, deterministic inference |
+| Attention | FA3, page size 1, non-deterministic inference |
 | Server context | 262,144 tokens |
 | Server concurrency | 64 running requests per DP replica |
 | Search concurrency | 96 requests cluster-wide |
-| Search policy | 32 proofs, 16 verifications per proof, top 8, 4 refinements, up to 16 rounds |
+| Search policy | 32 proofs, 16 verifications per proof, top 8, 4 refine parents × 3 reviews, up to 4 rounds |
 | Sampling | temperature 1.0, top-p 0.95 |
 | First output segment | 128,000 tokens |
 | Solution continuation | 16,384 tokens |
@@ -207,11 +212,12 @@ Users may change every YAML value. Validation retains type, range, schema, and
 implementation compatibility checks, including:
 
 ```text
-top_proofs * refinements_per_proof = proofs_per_round
-analyses_per_refinement = refinements_per_proof
-analyses_per_refinement <= min_valid_verifications <= verifications_per_proof
-FA3: page_size=1 and deterministic_inference=true
-FA4: page_size=128 and deterministic_inference=false
+top_proofs           <= proofs_per_round
+refine_parents       <= top_proofs
+reviews_per_refine_parent <= verifications_per_proof
+min_valid_verifications   <= verifications_per_proof
+FA3: page_size=1     (deterministic_inference optional; the configs run it false)
+FA4: page_size=128
 ```
 
 The configured server context is a total input-plus-output limit.

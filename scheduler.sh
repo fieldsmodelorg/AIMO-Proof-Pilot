@@ -69,6 +69,7 @@ if [[ "$RESUME" == "1" ]]; then
     # ./scheduler.sh --resume <output-dir> : reuse the run's pinned config + input.
     OUTPUT_DIR="${1:-}"
     [[ -n "$OUTPUT_DIR" ]] || die "--resume needs the output-dir to continue: ./scheduler.sh --resume <output-dir>"
+    [[ -z "${2:-}" ]] || die "--resume takes only <output-dir>; the config + input are read from its artifacts/ (you cannot change them mid-run). Got extra argument: ${2}"
     [[ -d "$OUTPUT_DIR" ]] || die "output-dir does not exist: $OUTPUT_DIR"
     OUTPUT_DIR="$(realpath "$OUTPUT_DIR")"
     CONFIG="$OUTPUT_DIR/artifacts/config.yaml"   # pinned at first launch
@@ -131,6 +132,28 @@ fi
 [[ -d "$TARGET_MODEL" && -f "$TARGET_MODEL/config.json" ]] \
     || die "target model not found at $TARGET_MODEL -- fetch the weights first with ./download_models.sh (see the README quick start)"
 
+# --- apply the SGLang patches (idempotent) -----------------------------------
+# The REQUIRED Olmo3Sink model patch is applied here, so a run that bypasses the
+# container entrypoint (e.g. `docker run --entrypoint bash`) still gets it.
+# apply_patches.sh backs up originals to *.orig and is a no-op if already applied.
+RUNTIME_ROOT="${RUNTIME_ROOT:-${VENV%/venv}}"
+_helper="$RUNTIME_ROOT/proof-pilot/deploy/w4a8/humming_w4a8.py"
+if [[ -f "$REPO/sglang_patches/apply_patches.sh" && -f "$_helper" ]]; then
+    log "applying SGLang patches (idempotent)"
+    bash "$REPO/sglang_patches/apply_patches.sh" "$VENV" "$_helper" \
+        || die "SGLang patch step failed -- see output above"
+else
+    log "NOTE: skipping SGLang patch step (patch script or humming helper not found; assuming a pre-patched runtime)"
+fi
+unset _helper
+
+# --- refuse to start if the port is already taken ----------------------------
+# We never adopt or kill a server we did not launch. If the port is busy, stop
+# now -- this is what keeps teardown safe even on a shared node.
+if "$PYTHON" -c "import socket,sys; s=socket.socket(); rc=s.connect_ex(('127.0.0.1',$SERVER_PORT)); s.close(); sys.exit(0 if rc==0 else 1)" 2>/dev/null; then
+    die "port $SERVER_PORT is already in use -- another server is running there. Free it, or change server.port in the config. (Refusing to start so teardown never touches a server we did not launch.)"
+fi
+
 # --- trace-upload token: source on-box if unset, never printed --------------
 if [[ -z "${HF_TOKEN:-}" ]] && command -v hf >/dev/null 2>&1; then
     _tok="$(hf auth token 2>/dev/null || true)"
@@ -138,9 +161,12 @@ if [[ -z "${HF_TOKEN:-}" ]] && command -v hf >/dev/null 2>&1; then
     unset _tok
 fi
 
-# --- teardown: stop ONLY our server, never a teammate's ---------------------
-# We start the server with setsid (its own process group) so a group kill is
-# surgical; the port is exclusive, so fuser on it is a safe last-resort backstop.
+# --- teardown: stop ONLY the server WE launched ------------------------------
+# The server runs in its own process group (setsid), so the group kill is
+# surgical. The fuser-by-port backstop runs ONLY after we confirmed OUR server
+# bound the port (SERVER_BOUND=1); combined with the pre-flight "port already in
+# use -> refuse to start" check above, it can never hit another job's server.
+SERVER_BOUND=0
 teardown() {
     local status=$?
     trap - EXIT INT TERM
@@ -152,8 +178,8 @@ teardown() {
         kill -KILL "$SERVER_PID" 2>/dev/null || true
         kill -KILL -"$SERVER_PID" 2>/dev/null || true
     fi
-    if [[ -n "$SERVER_PORT" ]] && command -v fuser >/dev/null 2>&1; then
-        fuser -k -9 "${SERVER_PORT}/tcp" 2>/dev/null || true   # exclusive port -> only our server
+    if [[ "$SERVER_BOUND" == "1" && -n "$SERVER_PORT" ]] && command -v fuser >/dev/null 2>&1; then
+        fuser -k -9 "${SERVER_PORT}/tcp" 2>/dev/null || true   # our port (we bound it) -> reap a lingering worker
     fi
     log "finished (exit $status); outputs in $OUTPUT_DIR"
     exit "$status"
@@ -175,6 +201,11 @@ until "$PYTHON" -c "import urllib.request; urllib.request.urlopen('$SERVER_URL/h
     (( SECONDS < deadline )) || die "server not healthy within ${SERVER_STARTUP_TIMEOUT_SECONDS}s -- see $SERVER_LOG"
     sleep 5
 done
+# our own process must be the one that became healthy (belt-and-braces with the
+# pre-flight port check: never run inference against a server we did not launch)
+kill -0 "$SERVER_PID" 2>/dev/null \
+    || die "$SERVER_URL answered but our server process is gone -- refusing to use a foreign server; see $SERVER_LOG"
+SERVER_BOUND=1
 log "server healthy"
 
 # --- strict config validation (same checks as the container path) -----------
