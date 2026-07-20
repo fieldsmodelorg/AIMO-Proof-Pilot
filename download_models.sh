@@ -2,7 +2,7 @@
 # download_models.sh -- fetch the proof-pilot model weights into a models folder.
 #
 # Usage: ./download_models.sh [WHICH] [MODELS_DIR]
-#   WHICH       step225 (default) | deploy | all   -- which target checkpoint(s)
+#   WHICH       all (default) | step225 | deploy   -- which target checkpoint(s)
 #   MODELS_DIR  destination directory (default /workspace/models)
 #
 # The source repos are PUBLIC, so no HuggingFace token is needed. The shared
@@ -13,7 +13,7 @@
 # step-225 config finds its weights at <MODELS_DIR>/opd-32b-bf16-step-225.
 set -Eeuo pipefail
 
-WHICH="${1:-step225}"
+WHICH="${1:-all}"
 MODELS_DIR="${2:-/workspace/models}"
 
 # Pinned, public source repos + revisions (immutable for reproducibility).

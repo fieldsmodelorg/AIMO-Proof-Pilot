@@ -26,8 +26,8 @@ docker run --rm -it --gpus all --ipc=host --shm-size=32g \
 **2. Download the model weights** (public repos, no token needed):
 
 ```bash
-./download_models.sh                # step-225 + shared draft  ->  /workspace/models
-# ./download_models.sh all          # also fetch the deploy checkpoint
+./download_models.sh                # deploy + step-225 + shared draft  ->  /workspace/models
+# ./download_models.sh step225      # just the step-225 target + draft (skip deploy)
 ```
 
 **3. Run inference.** The recommended best setting is the **step-225** checkpoint at
@@ -65,9 +65,10 @@ un-gated HuggingFace repos (pinned to a fixed revision for reproducibility):
 | **step-225** target | `opd-32b-bf16-step-225` | `fieldsmodelorg/Olmo-3.1-32B-Think-OPD-IMO` (`f14030d3`) |
 | DFlash **draft** (shared) | `dflash-32b-draft-v2test-phaseL` | `fieldsmodelorg/Olmo-3.1-32B-Think-OPD-ProofPilot` (`87707b80`) |
 
-`./download_models.sh step225` (the default) fetches step-225 + draft; `deploy`
-fetches the deploy target + draft; `all` fetches both targets + draft. Budget on
-disk: roughly ~64 GB per target checkpoint plus ~14 GB for the draft.
+`./download_models.sh` (default `all`) fetches both targets + draft; pass `step225`
+for just the step-225 target + draft, or `deploy` for just the deploy target +
+draft. Budget on disk: roughly ~64 GB per target checkpoint plus ~14 GB for the
+draft (so ~140 GB for the default `all`).
 
 ### Production configs
 
