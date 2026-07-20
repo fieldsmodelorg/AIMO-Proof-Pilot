@@ -213,10 +213,26 @@ async def run_submission(
     stop_uploads: asyncio.Event | None = None
     upload_task: asyncio.Task | None = None
     if traces is not None:
-        # secrets_file "" -> None -> HfApi uses the ambient token (HF_TOKEN env
-        # or `hf auth login`); a path -> read the token from that file.
+        # Resolve the HF token. A configured secrets_file is explicit intent, so a
+        # missing/invalid one still fails fast. With no secrets_file we use the
+        # ambient token (HF_TOKEN env or `hf auth login`); if there is NONE, skip
+        # uploads with a warning rather than crashing the run -- no token just
+        # means "don't upload".
         secrets_file = traces["secrets_file"].strip()
-        token = load_hf_token(secrets_file) if secrets_file else None
+        if secrets_file:
+            token = load_hf_token(secrets_file)
+        else:
+            from huggingface_hub import get_token
+
+            token = get_token()
+        if token is None:
+            print(
+                "[traces] enabled but no HF token found (HF_TOKEN unset and no "
+                "`hf auth login`); skipping trace upload",
+                flush=True,
+            )
+            traces = None
+    if traces is not None:
         run_name = resolve_run_name(traces["run_name"], model.target)
         uploader = TraceUploader(
             artifacts_dir=artifacts_dir,

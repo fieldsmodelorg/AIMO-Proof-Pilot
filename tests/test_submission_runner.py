@@ -260,5 +260,82 @@ class SubmissionRunnerTests(unittest.IsolatedAsyncioTestCase):
             )
 
 
+class _FakeClient:
+    def __init__(self, *args, **kwargs):
+        pass
+
+    async def aclose(self):
+        pass
+
+
+class _FakeSearch:
+    def __init__(self, *, problem_id, **kwargs):
+        self.problem_id = problem_id
+
+    async def solve(self):
+        return {
+            "final_proof": f"Proof for {self.problem_id}",
+            "selected_proof_id": f"{self.problem_id}-selected",
+        }
+
+
+class _RecordingUploader:
+    """Stand-in for TraceUploader that records whether it was constructed."""
+
+    instances: list = []
+
+    def __init__(self, **kwargs):
+        _RecordingUploader.instances.append(kwargs)
+        self.repo = kwargs["dataset_repo"]
+
+    def ensure_repo(self):
+        pass
+
+    async def run_periodic(self, stop):
+        await stop.wait()
+
+
+class TracesTokenGatingTests(unittest.IsolatedAsyncioTestCase):
+    """config.yaml has traces.enabled=true + empty secrets_file. Whether uploads
+    happen must depend on an AMBIENT token being available: none -> skip (do not
+    crash); present -> upload path runs."""
+
+    def setUp(self):
+        _RecordingUploader.instances = []
+
+    async def _run(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            input_path = root / "test.csv"
+            output_path = root / "submission.csv"
+            input_path.write_text("id,problem\n0,Prove the claim.\n", encoding="utf-8")
+            with (
+                patch.object(submission_runner, "AsyncChatClient", _FakeClient),
+                patch.object(submission_runner, "ProblemSearch", _FakeSearch),
+                patch.object(submission_runner, "TraceUploader", _RecordingUploader),
+            ):
+                await submission_runner.run_submission(
+                    REPO / "config.yaml", input_path, output_path, root / "artifacts"
+                )
+            with output_path.open(newline="", encoding="utf-8") as source:
+                return list(csv.DictReader(source))
+
+    async def test_no_token_skips_upload_without_crashing(self):
+        with patch("huggingface_hub.get_token", return_value=None):
+            rows = await self._run()
+        # Run completed and wrote the submission ...
+        self.assertEqual(rows, [{"id": "0", "proof": "Proof for row-0000"}])
+        # ... and the uploader was never constructed (no ensure_repo/create_repo).
+        self.assertEqual(_RecordingUploader.instances, [])
+
+    async def test_ambient_token_enables_upload(self):
+        with patch("huggingface_hub.get_token", return_value="hf_ambient"):
+            rows = await self._run()
+        self.assertEqual(rows, [{"id": "0", "proof": "Proof for row-0000"}])
+        # With a token present, the uploader IS built (and given that token).
+        self.assertEqual(len(_RecordingUploader.instances), 1)
+        self.assertEqual(_RecordingUploader.instances[0]["token"], "hf_ambient")
+
+
 if __name__ == "__main__":
     unittest.main()

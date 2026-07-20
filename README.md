@@ -6,6 +6,44 @@ writes `submission.csv` without calling an external grader. The checked-in
 configuration uses eight H200 GPUs as four TP2 replicas, BF16 target and draft
 weights, DFlash speculative decoding, and FlashAttention 3.
 
+## Run it directly (one command)
+
+If you already have the runtime venv on the box (e.g. an NII node, or the baked
+`/opt/pp/venv`), [`scheduler.sh`](scheduler.sh) runs a full inference end-to-end:
+it starts the SGLang server, waits for health, validates the config,
+**smoke-tests a real generation query**, runs the inference to completion as the
+main process, then tears the server down (also on Ctrl-C or error).
+
+```bash
+# ./scheduler.sh <config> <output-dir> [input.csv]
+
+# run all six committed IMO-2026 problems with the 2x-deploy config:
+VENV=/opt/pp/venv ./scheduler.sh config-nii-2x.yaml runs/deploy-2x
+
+# a custom problem set:
+VENV=/opt/pp/venv ./scheduler.sh config.yaml runs/my-run path/to/my-problems.csv
+
+# resolve + validate everything WITHOUT launching (fast, no GPU needed):
+VENV=/opt/pp/venv ./scheduler.sh --plan config-nii-2x.yaml runs/deploy-2x
+```
+
+**Arguments**
+- **`<config>`** — a config *name* from this repo (e.g. `config-nii-2x.yaml`) or a path to one.
+- **`<output-dir>`** — everything for the run lands here: `submission.csv`,
+  `artifacts/` (resumable search state), `server.log`, `server-validation.json`.
+- **`[input.csv]`** — problems file with exactly `id,problem` columns; defaults to
+  the committed IMO-2026 LaTeX set `evaluation/data/imo2026-latex-test.csv`.
+
+**Notes**
+- Point `VENV` at the runtime venv (default `/opt/pp/venv`), or `source` its
+  `activate-env.sh` and set `PYTHON`.
+- **No HuggingFace auth is required to run.** If the config enables trace upload,
+  the token is auto-sourced from `hf auth token`; when there is none, uploads are
+  simply skipped (the run still writes `submission.csv` + `artifacts/` locally).
+- Re-run with the same `<output-dir>` to **resume** an interrupted run.
+- Teardown is surgical (the server's own process group + its exclusive port), so it
+  is **safe on shared nodes** — it never touches another job's server.
+
 ## Docker usage
 
 ### Select the harness commit
