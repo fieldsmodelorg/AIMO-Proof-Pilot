@@ -7,13 +7,16 @@
 # server down cleanly. Everything for the run lands in one output directory.
 #
 # Usage:
-#   ./scheduler.sh <config> <output-dir> [input.csv]
+#   ./scheduler.sh <config> <output-dir> [input.csv]     # start a run
+#   ./scheduler.sh --resume <output-dir>                 # continue a crashed/stopped run
 #
-#   <config>      a config NAME from this repo (e.g. config-nii-2x.yaml) or a path
+#   <config>      a config NAME from this repo (e.g. config-model-step225-budget-xhigh.yaml) or a path
 #   <output-dir>  run outputs go here: submission.csv, artifacts/, server.log, ...
 #   [input.csv]   problems file (id,problem). Default: the committed IMO-2026 set
 #                 evaluation/data/imo2026-latex-test.csv
 #
+#   -r, --resume  continue the run in <output-dir>, reusing its pinned config + input
+#                 (no need to re-specify them); finished problems are skipped
 #   -n, --plan    resolve + validate everything and print the plan, but do NOT launch
 #   -h, --help    show this help
 #
@@ -24,8 +27,10 @@
 #   SMOKE_MAX_TOKENS                 tokens for the smoke query (default 32)
 #   HF_TOKEN                         for trace upload; auto-sourced from `hf auth token` if unset
 #
-# Resume: re-run with the SAME output-dir to continue an interrupted run -- the
-# pinned config/input + artifacts/ let run_submission.py pick up where it stopped.
+# Resume: if a run crashes or the node reboots, re-launch it with
+#   ./scheduler.sh --resume <output-dir>
+# It restarts the server and continues -- finished problems are skipped and a
+# partially-done problem picks up from its last completed round.
 set -Eeuo pipefail
 
 REPO="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
@@ -42,34 +47,54 @@ log() { printf '[scheduler] %s\n' "$*"; }
 die() { printf '[scheduler] ERROR: %s\n' "$*" >&2; exit 1; }
 
 usage() {
-    sed -n '2,40p' "${BASH_SOURCE[0]}" | sed 's/^#\( \|$\)//'
+    # Print the leading comment block (help text), stripping the leading "# ".
+    awk 'NR==1{next} /^#/{sub(/^# ?/,""); print; next} {exit}' "${BASH_SOURCE[0]}"
     exit "${1:-0}"
 }
 
 # --- argument parsing -------------------------------------------------------
 PLAN=0
-case "${1:-}" in
-    -h|--help) usage 0 ;;
-    -n|--plan) PLAN=1; shift ;;
-esac
-CONFIG_ARG="${1:-}"
-OUTPUT_DIR="${2:-}"
-INPUT_ARG="${3:-}"
-[[ -n "$CONFIG_ARG" ]] || usage 1
-[[ -n "$OUTPUT_DIR" ]] || die "output-dir is required (argument 2); see --help"
+RESUME=0
+while [[ "${1:-}" == -* ]]; do
+    case "$1" in
+        -h|--help)   usage 0 ;;
+        -n|--plan)   PLAN=1;   shift ;;
+        -r|--resume) RESUME=1; shift ;;
+        --)          shift; break ;;
+        *)           die "unknown option: $1 (see --help)" ;;
+    esac
+done
 
-# --- resolve the config: a repo config name, or a path ----------------------
-if [[ -f "$CONFIG_ARG" ]]; then
-    CONFIG="$(realpath "$CONFIG_ARG")"
-elif [[ -f "$REPO/$CONFIG_ARG" ]]; then
-    CONFIG="$REPO/$CONFIG_ARG"
+if [[ "$RESUME" == "1" ]]; then
+    # ./scheduler.sh --resume <output-dir> : reuse the run's pinned config + input.
+    OUTPUT_DIR="${1:-}"
+    [[ -n "$OUTPUT_DIR" ]] || die "--resume needs the output-dir to continue: ./scheduler.sh --resume <output-dir>"
+    [[ -d "$OUTPUT_DIR" ]] || die "output-dir does not exist: $OUTPUT_DIR"
+    OUTPUT_DIR="$(realpath "$OUTPUT_DIR")"
+    CONFIG="$OUTPUT_DIR/artifacts/config.yaml"   # pinned at first launch
+    INPUT="$OUTPUT_DIR/artifacts/test.csv"       # pinned at first launch
+    [[ -f "$CONFIG" && -f "$INPUT" ]] || die "no resumable run in $OUTPUT_DIR (missing artifacts/config.yaml or artifacts/test.csv) -- start a fresh run: ./scheduler.sh <config> <output-dir>"
+    log "resume: continuing the run in $OUTPUT_DIR (finished problems are skipped)"
 else
-    die "config not found: '$CONFIG_ARG' (looked in the current dir and the repo root). Available: $(cd "$REPO" && ls config*.yaml 2>/dev/null | tr '\n' ' ')"
+    CONFIG_ARG="${1:-}"
+    OUTPUT_DIR="${2:-}"
+    INPUT_ARG="${3:-}"
+    [[ -n "$CONFIG_ARG" ]] || usage 1
+    [[ -n "$OUTPUT_DIR" ]] || die "output-dir is required (argument 2); see --help"
+    # resolve the config: a repo config name, or a path
+    if [[ -f "$CONFIG_ARG" ]]; then
+        CONFIG="$(realpath "$CONFIG_ARG")"
+    elif [[ -f "$REPO/$CONFIG_ARG" ]]; then
+        CONFIG="$REPO/$CONFIG_ARG"
+    else
+        die "config not found: '$CONFIG_ARG' (looked in the current dir and the repo root). Available: $(cd "$REPO" && ls config*.yaml 2>/dev/null | tr '\n' ' ')"
+    fi
+    # resolve the problems file (default = committed IMO-2026 LaTeX set)
+    INPUT="${INPUT_ARG:-$DEFAULT_INPUT}"
+    [[ -f "$INPUT" ]] || die "problems file not found: $INPUT"
+    mkdir -p "$OUTPUT_DIR"
+    OUTPUT_DIR="$(realpath "$OUTPUT_DIR")"
 fi
-
-# --- resolve the problems file (default = committed IMO-2026 LaTeX set) ------
-INPUT="${INPUT_ARG:-$DEFAULT_INPUT}"
-[[ -f "$INPUT" ]] || die "problems file not found: $INPUT"
 
 # --- runtime python sanity (accept a bare command name or an absolute path) -
 _py="$(command -v "$PYTHON" 2>/dev/null || true)"
@@ -77,8 +102,6 @@ _py="$(command -v "$PYTHON" 2>/dev/null || true)"
 PYTHON="$_py"; unset _py
 
 # --- output layout ----------------------------------------------------------
-mkdir -p "$OUTPUT_DIR"
-OUTPUT_DIR="$(realpath "$OUTPUT_DIR")"
 SERVER_LOG="$OUTPUT_DIR/server.log"
 SERVER_VALIDATION="$OUTPUT_DIR/server-validation.json"
 SUBMISSION_CSV="$OUTPUT_DIR/submission.csv"
@@ -103,6 +126,10 @@ if [[ "$PLAN" == "1" ]]; then
     log "would: start server -> wait for health -> validate -> smoke-test -> run inference -> teardown"
     exit 0
 fi
+
+# --- models present? fail early with a clear pointer to download_models.sh ---
+[[ -d "$TARGET_MODEL" && -f "$TARGET_MODEL/config.json" ]] \
+    || die "target model not found at $TARGET_MODEL -- fetch the weights first with ./download_models.sh (see the README quick start)"
 
 # --- trace-upload token: source on-box if unset, never printed --------------
 if [[ -z "${HF_TOKEN:-}" ]] && command -v hf >/dev/null 2>&1; then

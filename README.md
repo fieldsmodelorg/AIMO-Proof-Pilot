@@ -6,45 +6,88 @@ writes `submission.csv` without calling an external grader. The checked-in
 configuration uses eight H200 GPUs as four TP2 replicas, BF16 target and draft
 weights, DFlash speculative decoding, and FlashAttention 3.
 
-## Run it directly (one command)
+## Quick start (8×H200)
 
-If you already have the runtime venv on the box (e.g. an NII node, or the baked
-`/opt/pp/venv`), [`scheduler.sh`](scheduler.sh) runs a full inference end-to-end:
-it starts the SGLang server, waits for health, validates the config,
-**smoke-tests a real generation query**, runs the inference to completion as the
-main process, then tears the server down (also on Ctrl-C or error).
+You need an 8×H200 node with Docker and NVIDIA GPU access. The image is
+self-contained — the SGLang runtime and every dependency are baked in; only the
+model weights are downloaded, into a folder you mount. No HuggingFace token is
+needed at any step.
+
+**1. Start the container**, mounting a host folder at `/workspace` (it holds the
+downloaded models and all run outputs, and persists across restarts):
 
 ```bash
-# ./scheduler.sh <config> <output-dir> [input.csv]
-
-# run all six committed IMO-2026 problems with the 2x-deploy config:
-VENV=/opt/pp/venv ./scheduler.sh config-nii-2x.yaml runs/deploy-2x
-
-# a custom problem set:
-VENV=/opt/pp/venv ./scheduler.sh config.yaml runs/my-run path/to/my-problems.csv
-
-# resolve + validate everything WITHOUT launching (fast, no GPU needed):
-VENV=/opt/pp/venv ./scheduler.sh --plan config-nii-2x.yaml runs/deploy-2x
+mkdir -p data
+docker run --rm -it --gpus all --ipc=host --shm-size=32g \
+  -v "$PWD/data:/workspace" \
+  ghcr.io/hav4ik/imo-inference:<TAG> bash        # see "Docker usage" for the current <TAG>
 ```
 
-**Arguments**
-- **`<config>`** — a config *name* from this repo (e.g. `config-nii-2x.yaml`) or a path to one.
-- **`<output-dir>`** — everything for the run lands here: `submission.csv`,
-  `artifacts/` (resumable search state), `server.log`, `server-validation.json`.
-- **`[input.csv]`** — problems file with exactly `id,problem` columns; defaults to
-  the committed IMO-2026 LaTeX set `evaluation/data/imo2026-latex-test.csv`.
+**2. Download the model weights** (public repos, no token needed):
 
-**Notes**
-- Point `VENV` at the runtime venv (default `/opt/pp/venv`), or `source` its
-  `activate-env.sh` and set `PYTHON`.
-- **No HuggingFace auth is required to run.** If the config enables trace upload,
-  the token is auto-sourced from `hf auth token`; when there is none, uploads are
-  simply skipped (the run still writes `submission.csv` + `artifacts/` locally).
-- Re-run with the same `<output-dir>` to **resume** an interrupted run.
-- Teardown is surgical (the server's own process group + its exclusive port), so it
-  is **safe on shared nodes** — it never touches another job's server.
+```bash
+./download_models.sh                # step-225 + shared draft  ->  /workspace/models
+# ./download_models.sh all          # also fetch the deploy checkpoint
+```
+
+**3. Run inference.** The recommended best setting is the **step-225** checkpoint at
+the **xhigh** budget:
+
+```bash
+./scheduler.sh config-model-step225-budget-xhigh.yaml /workspace/runs/step225-xhigh
+```
+
+That is the whole flow. The scheduler starts the server, waits for it to be healthy,
+runs all six IMO-2026 problems (the committed `evaluation/data/imo2026-latex-test.csv`),
+and writes `/workspace/runs/step225-xhigh/submission.csv` (with `artifacts/` and
+`server.log` alongside), then shuts the server down. Pass a third argument to run
+your own `id,problem` CSV instead.
+
+**If a run is interrupted** (a crash or a node reboot), continue it — no restart
+from scratch:
+
+```bash
+./scheduler.sh --resume /workspace/runs/step225-xhigh
+```
+
+Finished problems are skipped and a partially-done problem resumes from its last
+completed round. (Running outside the container? Point `VENV` at the runtime venv,
+or `source` its `activate-env.sh` and set `PYTHON`; everything else is identical.)
+
+### Models
+
+`download_models.sh` fetches these into `/workspace/models/` from public,
+un-gated HuggingFace repos (pinned to a fixed revision for reproducibility):
+
+| role | local folder | source repo (revision) |
+|---|---|---|
+| **deploy** target | `opd-32b-deploy` | `fieldsmodelorg/Olmo-3.1-32B-Think-OPD-ProofPilot` (`87707b80`) |
+| **step-225** target | `opd-32b-bf16-step-225` | `fieldsmodelorg/Olmo-3.1-32B-Think-OPD-IMO` (`f14030d3`) |
+| DFlash **draft** (shared) | `dflash-32b-draft-v2test-phaseL` | `fieldsmodelorg/Olmo-3.1-32B-Think-OPD-ProofPilot` (`87707b80`) |
+
+`./download_models.sh step225` (the default) fetches step-225 + draft; `deploy`
+fetches the deploy target + draft; `all` fetches both targets + draft. Budget on
+disk: roughly ~64 GB per target checkpoint plus ~14 GB for the draft.
+
+### Production configs
+
+Six presets, `config-model-<model>-budget-<budget>.yaml`, that vary only the search
+budget (exact knobs in [Budget presets](#budget-presets)):
+
+| checkpoint | medium | high | xhigh |
+|---|---|---|---|
+| **deploy** | [`…deploy-budget-medium`](config-model-deploy-budget-medium.yaml) | [`…deploy-budget-high`](config-model-deploy-budget-high.yaml) | [`…deploy-budget-xhigh`](config-model-deploy-budget-xhigh.yaml) |
+| **step-225** (best) | [`…step225-budget-medium`](config-model-step225-budget-medium.yaml) | [`…step225-budget-high`](config-model-step225-budget-high.yaml) | [**`…step225-budget-xhigh`**](config-model-step225-budget-xhigh.yaml) |
+
+`step-225` is the strongest checkpoint and `xhigh` the largest budget, so
+**`config-model-step225-budget-xhigh.yaml`** is the recommended best setting.
 
 ## Docker usage
+
+> The [Quick start](#quick-start-8h200) above is the recommended path. This section
+> documents the lower-level, fully-automated container entrypoint (`serve` /
+> `submission`) for reference.
+
 
 ### Select the harness commit
 

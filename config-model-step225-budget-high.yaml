@@ -7,11 +7,11 @@
 schema_version: 12
 
 models:
-  bf16_target: /tmp/chankhavu/models/opd-32b-bf16-step-225
+  bf16_target: /workspace/models/opd-32b-bf16-step-225
   # quantized_* are inactive (quantized: false); paths must be absolute per schema.
-  quantized_target: /tmp/chankhavu/models/opd-32b-v33-s200-gptq-w4a16
-  bf16_draft: /tmp/chankhavu/models/dflash-32b-draft-v2test-phaseL
-  quantized_draft: /tmp/chankhavu/models/dflash-32b-draft-v2test-phaseL-int4mlp
+  quantized_target: /workspace/models/opd-32b-v33-s200-gptq-w4a16
+  bf16_draft: /workspace/models/dflash-32b-draft-v2test-phaseL
+  quantized_draft: /workspace/models/dflash-32b-draft-v2test-phaseL-int4mlp
 
 model:
   tensor_parallel_size: 2
@@ -82,17 +82,15 @@ search:
   selection_max_tokens: 56000
   selection_continuation_tokens: 2048
 
-# Periodic reasoning-trace upload to the imo2026-challenge team org. Auth = the
-# node's built-in `hf auth login` (secrets_file "" -> ambient token). NOTE: the
-# run command must export HF_TOKEN before sourcing activate-env.sh, which
-# redirects HF_HOME and would otherwise hide a file-based login token.
+# Optional: periodically upload artifacts/reasoning traces to a HuggingFace
+# dataset. DISABLED by default for a self-contained run. To enable, set
+# enabled: true and dataset_repo to a dataset you can write to (auth via
+# HF_TOKEN or `hf auth login`; with no token the upload is simply skipped and
+# the run still writes submission.csv + artifacts locally).
 traces:
-  enabled: true
-  # Alias-prefixed (teammates create their own <alias>-* datasets in the org).
-  dataset_repo: imo2026-challenge/chankhavu-imo-reasoning-traces
+  enabled: false
+  dataset_repo: your-org/proof-pilot-traces
   secrets_file: ""
   interval_seconds: 600
   private: true
-  # Name THIS experiment (its subfolder). Change per run alongside bf16_target:
-  #   deploy -> imo2026-deploy-r4 ; step-225 -> imo2026-step225-r4 ; step-125 -> imo2026-step125-r4
   run_name: imo2026-step225-budget-high
