@@ -44,6 +44,18 @@ jobs:
           tests.test_submission_runner
 
 
+      - name: Free up runner disk
+        # The baked image is ~19 GB (4.4 GB runtime .bin -> ~19 GB extracted venv
+        # layer). GitHub's runner ships ~25 GB of preinstalled toolchains we do not
+        # need for a Docker build; reclaiming them prevents ENOSPC during the bake.
+        run: |
+          echo "before:"; df -h / | tail -1
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
+            /opt/hostedtoolcache/CodeQL /usr/local/share/boost \
+            /usr/local/share/powershell /usr/share/swift || true
+          sudo docker image prune -af || true
+          echo "after:"; df -h / | tail -1
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -85,12 +97,16 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             VCS_REF=${{ github.sha }}
-          # The build bakes the runtime venv from the pinned mirror. If the
-          # mirror is private, set an HF_TOKEN repo secret; if it is public,
-          # this is empty and the build downloads anonymously.
+          # The build bakes the runtime venv from the pinned mirror. If the mirror
+          # is private, set an HF_TOKEN repo secret; if it is public (default), no
+          # secret is passed and the build downloads anonymously. Passing an empty
+          # `hf_token=` is an invalid-secret warning, so omit the line entirely when
+          # the secret is absent.
           secrets: |
-            hf_token=${{ secrets.HF_TOKEN }}
+            ${{ secrets.HF_TOKEN != '' && format('hf_token={0}', secrets.HF_TOKEN) || '' }}
+          # cache-from only: a `mode=max` cache export doubles on-disk usage (image
+          # + full cache) and tips the runner into ENOSPC on this ~19 GB image.
+          # Release builds are on-demand, so a warm cache is not worth the disk.
           cache-from: type=gha
-          cache-to: type=gha,mode=max
           provenance: mode=max
           sbom: true
