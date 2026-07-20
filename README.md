@@ -172,6 +172,28 @@ FA4: page_size=128 and deterministic_inference=false
 
 The configured server context is a total input-plus-output limit.
 
+### Budget presets
+
+The `config-model-{deploy,step225}-budget-{medium,high,xhigh}.yaml` configs are a
+matrix that varies **only the search budget**. `refine_parents` (4) ×
+`reviews_per_refine_parent` (3) — the training limit — and everything else (server
+topology, sampling, the LLM selector) are held constant, so runs differ only by
+compute. Pick one by name with `scheduler.sh` (or as the container `CONFIG`).
+
+| preset | proofs_per_round | verifications_per_proof | top_proofs | refine_parents | reviews/parent | max_rounds |
+|---|---|---|---|---|---|---|
+| **medium** | 32 | 16 | 8 | 4 | 3 | 4 |
+| **high** | 64 | 32 | 16 | 4 | 3 | 8 |
+| **xhigh** | 128 | 64 | 32 | 4 | 3 | 8 |
+
+- `medium` is the original run policy (`config-nii-r4`).
+- `proofs_per_round` is both the round-1 prover count and the per-round refinement
+  count; `top_proofs` is the pool refinement parents are stratified-sampled from.
+- `refine_review_strategy` is `random_nonideal` (each refine parent is paired with 3
+  reviews drawn from its `<1`-score verifications).
+- `max_rounds` counts round 1 (generation): `4` = 1 gen + 3 refine, `8` = 1 gen + 7 refine.
+- Two checkpoints (`deploy`, `step225`) × three budgets = the six configs.
+
 ## Resume and outputs
 
 Search state is stored in `/workspace/submission_artifacts`. If a run stops
