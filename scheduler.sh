@@ -138,12 +138,16 @@ fi
 # apply_patches.sh backs up originals to *.orig and is a no-op if already applied.
 RUNTIME_ROOT="${RUNTIME_ROOT:-${VENV%/venv}}"
 _helper="$RUNTIME_ROOT/proof-pilot/deploy/w4a8/humming_w4a8.py"
-if [[ -f "$REPO/sglang_patches/apply_patches.sh" && -f "$_helper" ]]; then
+if [[ -f "$REPO/sglang_patches/apply_patches.sh" ]]; then
+    # apply_patches.sh present -> the REQUIRED Olmo3Sink patch MUST be applied. A
+    # missing helper means RUNTIME_ROOT/VENV is not the expected baked runtime; fail
+    # loudly rather than silently running UNPATCHED SGLang (no sinks -> wrong numerics).
+    [[ -f "$_helper" ]] || die "SGLang patch helper not found: $_helper -- point RUNTIME_ROOT/VENV at the baked runtime; the required Olmo3Sink patch cannot be skipped"
     log "applying SGLang patches (idempotent)"
     bash "$REPO/sglang_patches/apply_patches.sh" "$VENV" "$_helper" \
         || die "SGLang patch step failed -- see output above"
 else
-    log "NOTE: skipping SGLang patch step (patch script or humming helper not found; assuming a pre-patched runtime)"
+    log "NOTE: sglang_patches/apply_patches.sh not present; assuming a pre-patched runtime"
 fi
 unset _helper
 
