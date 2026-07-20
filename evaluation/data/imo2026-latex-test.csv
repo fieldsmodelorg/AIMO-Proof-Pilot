@@ -1,36 +1,38 @@
 id,problem
-1,"There are $2026$ integers greater than $1$ written on a blackboard, not necessarily all different. In a move, Confucius chooses two integers $m>1$ and $n>1$ from different places on the blackboard and replaces them with
+1,"There are $2026$ integers greater than $1$ written on a blackboard, not necessarily different. In a move, Confucius chooses two integers $m>1$ and $n>1$ from different places on the blackboard and replaces these two integers with
 \[
   \gcd(m,n)\qquad\text{and}\qquad
   \frac{\operatorname{lcm}(m,n)}{\gcd(m,n)}.
 \]
 He continues to make moves while it is possible to do so.
 \begin{enumerate}
-\item[(a)] Prove that, regardless of Confucius's choices, after finitely many moves exactly one integer $M$ on the blackboard is greater than $1$.
-\item[(b)] Prove that the value of $M$ does not depend on Confucius's choices.
-\end{enumerate}"
-2,"Let $ABC$ be a triangle, and let $M$ and $N$ be the midpoints of sides $AB$ and $AC$, respectively. Let $K$ and $L$ be chosen strictly inside triangles $BMC$ and $BNC$, respectively, such that $K$ lies strictly inside $\angle LBA$, $L$ lies strictly inside $\angle ACK$, and
+\item[(a)] Prove that, regardless of the choices of Confucius, after finitely many moves, exactly one integer $M$ on the blackboard is greater than $1$.
+\item[(b)] Prove that the value of $M$ does not depend on the choices of Confucius.
+\end{enumerate}
+(Note that $\gcd(x,y)$ denotes the greatest common divisor of positive integers $x$ and $y$, and $\operatorname{lcm}(x,y)$ denotes the least common multiple of $x$ and $y$.)"
+2,"Let $ABC$ be a triangle and let points $M$ and $N$ be the midpoints of sides $AB$ and $AC$, respectively. Let points $K$ and $L$ be chosen strictly inside triangles $BMC$ and $BNC$, respectively, such that $K$ lies strictly inside triangle $ABL$ and $L$ lies strictly inside triangle $AKC$. Suppose that
 \[
   \angle KBA=\angle ACL,\qquad
-  \angle LBK=\angle LNC,\qquad
+  \angle LBK=\angle LNC,\qquad\text{and}\qquad
   \angle LCK=\angle BMK.
 \]
-Let $O$ be the circumcenter of triangle $AKL$. Prove that $OM=ON$."
-3,"Let $n$ be a positive integer. Liu Bang and Xiang Yu have a stick of length $1$ and want to divide it between themselves. Liu Bang marks at most $n$ points on the stick, and then Xiang Yu marks at most $n$ points on the stick; all marked points are distinct. The stick is cut at all marked points. Afterwards, they take turns claiming any unclaimed piece, with Liu Bang going first. Each player seeks to maximize the total length of his own pieces. Determine the largest number $c_n$ that Liu Bang can guarantee, regardless of Xiang Yu's play."
-4,"Shan-Yu and Mulan are playing a game. Let $\theta$ be an angle with $0^\circ<\theta<180^\circ$, known to both players. Initially, Shan-Yu makes a paper triangle $T$ with measurements of his choice. They then repeat the following steps:
+Let $O$ be the circumcentre of triangle $AKL$. Prove that $OM=ON$."
+3,"Let $n$ be a positive integer. Liu Bang and Xiang Yu have a stick of length $1$ and want to divide it between themselves. Liu marks at most $n$ points on the stick, and then Xiang marks at most $n$ points on the stick. The marked points are distinct. Then, the stick is cut at all marked points, creating a number of pieces. Afterwards, they take turns claiming any unclaimed piece of the stick, with Liu going first. Each player's goal is to maximise the total length of their own pieces. For each $n$, determine the largest value $c$ such that Liu may guarantee a total length of at least $c$, regardless of Xiang's play."
+4,"Shan-Yu and Mulan are playing a game. Let $\theta$ be an angle with $0^\circ<\theta<180^\circ$ known to both players. Initially, Shan-Yu makes a paper triangle $T$ with measurements of his choice. Then, they repeatedly perform the following steps:
 \begin{itemize}
-\item If $T$ has an angle measuring exactly $\theta$, the game stops and Mulan wins.
-\item Otherwise, Mulan chooses a nonvertex point $P$ on the perimeter of $T$ and makes a straight cut from $P$ to the opposite vertex, splitting $T$ into two triangles.
-\item Shan-Yu discards one of the two triangles; the other becomes the new $T$.
+\item If $T$ has at least one angle measuring exactly $\theta$, then the game stops and Mulan wins.
+\item Otherwise, Mulan chooses a point $P$ on the perimeter of $T$, different from its three vertices. She then makes a straight cut from $P$ to the opposite vertex of $T$, splitting it into two triangles.
+\item Shan-Yu discards one of the two triangles. The remaining triangle becomes the new $T$.
 \end{itemize}
-For which real values of $\theta$ can Mulan guarantee victory after finitely many steps, no matter how Shan-Yu plays?"
-5,"Determine all functions $f:\mathbb{R}_{>0}\to\mathbb{R}_{>0}$ such that, for every $x,y>0$,
+For which real values of $\theta$ can Mulan guarantee her victory in finitely many steps, no matter how Shan-Yu plays?"
+5,"Let $\mathbb{R}_{>0}$ be the set of positive real numbers. Determine all functions $f:\mathbb{R}_{>0}\to\mathbb{R}_{>0}$ such that
 \[
   \sqrt{\frac{x^2+f(y)^2}{2}}
   \ge \frac{f(x)+y}{2}
-  \ge \sqrt{x f(y)}.
-\]"
-6,"Let $a_1,a_2,a_3,\dots$ be an infinite sequence of positive integers greater than $1$. Suppose that, for every positive integer $n$, the number $a_{n+1}$ is the smallest positive integer greater than $a_n$ such that
+  \ge \sqrt{x f(y)}
+\]
+for every $x,y\in\mathbb{R}_{>0}$."
+6,"Let $a_1,a_2,a_3,\dots$ be an infinite sequence of positive integers greater than $1$. Suppose that for all positive integers $n$, the number $a_{n+1}$ is the smallest positive integer greater than $a_n$ such that
 \[
   \gcd(a_{n+1},a_i)>1
   \qquad\text{for every }i=1,2,\dots,n.
@@ -39,4 +41,5 @@ Prove that there exist positive integers $T$ and $L$ such that
 \[
   a_{n+T}=a_n+L
 \]
-for every positive integer $n$."
+for every positive integer $n$.
+(Note that $\gcd(x,y)$ denotes the greatest common divisor of positive integers $x$ and $y$.)"
