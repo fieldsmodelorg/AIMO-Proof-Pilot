@@ -121,6 +121,14 @@ runtime**, and every image tag carries an identical, frozen SGLang. Only the
 `docker run ... submission` needs no secrets at all. At boot the entrypoint just
 applies the checked-in SGLang patches (fast, in-place) and resolves the models.
 
+> **Always launch through the `serve`/`submission` entrypoint or `scheduler.sh`.**
+> The SGLang patches (including the **required** Olmo3Sink model patch) are applied
+> at boot by those launchers, not baked into the venv at rest. A hand-rolled
+> `python -m sglang.launch_server` / `launch_server.py` that bypasses both would run
+> **unpatched** (no attention sinks) and silently produce wrong numerics. `scheduler.sh`
+> applies the patch set itself and now **fails loudly** if the runtime is missing the
+> expected patch helper, rather than skipping.
+
 ### Prepare persistent storage
 
 Mount persistent storage at the internal `/workspace` path. It holds the runtime,
@@ -151,7 +159,13 @@ draft assets at the corresponding locations under the mounted storage. The
 container downloads the checked-in default model pair only when the YAML uses
 the default paths and those assets are missing.
 
-Create `$PWD/workspace/test.csv` with exactly two lowercase columns:
+**By default the container runs the committed IMO-2026 set** — the exact 6-problem
+`evaluation/data/imo2026-latex-test.csv` that was run on NII. You do **not** need to
+create anything to reproduce our results; leave `/workspace/test.csv` absent and the
+`submission` entrypoint falls back to the committed CSV automatically.
+
+To run your **own** problems instead, mount a `test.csv` at `$PWD/workspace/test.csv`
+(or set `INPUT_CSV`) with exactly two lowercase columns:
 
 ```csv
 id,problem
@@ -160,7 +174,9 @@ id,problem
 ```
 
 IDs must be nonempty and unique. Quote fields containing commas or newlines. Do
-not add answers, rubrics, reference solutions, or metadata columns.
+not add answers, rubrics, reference solutions, or metadata columns. Note: the harness
+keys its deterministic RNG on CSV **row order**, so to reproduce a specific run use the
+same problems in the same order (the committed CSV is byte-exact for the NII set).
 
 ### Generate submission.csv
 

@@ -40,7 +40,18 @@ SERVER_VALIDATION="${SERVER_VALIDATION:-$STATE_DIR/server-validation.json}"
 SERVER_STARTUP_TIMEOUT_SECONDS="${SERVER_STARTUP_TIMEOUT_SECONDS:-2700}"
 EXPECTED_GPU_COUNT=
 REQUIRE_H200="${REQUIRE_H200:-1}"
-INPUT_CSV="${INPUT_CSV:-/workspace/test.csv}"
+# Input CSV: an explicit $INPUT_CSV wins; else an operator-supplied /workspace/test.csv
+# if present; else the committed IMO-2026 set -- the exact 6-problem CSV validated on
+# NII. This makes the container reproduce the NII input by DEFAULT (the harness keys all
+# deterministic RNG on CSV row index, so the exact set+order matters). Mount your own at
+# /workspace/test.csv (or set INPUT_CSV) to run different problems.
+if [[ -z "${INPUT_CSV:-}" ]]; then
+    if [[ -f /workspace/test.csv ]]; then
+        INPUT_CSV=/workspace/test.csv
+    else
+        INPUT_CSV="$REPO/evaluation/data/imo2026-latex-test.csv"
+    fi
+fi
 OUTPUT_CSV="${OUTPUT_CSV:-/workspace/submission.csv}"
 ARTIFACTS_DIR="${ARTIFACTS_DIR:-/workspace/submission_artifacts}"
 SERVER_PID=
