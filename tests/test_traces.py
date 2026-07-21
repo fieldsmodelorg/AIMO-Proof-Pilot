@@ -160,5 +160,64 @@ class StageOutputFileTests(unittest.TestCase):
             self.assertFalse((artifacts / "nope.csv").exists())
 
 
+class UploadOnceTests(unittest.TestCase):
+    """The upload path: hardlink staging + explicit submission upload via a mock api."""
+
+    def _make(self, tmp):
+        from unittest.mock import MagicMock
+
+        from trace_uploader import TraceUploader
+
+        out = Path(tmp)
+        artifacts = out / "artifacts"
+        (artifacts / "problems" / "row-0000").mkdir(parents=True)
+        (artifacts / "problems" / "row-0000" / "calls.jsonl").write_text("{}\n")
+        (artifacts / "config.yaml").write_text("x: 1\n")
+        submission = out / "submission.csv"
+        submission.write_text("id,proof\n1,done\n", encoding="utf-8")
+        up = TraceUploader(
+            artifacts_dir=artifacts,
+            dataset_repo="owner/repo",
+            token=None,
+            run_name="myrun",
+            private=True,
+            interval_seconds=10,
+            output_path=submission,
+        )
+        up.api = MagicMock()
+        return up, artifacts, submission
+
+    def test_stages_tree_and_uploads_real_submission(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            up, artifacts, submission = self._make(tmp)
+            self.assertTrue(up.upload_once("periodic"))
+
+            stage_run = artifacts.parent / ".hf_stage" / "myrun"
+            # tree hardlinked + namespaced under run_name
+            self.assertTrue((stage_run / "config.yaml").is_file())
+            self.assertTrue((stage_run / "problems" / "row-0000" / "calls.jsonl").is_file())
+            # submission.csv is NOT staged into the bulk tree
+            self.assertFalse((stage_run / "submission.csv").exists())
+
+            # explicit submission upload -> <run_name>/submission.csv
+            up.api.upload_file.assert_called_once()
+            kw = up.api.upload_file.call_args.kwargs
+            self.assertEqual(kw["path_in_repo"], "myrun/submission.csv")
+            self.assertEqual(str(kw["path_or_fileobj"]), str(submission))
+
+            # bulk upload via upload_large_folder rooted at the stage ROOT
+            up.api.upload_large_folder.assert_called_once()
+            lkw = up.api.upload_large_folder.call_args.kwargs
+            self.assertEqual(lkw["folder_path"], str(artifacts.parent / ".hf_stage"))
+            self.assertIn("**/submission.csv", lkw["ignore_patterns"])
+
+    def test_upload_failure_is_swallowed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            up, _artifacts, _submission = self._make(tmp)
+            up.api.upload_large_folder.side_effect = RuntimeError("boom")
+            # must not raise; returns False
+            self.assertFalse(up.upload_once("periodic"))
+
+
 if __name__ == "__main__":
     unittest.main()

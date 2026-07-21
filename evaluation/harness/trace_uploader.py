@@ -6,6 +6,16 @@ The proof search writes a complete trace under the run's artifacts dir:
 snapshots that whole tree to a HuggingFace dataset on a fixed interval and once
 more at shutdown, so a long run's traces are durably captured as it goes.
 
+Uploads go through `upload_large_folder`, which splits a big tree into many
+commits and is resumable -- a single all-at-once `upload_folder` commit stalls
+(HTTP 413 / "large folder" rejection) once a run's `calls.jsonl` grows to
+hundreds of MB. `upload_large_folder` has no `path_in_repo`, so we hardlink-
+mirror the artifacts under a per-run staging dir (`<run_out>/.hf_stage/<run_name>/`)
+and upload that, keeping each run namespaced. The judge-facing `submission.csv`
+(written OUTSIDE the artifacts dir, atomically rewritten each round -> a folder
+mirror of it goes stale) is uploaded explicitly with `upload_file`, which always
+commits current content.
+
 Auth comes from a secrets file (JSON or YAML) that is NOT the config and never
 leaves the node -- the config only stores its path. Upload failures are logged
 and swallowed: a flaky network must never kill a multi-hour proof run.
@@ -14,6 +24,7 @@ from __future__ import annotations
 
 import asyncio
 import shutil
+import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -25,6 +36,14 @@ IGNORE_PATTERNS = [
     "SECRETS.*", "**/SECRETS.*",
     "*.token", "**/*.token",
     ".git", ".git/**",
+]
+
+# Extra excludes for the bulk (large-folder) upload: submission.csv is uploaded
+# explicitly (see `_upload_submission`) so the atomically-rewritten file never
+# goes stale, and upload_large_folder's own metadata dir must never be shipped.
+LARGE_FOLDER_IGNORE = IGNORE_PATTERNS + [
+    "submission.csv", "**/submission.csv",
+    ".cache/**", "**/.cache/**",
 ]
 
 _TOKEN_KEYS = ("hf_token", "huggingface_token", "HF_TOKEN", "token")
@@ -58,11 +77,13 @@ def resolve_run_name(run_name: str, target: Path) -> str:
 
 
 def stage_output_file(output_path: Path | None, artifacts_dir: Path) -> None:
-    """Copy the submission CSV into the artifacts dir so it uploads with the tree.
+    """Copy the submission CSV into the artifacts dir (standalone helper).
 
-    The submission is written to a separate --output path, outside the uploaded
-    artifacts dir; mirroring the latest copy in lets teammates grab all final
-    answers from one file on HF. No-op if unset or not yet written; never raises.
+    The submission is written to a separate --output path, outside the artifacts
+    dir. `TraceUploader` no longer relies on this mirror -- it uploads the real
+    submission.csv explicitly (see `TraceUploader._upload_submission`) so the
+    atomically-rewritten file never goes stale. Retained for callers that want a
+    local copy alongside the artifacts. No-op if unset or not yet written; never raises.
     """
     if output_path is None:
         return
@@ -97,9 +118,14 @@ class TraceUploader:
         self.run_name = run_name
         self.private = private
         self.interval = interval_seconds
-        # Submission CSV (written outside artifacts_dir); mirrored in on each
-        # upload so it rides along to HF.
-        self.output_path = output_path
+        # Submission CSV, written outside artifacts_dir; uploaded explicitly on
+        # each cycle (see _upload_submission) rather than mirrored into the tree.
+        self.output_path = Path(output_path) if output_path is not None else None
+        # Hardlink staging so upload_large_folder (which has no path_in_repo) can
+        # namespace the run under <run_name>/. Kept beside artifacts_dir so it is
+        # on the same filesystem (hardlinks require it) and cleaned up with the run.
+        self._stage_root = self.artifacts_dir.parent / ".hf_stage"
+        self._stage_run = self._stage_root / self.run_name
         self._count = 0
 
     def ensure_repo(self) -> None:
@@ -109,17 +135,61 @@ class TraceUploader:
             self.repo, repo_type="dataset", private=self.private, exist_ok=True
         )
 
-    def upload_once(self, label: str) -> bool:
-        self._count += 1
-        stage_output_file(self.output_path, self.artifacts_dir)
+    def _refresh_stage(self) -> None:
+        """Hardlink-mirror the artifacts tree into <stage>/<run_name>/.
+
+        Hardlinks are cheap and reflect appended files (e.g. calls.jsonl) in place;
+        --remove-destination re-links any file rewritten via atomic replace so the
+        staged copy always matches. submission.csv is never staged -- it is uploaded
+        explicitly from its real path so a stale folder mirror can't shadow it.
+        """
+        self._stage_run.mkdir(parents=True, exist_ok=True)
+        result = subprocess.run(
+            ["cp", "-al", "--remove-destination",
+             f"{self.artifacts_dir}/.", f"{self._stage_run}/"],
+            stderr=subprocess.PIPE, text=True, check=False,
+        )
+        if result.returncode != 0:
+            print(
+                f"[traces] staging hardlink warning: {result.stderr.strip()[:200]}",
+                flush=True,
+            )
         try:
-            self.api.upload_folder(
-                folder_path=str(self.artifacts_dir),
+            (self._stage_run / "submission.csv").unlink()
+        except FileNotFoundError:
+            pass
+
+    def _upload_submission(self, label: str) -> None:
+        """Upload the real submission.csv straight to <run_name>/submission.csv.
+
+        upload_file always commits the current bytes, so this small file (rewritten
+        atomically each round -> a new inode) never lags behind the run, unlike a
+        folder mirror that upload_large_folder may skip as "unchanged"."""
+        if self.output_path is None or not self.output_path.is_file():
+            return
+        try:
+            self.api.upload_file(
+                path_or_fileobj=str(self.output_path),
+                path_in_repo=f"{self.run_name}/submission.csv",
                 repo_id=self.repo,
                 repo_type="dataset",
-                path_in_repo=self.run_name,
-                commit_message=f"traces: {label} snapshot #{self._count}",
-                ignore_patterns=IGNORE_PATTERNS,
+                commit_message=f"traces: {label} submission #{self._count}",
+            )
+        except Exception as error:  # best-effort, like the bulk upload
+            print(f"[traces] submission upload failed (continuing): {error!r}", flush=True)
+
+    def upload_once(self, label: str) -> bool:
+        self._count += 1
+        # Small, judge-facing file first so it is current even if the bulk is slow.
+        self._upload_submission(label)
+        self._refresh_stage()
+        try:
+            self.api.upload_large_folder(
+                repo_id=self.repo,
+                repo_type="dataset",
+                folder_path=str(self._stage_root),
+                ignore_patterns=LARGE_FOLDER_IGNORE,
+                print_report=False,
             )
             return True
         except Exception as error:  # never let an upload kill the run
