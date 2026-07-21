@@ -6,6 +6,14 @@ writes `submission.csv` without calling an external grader. The checked-in
 configuration uses eight H200 GPUs as four TP2 replicas, BF16 target and draft
 weights, DFlash speculative decoding, and FlashAttention 3.
 
+> ### 📦 Prebuilt image
+> **`ghcr.io/fieldsmodelorg/aimo-proof-pilot:sha-29c2ec5`** &nbsp;·&nbsp; built from `main` [`29c2ec5`](https://github.com/fieldsmodelorg/AIMO-Proof-Pilot/commit/29c2ec5e92cc140895ebaa6b397db40b1e227452) &nbsp;·&nbsp; [package on GHCR](https://github.com/fieldsmodelorg/AIMO-Proof-Pilot/pkgs/container/aimo-proof-pilot)
+> ```bash
+> docker pull ghcr.io/fieldsmodelorg/aimo-proof-pilot:sha-29c2ec5
+> ```
+> Public, pullable with no login. Bakes the SGLang runtime + the committed IMO-2026
+> problem set; only model weights are downloaded at run time.
+
 ## Quick start (8×H200)
 
 You need an 8×H200 node with Docker and NVIDIA GPU access. The image is
@@ -21,7 +29,7 @@ mkdir -p data
 docker run --rm -it --gpus all --ipc=host --shm-size=32g \
   --entrypoint bash \
   -v "$PWD/data:/workspace" \
-  ghcr.io/fieldsmodelorg/aimo-proof-pilot:<TAG>   # see "Docker usage" for the current <TAG>
+  ghcr.io/fieldsmodelorg/aimo-proof-pilot:sha-29c2ec5
 ```
 
 (`--entrypoint bash` opens a shell in the repo directory; the automated
@@ -99,13 +107,13 @@ budget (exact knobs in [Budget presets](#budget-presets)):
 
 The image is built on demand (a `v*` release tag or a manual **Run workflow** in
 the Actions tab — the baked image is ~19 GB, so it is not built per commit) and
-published to **`ghcr.io/fieldsmodelorg/aimo-proof-pilot`** and the Docker Hub mirror
-**`docker.io/chankhavu/imo-inference`**, each tagged `sha-<7-character-commit>`.
-Set `COMMIT` to the full commit of a build that completed successfully:
+published to **`ghcr.io/fieldsmodelorg/aimo-proof-pilot`** (public, no login), tagged
+`sha-<7-character-commit>`. The current build is `sha-29c2ec5`. Set `COMMIT` to the
+full commit of a build that completed successfully:
 
 ```bash
-export COMMIT=REPLACE_WITH_FULL_COMMIT_SHA
-export IMAGE=ghcr.io/fieldsmodelorg/aimo-proof-pilot:sha-${COMMIT:0:7}   # or docker.io/chankhavu/imo-inference:sha-${COMMIT:0:7}
+export COMMIT=29c2ec5e92cc140895ebaa6b397db40b1e227452
+export IMAGE=ghcr.io/fieldsmodelorg/aimo-proof-pilot:sha-${COMMIT:0:7}
 
 docker pull "$IMAGE"
 test "$(docker image inspect "$IMAGE" \
