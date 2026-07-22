@@ -54,12 +54,27 @@ SEARCH_KEYS = {
 # force-closed (</think> + <selected_id>) and continued so it still casts a vote (offline
 # analog of gold's time-derived selector cap). Defaults to max_completion_tokens if absent.
 # selection_continuation_tokens: budget for that forced answer after the force-close.
+#
+# Tiered tournament selection (grading finding: the self-verifier saturates -- once several
+# proofs tie at the ceiling its argmax is quality-blind, so a plain top-4 re-rank leaves
+# perfect proofs on the table). When selection_tournament is on:
+#   - SATURATED pool (> selection_candidates proofs at verifier score >= tournament_threshold):
+#     run selection_tournament_rounds STRATIFIED brackets of selection_candidates proofs each
+#     (up to selection_tournament_max_candidates), tally the per-round winners, submit the
+#     proof that won the most rounds.
+#   - otherwise: the normal majority vote, but restricted to proofs within selection_score_window
+#     (fraction) of the best verifier score, so a 1.0 is never pitted against a 0.3.
 OPTIONAL_SEARCH_KEYS = {
     "llm_selector",
     "selection_votes",
     "selection_candidates",
     "selection_max_tokens",
     "selection_continuation_tokens",
+    "selection_tournament",
+    "selection_tournament_threshold",
+    "selection_tournament_rounds",
+    "selection_tournament_max_candidates",
+    "selection_score_window",
 }
 
 @dataclass(frozen=True)
@@ -282,6 +297,23 @@ def load_config(path: Path) -> dict[str, Any]:
             search["selection_continuation_tokens"],
             "search.selection_continuation_tokens",
         )
+    if "selection_tournament" in search and type(search["selection_tournament"]) is not bool:
+        raise ValueError("search.selection_tournament must be a boolean")
+    if "selection_tournament_threshold" in search:
+        value = search["selection_tournament_threshold"]
+        if type(value) not in (int, float) or type(value) is bool or not 0 < value <= 1:
+            raise ValueError("search.selection_tournament_threshold must be in (0, 1]")
+    if "selection_tournament_rounds" in search:
+        _positive_int(search["selection_tournament_rounds"], "search.selection_tournament_rounds")
+    if "selection_tournament_max_candidates" in search:
+        _positive_int(
+            search["selection_tournament_max_candidates"],
+            "search.selection_tournament_max_candidates",
+        )
+    if "selection_score_window" in search:
+        value = search["selection_score_window"]
+        if type(value) not in (int, float) or type(value) is bool or not 0 <= value < 1:
+            raise ValueError("search.selection_score_window must be in [0, 1)")
     if search["refine_review_strategy"] not in {"worst", "random_nonideal"}:
         raise ValueError(
             "search.refine_review_strategy must be 'worst' or 'random_nonideal'"

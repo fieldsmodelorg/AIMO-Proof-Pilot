@@ -9,7 +9,7 @@ HARNESS = REPO / "evaluation" / "harness"
 sys.path.insert(0, str(HARNESS))
 
 import proof_prompts as pp  # noqa: E402
-from proof_search import majority_winner, ProblemSearch, Proof  # noqa: E402
+from proof_search import majority_winner, ProblemSearch, Proof, Verification  # noqa: E402
 
 
 class ParseSelectedIdTests(unittest.TestCase):
@@ -131,6 +131,175 @@ class ConfigOptionalSelectorKeysTests(unittest.TestCase):
                 path = Path(f.name)
             with self.assertRaises(ValueError, msg=f"{key}={bad!r} should be rejected"):
                 load_config(path)
+
+    def test_tournament_keys_accepted(self):
+        from eval_config import load_config
+        import tempfile, yaml
+        cfg = self._base_search()
+        cfg["search"].update(
+            selection_tournament=True,
+            selection_tournament_threshold=0.9,
+            selection_tournament_rounds=32,
+            selection_tournament_max_candidates=8,
+            selection_score_window=0.15,
+        )
+        with tempfile.NamedTemporaryFile("w", suffix=".yaml", delete=False) as f:
+            yaml.safe_dump(cfg, f)
+            path = Path(f.name)
+        loaded = load_config(path)
+        self.assertTrue(loaded["search"]["selection_tournament"])
+        self.assertEqual(loaded["search"]["selection_tournament_rounds"], 32)
+
+    def test_tournament_bad_values_rejected(self):
+        from eval_config import load_config
+        import tempfile, yaml
+        for key, bad in (
+            ("selection_tournament", "yes"),
+            ("selection_tournament_threshold", 0),
+            ("selection_tournament_threshold", 1.5),
+            ("selection_tournament_rounds", 0),
+            ("selection_tournament_max_candidates", 0),
+            ("selection_score_window", 1.0),
+            ("selection_score_window", -0.1),
+        ):
+            cfg = self._base_search()
+            cfg["search"][key] = bad
+            with tempfile.NamedTemporaryFile("w", suffix=".yaml", delete=False) as f:
+                yaml.safe_dump(cfg, f)
+                path = Path(f.name)
+            with self.assertRaises(ValueError, msg=f"{key}={bad!r} should be rejected"):
+                load_config(path)
+
+
+class TournamentSelectionTests(unittest.TestCase):
+    """The tiered tournament path (saturated verifier -> stratified brackets)."""
+
+    MARK = "THE-TARGET-PROOF"
+
+    def _proof(self, i: int, score: float, mark: bool = False) -> Proof:
+        body = f"Proof number {i}." + (f" {self.MARK}" if mark else "")
+        return Proof(
+            proof_id=f"r00-p{i:04d}",
+            round_index=0,
+            parent_id=None,
+            proof=body,
+            self_evaluation="ok",
+            self_score=1.0,
+            generation_sample_id=f"s{i}",
+            verifications=[Verification(sample_id=f"v{i}", score=score, analysis="")],
+        )
+
+    def _run(self, cfg, ranked, perform):
+        import asyncio, tempfile
+
+        with tempfile.TemporaryDirectory() as d:
+            ps = ProblemSearch(
+                problem_id="1",
+                problem="Prove something.",
+                output_dir=Path(d),
+                client=None,
+                semaphore=asyncio.Semaphore(8),
+                config=cfg,
+            )
+            ps._perform = perform
+            return asyncio.run(ps._select_final(ranked))
+
+    def _target_ballot(self, seen):
+        """A fake selector that votes for the marked proof when present, else abstains
+        (null vote). Records per-bracket candidate counts into `seen`."""
+        import re
+
+        async def perform(spec, temperature=None):
+            user = spec.messages[-1]["content"]
+            cands = re.findall(r'<candidate id="(P\d+)">.*?<proof>(.*?)</proof>', user, re.S)
+            seen.append(len(cands))
+            for cid, body in cands:
+                if self.MARK in body:
+                    return {"content": f"<selected_id>{cid}</selected_id>"}
+            return {"content": "no pick here"}  # parses to None -> null vote
+
+        return perform
+
+    def test_tournament_runs_when_saturated_and_picks_most_wins(self):
+        # 8 proofs all >=0.95 -> saturated (> selection_candidates=4) -> tournament.
+        cfg = {
+            "seed": 0, "top_proofs": 16, "selection_candidates": 4, "selection_votes": 16,
+            "temperature": 1.0, "top_p": 0.95,
+            "selection_tournament": True, "selection_tournament_threshold": 0.95,
+            "selection_tournament_rounds": 16, "selection_tournament_max_candidates": 10,
+        }
+        scores = [1.0, 0.99, 0.98, 0.97, 0.97, 0.96, 0.96, 0.95]
+        ranked = [self._proof(i, s, mark=(i == 3)) for i, s in enumerate(scores)]
+        seen = []
+        result = self._run(cfg, ranked, self._target_ballot(seen))
+
+        self.assertIsNotNone(result)
+        self.assertEqual(result["mode"], "tournament")
+        self.assertEqual(result["winner_id"], "r00-p0003")           # the marked proof
+        self.assertEqual(result["total_votes"], 16)                  # one tally per bracket
+        self.assertEqual(len(seen), 16)                              # 16 selector calls
+        self.assertTrue(all(c == 4 for c in seen), seen)             # group size = 4
+        # stratified: 8 proofs * appearances, 16 rounds * 4 slots = 64 -> 8 each, balanced
+        appear = result["appearances"]
+        self.assertEqual(set(appear.values()), {8})
+
+    def test_tournament_caps_pool_at_max_candidates(self):
+        cfg = {
+            "seed": 1, "selection_candidates": 4, "selection_votes": 16,
+            "temperature": 1.0, "top_p": 0.95,
+            "selection_tournament": True, "selection_tournament_threshold": 0.95,
+            "selection_tournament_rounds": 20, "selection_tournament_max_candidates": 6,
+        }
+        ranked = [self._proof(i, 1.0, mark=(i == 0)) for i in range(12)]  # all saturated
+        seen = []
+        result = self._run(cfg, ranked, self._target_ballot(seen))
+        # only the top-6 candidates ever entered the bracket pool
+        self.assertEqual(len(result["appearances"]), 6)
+        self.assertEqual(set(result["appearances"].keys()),
+                         {f"r00-p{i:04d}" for i in range(6)})
+
+    def test_below_threshold_uses_windowed_vote_excluding_far_proofs(self):
+        # only 2 proofs >=0.95 (not > 4) -> windowed majority vote, window 0.2 of best (1.0)
+        # -> floor 0.8, so the 0.5 and 0.3 proofs are never shown to the selector.
+        cfg = {
+            "seed": 0, "selection_candidates": 4, "selection_votes": 5,
+            "temperature": 1.0, "top_p": 0.95,
+            "selection_tournament": True, "selection_tournament_threshold": 0.95,
+            "selection_score_window": 0.2,
+        }
+        ranked = [self._proof(0, 1.0), self._proof(1, 0.96),
+                  self._proof(2, 0.5), self._proof(3, 0.3)]
+        bodies = []
+
+        async def perform(spec, temperature=None):
+            bodies.append(spec.messages[-1]["content"])
+            return {"content": "<selected_id>P1</selected_id>"}
+
+        result = self._run(cfg, ranked, perform)
+        self.assertIsNotNone(result)
+        self.assertEqual(result["mode"], "vote")               # NOT tournament
+        joined = "\n".join(bodies)
+        self.assertIn("Proof number 0.", joined)
+        self.assertIn("Proof number 1.", joined)
+        self.assertNotIn("Proof number 2.", joined)            # 0.5 excluded by window
+        self.assertNotIn("Proof number 3.", joined)            # 0.3 excluded by window
+
+    def test_disabled_ignores_scores_and_uses_top_n(self):
+        # selection_tournament absent -> legacy top-n vote, mean_score never consulted.
+        cfg = {
+            "seed": 0, "selection_candidates": 4, "selection_votes": 3,
+            "temperature": 1.0, "top_p": 0.95,
+        }
+        ranked = [self._proof(i, 1.0) for i in range(8)]
+        seen = []
+
+        async def perform(spec, temperature=None):
+            seen.append(spec.messages[-1]["content"].count("<candidate"))
+            return {"content": "<selected_id>P1</selected_id>"}
+
+        result = self._run(cfg, ranked, perform)
+        self.assertEqual(result["mode"], "vote")
+        self.assertTrue(all(c == 4 for c in seen), seen)
 
 
 class SelectionCandidateCapTests(unittest.TestCase):

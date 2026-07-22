@@ -434,7 +434,25 @@ class ProblemSearch:
         # is ~4); feeding it top_proofs (the refinement pool, e.g. 16) is out of
         # distribution. Cap at selection_candidates, decoupled from top_proofs.
         n_cand = int(self.config.get("selection_candidates", 4))
-        candidates = ranked[:n_cand]
+        if len(ranked) < 2:
+            return None
+        if self.config.get("selection_tournament", False):
+            # Tiered selection (see eval_config OPTIONAL_SEARCH_KEYS). When the verifier
+            # saturates -- MORE than n_cand proofs tied near its ceiling -- a single
+            # top-n_cand re-rank is quality-blind, so play a stratified tournament over the
+            # whole saturated band instead. Otherwise fall through to the majority vote, but
+            # only over proofs within selection_score_window of the best verifier score, so
+            # a 1.0 is never pitted against a 0.3.
+            threshold = float(self.config.get("selection_tournament_threshold", 0.95))
+            strong = [p for p in ranked if p.mean_score >= threshold]
+            if len(strong) > n_cand:
+                cap = int(self.config.get("selection_tournament_max_candidates", 10))
+                return await self._select_tournament(strong[:cap])
+            window = float(self.config.get("selection_score_window", 0.2))
+            floor = ranked[0].mean_score * (1.0 - window)
+            candidates = [p for p in ranked if p.mean_score >= floor][:n_cand]
+        else:
+            candidates = ranked[:n_cand]
         if votes_n < 1 or len(candidates) < 2:
             return None
         rank_order = [p.proof_id for p in candidates]
@@ -471,6 +489,76 @@ class ProblemSearch:
             "counts": dict(counts),
             "valid_votes": sum(1 for v in votes if v is not None),
             "total_votes": votes_n,
+            "mode": "vote",
+        }
+
+    async def _select_tournament(self, pool: list[Proof]) -> dict | None:
+        """Stratified tournament over a saturated finalist pool.
+
+        The verifier can't separate proofs once several tie at its ceiling, so instead of
+        one top-n re-rank we play ``selection_tournament_rounds`` brackets: each bracket
+        pits ``selection_candidates`` proofs (the count the selector prompt is trained for),
+        picked so every candidate appears in a balanced number of brackets (stratified, with
+        slots shuffled to kill position bias), and we submit the proof that wins the most
+        brackets. Ties in wins break toward the better verifier rank. A dead selector call
+        drops that bracket to a null result; it never aborts the run.
+        """
+        rounds_n = int(self.config.get("selection_tournament_rounds", 64))
+        group = min(int(self.config.get("selection_candidates", 4)), len(pool))
+        if rounds_n < 1 or group < 2 or len(pool) < 2:
+            return None
+        rank_order = [p.proof_id for p in pool]
+
+        # Stratified brackets: greedily fill each with the least-used candidates (seeded
+        # jitter breaks ties) so appearances stay balanced across the pool, then shuffle
+        # within the bracket to debias slot position.
+        seed_rng = random.Random(
+            stable_seed(self.config["seed"], self.problem_id, "select-tournament")
+        )
+        appearances = {p.proof_id: 0 for p in pool}
+        brackets: list[list[Proof]] = []
+        for _ in range(rounds_n):
+            order = sorted(pool, key=lambda p: (appearances[p.proof_id], seed_rng.random()))
+            bracket = order[:group]
+            for p in bracket:
+                appearances[p.proof_id] += 1
+            seed_rng.shuffle(bracket)
+            brackets.append(bracket)
+
+        async def _one_round(i: int, bracket: list[Proof]) -> str | None:
+            id_map = {f"P{j + 1}": p.proof_id for j, p in enumerate(bracket)}
+            bundle = selection_bundle(
+                [(f"P{j + 1}", p.proof) for j, p in enumerate(bracket)]
+            )
+            spec = self._spec(
+                f"round-final/select/t{i:03d}",
+                "round-final/select",
+                selector_messages(self.problem, bundle),
+            )
+            try:
+                record = await self._perform(spec, temperature=SELECTION_TEMPERATURE)
+            except Exception:  # a broken bracket must not kill the run
+                return None
+            return id_map.get(parse_selected_id(record.get("content") or ""))
+
+        wins = list(
+            await asyncio.gather(*(_one_round(i, b) for i, b in enumerate(brackets)))
+        )
+        counts = Counter(w for w in wins if w is not None)
+        if not counts:
+            return None
+        # most wins; ties -> better verifier rank (earlier in the rank-sorted pool)
+        winner_id = max(
+            rank_order, key=lambda pid: (counts.get(pid, 0), -rank_order.index(pid))
+        )
+        return {
+            "winner_id": winner_id,
+            "votes": wins,
+            "counts": dict(counts),
+            "valid_votes": sum(1 for w in wins if w is not None),
+            "total_votes": rounds_n,
+            "appearances": appearances,
+            "mode": "tournament",
         }
 
     async def _emit_round_checkpoint(self, summary: dict) -> None:
@@ -850,8 +938,10 @@ class ProblemSearch:
                 chosen = self.proofs.get(selection["winner_id"])
                 if chosen is not None:
                     winner = chosen
+                    mode = selection.get("mode", "vote")
+                    tag = "llm_selector" if mode == "vote" else f"llm_selector[{mode}]"
                     final_source = (
-                        f"llm_selector:{selection['winner_id']}("
+                        f"{tag}:{selection['winner_id']}("
                         f"{selection['counts'].get(selection['winner_id'], 0)}/"
                         f"{selection['total_votes']})"
                     )
