@@ -441,8 +441,9 @@ class ProblemSearch:
             # saturates -- MORE than n_cand proofs tied near its ceiling -- a single
             # top-n_cand re-rank is quality-blind, so play a stratified tournament over the
             # whole saturated band instead. Otherwise fall through to the majority vote, but
-            # only over proofs within selection_score_window of the best verifier score, so
-            # a 1.0 is never pitted against a 0.3.
+            # only over proofs whose score is within selection_score_window (a FRACTION) of
+            # the best -- floor = best * (1 - window) -- so a 1.0 is never pitted against a
+            # 0.3. Multiplicative, not additive: this equals best-0.2 only when best == 1.0.
             threshold = float(self.config.get("selection_tournament_threshold", 0.95))
             strong = [p for p in ranked if p.mean_score >= threshold]
             if len(strong) > n_cand:

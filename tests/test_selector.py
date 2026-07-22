@@ -297,6 +297,32 @@ class TournamentSelectionTests(unittest.TestCase):
         self.assertNotIn("Proof number 2.", joined)            # 0.5 excluded by window
         self.assertNotIn("Proof number 3.", joined)            # 0.3 excluded by window
 
+    def test_windowed_floor_is_multiplicative(self):
+        # best<1.0 distinguishes multiplicative (best*(1-window)) from additive (best-window).
+        # best=0.6, window=0.2 -> floor 0.48: keeps 0.5, EXCLUDES 0.45 (additive best-0.2=0.40
+        # would have kept 0.45). Not saturated (0 proofs >=0.95) -> windowed vote.
+        cfg = {
+            "seed": 0, "selection_candidates": 4, "selection_votes": 5,
+            "temperature": 1.0, "top_p": 0.95,
+            "selection_tournament": True, "selection_tournament_threshold": 0.95,
+            "selection_score_window": 0.2,
+        }
+        ranked = [self._proof(0, 0.60), self._proof(1, 0.50),
+                  self._proof(2, 0.45), self._proof(3, 0.30)]
+        bodies = []
+
+        async def perform(spec, temperature=None):
+            bodies.append(spec.messages[-1]["content"])
+            return {"content": "<selected_id>P1</selected_id>"}
+
+        result = self._run(cfg, ranked, perform)
+        self.assertEqual(result["mode"], "vote")
+        joined = "\n".join(bodies)
+        self.assertIn("Proof number 0.", joined)      # 0.60 (best) kept
+        self.assertIn("Proof number 1.", joined)      # 0.50 >= 0.48 kept
+        self.assertNotIn("Proof number 2.", joined)   # 0.45 < 0.48 -> EXCLUDED (multiplicative)
+        self.assertNotIn("Proof number 3.", joined)   # 0.30 excluded
+
     def test_disabled_ignores_scores_and_uses_top_n(self):
         # selection_tournament=False -> legacy top-n vote, mean_score never consulted.
         cfg = {
