@@ -57,7 +57,8 @@ SEARCH_KEYS = {
 #
 # Tiered tournament selection (grading finding: the self-verifier saturates -- once several
 # proofs tie at the ceiling its argmax is quality-blind, so a plain top-4 re-rank leaves
-# perfect proofs on the table). When selection_tournament is on:
+# perfect proofs on the table). selection_tournament defaults to ON (only active when
+# llm_selector is on). When selection_tournament is on:
 #   - SATURATED pool (> selection_candidates proofs at verifier score >= tournament_threshold):
 #     run selection_tournament_rounds STRATIFIED brackets of selection_candidates proofs each
 #     (up to selection_tournament_max_candidates), tally the per-round winners, submit the
