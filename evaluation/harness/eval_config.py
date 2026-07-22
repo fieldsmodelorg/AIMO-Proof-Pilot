@@ -63,8 +63,9 @@ SEARCH_KEYS = {
 #     run selection_tournament_rounds STRATIFIED brackets of selection_candidates proofs each
 #     (up to selection_tournament_max_candidates), tally the per-round winners, submit the
 #     proof that won the most rounds.
-#   - otherwise: the normal majority vote, but restricted to proofs within selection_score_window
-#     (fraction) of the best verifier score, so a 1.0 is never pitted against a 0.3.
+#   - otherwise: the normal majority vote, but restricted to proofs with score >=
+#     best * (1 - selection_score_window) -- a FRACTION of the best (multiplicative, so it
+#     equals best-0.2 only when best == 1.0), so a 1.0 is never pitted against a 0.3.
 OPTIONAL_SEARCH_KEYS = {
     "llm_selector",
     "selection_votes",
