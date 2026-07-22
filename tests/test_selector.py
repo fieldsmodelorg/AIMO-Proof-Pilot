@@ -243,6 +243,19 @@ class TournamentSelectionTests(unittest.TestCase):
         appear = result["appearances"]
         self.assertEqual(set(appear.values()), {8})
 
+    def test_tournament_is_on_by_default(self):
+        # selection_tournament OMITTED -> defaults ON; a saturated pool still tournaments.
+        cfg = {
+            "seed": 0, "selection_candidates": 4, "selection_votes": 16,
+            "temperature": 1.0, "top_p": 0.95,
+            "selection_tournament_rounds": 8,
+        }
+        ranked = [self._proof(i, 1.0, mark=(i == 2)) for i in range(8)]
+        seen = []
+        result = self._run(cfg, ranked, self._target_ballot(seen))
+        self.assertEqual(result["mode"], "tournament")
+        self.assertEqual(result["winner_id"], "r00-p0002")
+
     def test_tournament_caps_pool_at_max_candidates(self):
         cfg = {
             "seed": 1, "selection_candidates": 4, "selection_votes": 16,
@@ -285,10 +298,10 @@ class TournamentSelectionTests(unittest.TestCase):
         self.assertNotIn("Proof number 3.", joined)            # 0.3 excluded by window
 
     def test_disabled_ignores_scores_and_uses_top_n(self):
-        # selection_tournament absent -> legacy top-n vote, mean_score never consulted.
+        # selection_tournament=False -> legacy top-n vote, mean_score never consulted.
         cfg = {
             "seed": 0, "selection_candidates": 4, "selection_votes": 3,
-            "temperature": 1.0, "top_p": 0.95,
+            "temperature": 1.0, "top_p": 0.95, "selection_tournament": False,
         }
         ranked = [self._proof(i, 1.0) for i in range(8)]
         seen = []
@@ -331,6 +344,7 @@ class SelectionCandidateCapTests(unittest.TestCase):
             "selection_votes": 3,
             "temperature": 1.0,
             "top_p": 0.95,
+            "selection_tournament": False,  # exercising the legacy top-n vote path
         }
         ranked = [self._proof(i) for i in range(16)]
 
@@ -370,6 +384,7 @@ class SelectionCandidateCapTests(unittest.TestCase):
             "selection_votes": 2,
             "temperature": 1.0,
             "top_p": 0.95,
+            "selection_tournament": False,  # exercising the legacy top-n vote path
         }
         ranked = [self._proof(i) for i in range(16)]
         with tempfile.TemporaryDirectory() as d:

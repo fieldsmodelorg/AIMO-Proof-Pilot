@@ -436,7 +436,7 @@ class ProblemSearch:
         n_cand = int(self.config.get("selection_candidates", 4))
         if len(ranked) < 2:
             return None
-        if self.config.get("selection_tournament", False):
+        if self.config.get("selection_tournament", True):
             # Tiered selection (see eval_config OPTIONAL_SEARCH_KEYS). When the verifier
             # saturates -- MORE than n_cand proofs tied near its ceiling -- a single
             # top-n_cand re-rank is quality-blind, so play a stratified tournament over the
