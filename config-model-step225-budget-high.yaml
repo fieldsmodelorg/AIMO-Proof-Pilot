@@ -81,6 +81,17 @@ search:
   selection_candidates: 4
   selection_max_tokens: 56000
   selection_continuation_tokens: 2048
+  # Tiered tournament selection (default-on; pinned here for reproducible cost).
+  # When the verifier SATURATES -- more than selection_candidates proofs at score
+  # >= selection_tournament_threshold -- play selection_tournament_rounds stratified
+  # brackets of selection_candidates proofs and submit the one that wins the most;
+  # otherwise the majority vote above, restricted to proofs with score >=
+  # best * (1 - selection_score_window) (a fraction of the best, not absolute).
+  selection_tournament: true
+  selection_tournament_threshold: 0.95
+  selection_tournament_rounds: 64
+  selection_tournament_max_candidates: 10
+  selection_score_window: 0.2
 
 # Optional: periodically push the whole artifacts tree (reasoning traces) to a HF
 # dataset. Auth: secrets_file (a JSON/YAML file with an hf_token) OR, if
