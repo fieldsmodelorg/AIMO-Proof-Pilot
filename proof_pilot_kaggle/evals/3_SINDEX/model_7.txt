@@ -1,0 +1,240 @@
+================================================================================
+SOLUTION
+================================================================================
+
+ANSWER.  N = 5,  M = 16,  and the smallest possible number of elements is
+
+                                   32.
+
+Throughout, a multiset S of positive integers < 20 is encoded by its
+generating polynomial
+                         f_S(x) = sum_{s in S} x^s ,
+where each element s contributes one monomial x^s counted with multiplicity.
+Thus f_S has nonnegative integer coefficients, its support lies in the
+exponents {1,2,...,19}, and the number of elements of S (with multiplicity)
+equals f_S(1).
+
+--------------------------------------------------------------------------------
+0.  REFORMULATION
+--------------------------------------------------------------------------------
+
+LEMMA 1.  Let i be a positive integer.  S can be partitioned into multisets
+A_i, B_i with A_i = i + B_i  if and only if
+
+        f_S(x) = (1 + x^i) g(x)   for some polynomial g with
+        nonnegative integer coefficients.                          (*)
+
+Proof.  A partition with A_i = i + B_i is the same as a way of grouping the
+elements of S into unordered pairs {b, b+i} (one element b of B_i together
+with the corresponding element b+i of A_i).  If g(x) = sum_b (mult) x^b is the
+generating polynomial of B_i, then A_i has generating polynomial x^i g(x), and
+S = A_i ⊔ B_i gives f_S = (1+x^i) g.  Conversely, given (*), g has nonnegative
+integer coefficients, so it is the generating polynomial of a multiset B_i,
+and A_i := i + B_i works.  ∎
+
+Hence the index of S is the largest n such that (*) holds for every
+i = 1,2,...,n; if even i = 1 fails the index is 0.
+
+In particular, putting x = 1 in (*) shows |S| = f_S(1) is even whenever the
+index is ≥ 1.
+
+--------------------------------------------------------------------------------
+1.  A NECESSARY CYCLOTOMIC CONDITION
+--------------------------------------------------------------------------------
+
+Let Phi_m denote the m-th cyclotomic polynomial.  We use
+
+   Phi_2  = 1 + x                  Phi_8  = 1 + x^4
+   Phi_4  = 1 + x^2                Phi_10 = 1 - x + x^2 - x^3 + x^4
+   Phi_6  = 1 - x + x^2            Phi_12 = 1 - x^2 + x^4
+
+and the factorizations
+
+   1 + x   = Phi_2
+   1 + x^2 = Phi_4
+   1 + x^3 = Phi_2 Phi_6
+   1 + x^4 = Phi_8
+   1 + x^5 = Phi_2 Phi_10
+   1 + x^6 = Phi_4 Phi_12                                          (1)
+
+(These are read off from 1 + x^i = (x^{2i}-1)/(x^i-1).)
+
+If S has index ≥ n then for every i ≤ n, (1+x^i) divides f_S, hence every
+cyclotomic factor occurring in (1) for i ≤ n divides f_S.  Since distinct
+cyclotomic polynomials are coprime, their product divides f_S.  Define
+
+   L_5 = Phi_2 Phi_4 Phi_6 Phi_8 Phi_10              (deg 13),
+   L_6 = Phi_2 Phi_4 Phi_6 Phi_8 Phi_10 Phi_12       (deg 17).
+
+By (1):
+
+   index ≥ 5  =>  L_5 | f_S,        index ≥ 6  =>  L_6 | f_S.       (2)
+
+Their explicit coefficient lists (exponents 0,1,2,...) are
+
+   L_5 = [1,-1, 2,-1, 2, 0, 1, 1, 0, 2,-1, 2,-1, 1]
+   L_6 = [1,-1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1,-1, 1]    (3)
+
+(One checks (3) directly by multiplying the cyclotomic polynomials above;
+note L_6 = L_5 · Phi_12.)  Both L_5 and L_6 are monic with constant term 1.
+
+--------------------------------------------------------------------------------
+2.  THE MAXIMUM INDEX IS N = 5
+--------------------------------------------------------------------------------
+
+2a.  Index 6 is impossible.
+
+Suppose S has index ≥ 6.  By (2), L_6 | f_S, so f_S = L_6 · h for an integer
+polynomial h.  Because the support of f_S lies in {1,...,19} we have
+deg f_S ≤ 19, so deg h ≤ 19 - 17 = 2; and f_S(0) = 0 with L_6(0) = 1 forces
+h(0) = 0.  Therefore
+
+                         h(x) = a x + b x^2 ,   a, b integers.
+
+Using (3), the coefficient of x^2 in f_S is
+       [x^2] f_S = a·L_6[1] + b·L_6[0] = -a + b ,
+and the coefficient of x^3 is
+       [x^3] f_S = a·L_6[2] + b·L_6[1] =  a - b .
+Both must be ≥ 0 (coefficients of a multiset), so -a+b ≥ 0 and a-b ≥ 0, i.e.
+
+                                 a = b =: t .
+
+Since S is nonempty, t ≥ 1, and
+
+       f_S = t (x + x^2) L_6 = t · x (1+x) L_6 .
+
+Now test i = 1.  Dividing by (1 + x) = Phi_2 (which is a genuine factor):
+       f_S / (1 + x) = t · x · L_6 .
+The coefficient of x^2 here equals t·L_6[1] = -t < 0.  Hence the quotient
+g in (*) for i = 1 has a NEGATIVE coefficient, so there is no valid partition
+for i = 1 — contradicting index ≥ 6 (which requires i = 1 to work).
+
+Therefore no S has index ≥ 6, and  N ≤ 5.
+
+2b.  Index 5 is attained.
+
+Take h(x) = x + 2x^2 + x^3 and set f = L_5 · h.  Expanding (using (3)),
+
+   f(x) = x + x^2 + x^3 + 2x^4 + 2x^5 + 3x^6 + 3x^7 + 3x^8 + 3x^9
+            + 3x^10 + 3x^11 + 2x^12 + 2x^13 + x^14 + x^15 + x^16 ,
+
+which corresponds to the multiset
+
+   S* = { 1, 2, 3, 4,4, 5,5, 6,6,6, 7,7,7, 8,8,8, 9,9,9,
+          10,10,10, 11,11,11, 12,12, 13,13, 14, 15, 16 }.
+
+All coefficients are nonnegative and the support is {1,...,16} ⊂ {1,...,19},
+so S* is a legitimate multiset.  Its index is exactly 5: explicit partitions
+into pairs {b, b+i} for i = 1,2,3,4,5 (each a list of 16 pairs covering S*
+exactly) are
+
+ i=1: (1,2)(3,4)(4,5)(5,6)(6,7)(6,7)(7,8)(8,9)(8,9)(9,10)(10,11)(10,11)
+      (11,12)(12,13)(13,14)(15,16)
+ i=2: (1,3)(2,4)(4,6)(5,7)(5,7)(6,8)(6,8)(7,9)(8,10)(9,11)(9,11)(10,12)
+      (10,12)(11,13)(13,15)(14,16)
+ i=3: (1,4)(2,5)(3,6)(4,7)(5,8)(6,9)(6,9)(7,10)(7,10)(8,11)(8,11)(9,12)
+      (10,13)(11,14)(12,15)(13,16)
+ i=4: (1,5)(2,6)(3,7)(4,8)(4,8)(5,9)(6,10)(6,10)(7,11)(7,11)(8,12)(9,13)
+      (9,13)(10,14)(11,15)(12,16)
+ i=5: (1,6)(2,7)(3,8)(4,9)(4,9)(5,10)(5,10)(6,11)(6,11)(7,12)(7,12)(8,13)
+      (8,13)(9,14)(10,15)(11,16)
+
+(One verifies for each i that the multiset of all entries appearing is exactly
+S*.)  Thus partitions exist for i = 1,...,5, so the index is ≥ 5; by part 2a
+it cannot exceed 5.  Hence the index of S* equals 5, and combined with 2a,
+
+                                 N = 5.
+
+[Sufficiency remark used implicitly: whenever f = L_5·h with h having
+nonnegative coefficients, dropping any single factor (1+x^i) for i ≤ 5 leaves
+a product of (3) with nonnegative pieces and h, but in general we simply verify
+each quotient directly, as done above.]
+
+--------------------------------------------------------------------------------
+3.  THE SMALLEST MAXIMUM ELEMENT IS M = 16
+--------------------------------------------------------------------------------
+
+Let S have index 5 (= N).  By (2), L_5 | f_S, so f_S = L_5 · h with h an
+integer polynomial, h(0) = 0 (since f_S(0)=0, L_5(0)=1).  The maximum element
+of S equals deg f_S = 13 + deg h.  Since h(0) = 0 and h ≠ 0, deg h ≥ 1, giving
+maximum element ≥ 14.  We rule out 14 and 15.
+
+• Maximum element 14  (deg h = 1):  h = c x, c ≥ 1, so f_S = c·x·L_5.  By (3),
+  [x^2] f_S = c·L_5[1] = -c < 0, impossible for a multiset.
+
+• Maximum element 15  (deg h = 2):  h = c1 x + c2 x^2 with c2 ≥ 1.  Then
+        [x^2]  f_S = c1·L_5[1] + c2·L_5[0] = -c1 + c2 ≥ 0  =>  c2 ≥ c1,
+        [x^14] f_S = c1·L_5[13] + c2·L_5[12] =  c1 - c2 ≥ 0  =>  c1 ≥ c2,
+  so c1 = c2 =: s ≥ 1 and f_S = s·x(1+x)L_5.  Dividing by (1+x),
+        f_S/(1+x) = s·x·L_5 ,  whose [x^2]-coefficient is s·L_5[1] = -s < 0,
+  so the i = 1 partition fails — contradicting index 5.
+
+Hence every index-5 multiset has maximum element ≥ 16, and S* above achieves
+16.  Therefore  M = 16.
+
+--------------------------------------------------------------------------------
+4.  THE SMALLEST NUMBER OF ELEMENTS IS 32
+--------------------------------------------------------------------------------
+
+Let S have index 5 and maximum element 16.  As in Section 3, f_S = L_5 · h
+with h(0) = 0 and deg f_S = 16, so deg h = 3:
+
+                 h(x) = c1 x + c2 x^2 + c3 x^3 ,   c3 ≠ 0.
+
+KEY IDENTITY (size formula).  Evaluating at x = 1,
+       |S| = f_S(1) = L_5(1) · h(1) = 8 · (c1 + c2 + c3),
+because L_5(1) = Phi_2(1)Phi_4(1)Phi_6(1)Phi_8(1)Phi_10(1) = 2·2·1·2·1 = 8.
+Thus |S| is 8 times the integer h(1) = c1 + c2 + c3, and minimizing |S| means
+minimizing c1 + c2 + c3.
+
+Sign constraints on the coefficients of f_S = L_5·h (read off via (3)):
+       [x^1]  f_S = c1·L_5[0]              = c1            ≥ 0,
+       [x^16] f_S = c3·L_5[13]             = c3            ≥ 0,  and c3 ≠ 0,
+       [x^2]  f_S = c1·L_5[1] + c2·L_5[0]  = c2 - c1       ≥ 0,
+       [x^15] f_S = c2·L_5[13]+ c3·L_5[12] = c2 - c3       ≥ 0.
+Therefore  c1 ≥ 0,  c3 ≥ 1,  c2 ≥ c1,  c2 ≥ c3 ≥ 1.  In particular all of
+c1, c2, c3 are nonnegative with c2 ≥ 1 and c3 ≥ 1.
+
+We claim c1 + c2 + c3 ≥ 4.  Suppose instead c1 + c2 + c3 ≤ 3.  Subject to
+0 ≤ c1 ≤ c2, 1 ≤ c3 ≤ c2, the only integer triples are
+
+   (c1,c2,c3) = (0,1,1),  (1,1,1),  (0,2,1).
+
+We check each fails to give an index-5 multiset:
+
+ (0,1,1):  f = L_5(x^2+x^3) = x^2(1+x)L_5.  Its (1+x)-quotient is x^2 L_5,
+           whose [x^3]-coefficient is L_5[1] = -1 < 0, so i = 1 already fails
+           (index 0).
+
+ (1,1,1):  f = x(1+x+x^2)L_5.  Direct division by (1+x) gives a quotient with
+           a negative coefficient (e.g. [x^2] of f/(1+x) is -1), so i = 1
+           fails (index 0).
+
+ (0,2,1):  f = L_5(2x^2 + x^3) has [x^3] f = 2·L_5[1] + L_5[0] = -2 + 1
+           = -1 < 0, so f is not even a valid multiset.
+
+(Each statement is a one-line coefficient computation from (3).)  None of the
+three has index 5, so c1 + c2 + c3 ≥ 4, hence
+
+                       |S| = 8(c1+c2+c3) ≥ 8·4 = 32.
+
+This bound is attained: S* from Section 2b has h = x + 2x^2 + x^3, so
+c1+c2+c3 = 4 and |S*| = 32, with index 5 and maximum element 16.
+
+--------------------------------------------------------------------------------
+5.  CONCLUSION
+--------------------------------------------------------------------------------
+
+The maximum index over all admissible multisets is N = 5.  Among multisets of
+index 5, the smallest possible maximum element is M = 16.  Among multisets of
+index 5 with maximum element 16, the number of elements is a multiple of 8 and
+is at least 32, with equality achieved by
+
+   S* = {1, 2, 3, 4², 5², 6³, 7³, 8³, 9³, 10³, 11³, 12², 13², 14, 15, 16}.
+
+Hence the smallest possible number of elements of S (with multiplicity) is
+
+                                ┌──────────┐
+                                │   32     │
+                                └──────────┘
+================================================================================

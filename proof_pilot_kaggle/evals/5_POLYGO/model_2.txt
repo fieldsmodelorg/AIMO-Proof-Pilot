@@ -1,0 +1,116 @@
+The polynomial is monic degree 7, so write
+\[
+P(x)=x^{7}+a_{6}x^{6}+a_{5}x^{5}+a_{4}x^{4}+a_{3}x^{3}+a_{2}x^{2}+a_{1}x+a_{0},
+\]
+with integer coefficients \(a_i\).  
+Conditions:  
+- \(a_i\) are odd, \(|a_i|<2025^{2}\) for \(i=0,\dots,6\); leading coefficient 1 also satisfies \(|1|=1\) odd and \(<2025^{2}\).  
+- For each coefficient (including the leading one) its absolute value is a root of \(P\).  
+In particular \(1\) (absolute value of leading coefficient) is a root, so \(P(1)=0\):
+\[
+1+\sum_{i=0}^{6}a_i=0\quad\Longrightarrow\quad \sum_{i=0}^{6}a_i=-1.\tag{1}
+\]
+Define \(t_i=|a_i|>0\) (odd). Then the condition gives \(P(t_i)=0\) for each \(i=0,\dots,6\) as well.  
+By the rational root theorem any integer root divides the constant term, hence \(t_i\mid a_0\) for all \(i\). Therefore \(t_0=|a_0|\) and each \(t_i\) is a positive odd divisor of \(t_0\).
+
+We split into two cases.
+
+---
+
+### Case 1: \(t_0=1\)  
+Then \(a_0=\pm1\) and every \(t_i\mid 1\) forces \(t_i=1\). Hence all coefficients (except the leading 1) are \(\pm1\).  
+Equation (1) becomes \(1+\sum_{i=0}^{6}\varepsilon_i=0\), where \(\varepsilon_i=\pm1\) is the sign of \(a_i\). Thus \(\sum_{i=0}^{6}\varepsilon_i=-1\), i.e. among the seven coefficients \(a_0,\dots,a_6\) exactly three are \(+1\) and four are \(-1\). The number of such sign choices is \(\binom{7}{3}=35\).  
+Each such polynomial satisfies \(P(1)=0\) (so \(1\) is a root) and every coefficient has absolute value \(1\) which is a root; the other conditions (odd, \(<2025^{2}\)) are clearly satisfied. Hence there are \(35\) good polynomials with \(t_0=1\).
+
+---
+
+### Case 2: \(t_0>1\)  
+Now \(t_0\) is odd and \(>1\). Write \(a_i=\varepsilon_i t_i\) with \(\varepsilon_i=\pm1\) (so \(t_i=|a_i|\)). The conditions give
+\[
+\sum_{i=0}^{6}\varepsilon_i t_i = -1,\tag{2}
+\]
+\[
+\sum_{i=0}^{6}\varepsilon_i t_i\,t_0^{\,i} = -t_0^{7}.\tag{3}
+\]
+Because \(t_i\mid t_0\), each \(t_i\) is either \(1\) or a proper divisor of \(t_0\) or \(t_0\) itself.  
+Manipulate (3) step by step using increasing powers of \(t_0\) to show that the only possibility is:
+\(t_i=t_0\) for even \(i\) and \(t_i=1\) for odd \(i\), together with precise sign relations.
+
+*Step 1:* Divide (3) by \(t_0\):
+\[
+\varepsilon_0 + \varepsilon_1 t_1 + \sum_{i=2}^{6}\varepsilon_i t_i t_0^{\,i-1} = -t_0^{6}.
+\]
+Modulo \(t_0\) the sum for \(i\ge2\) vanishes; thus \(\varepsilon_0+\varepsilon_1 t_1\equiv0\pmod{t_0}\). Since \(t_1\mid t_0\) and \(t_0>1\), the only possibility is \(t_1=1\) and \(\varepsilon_1=-\varepsilon_0\). (Otherwise \(|t_1|>1\) gives a contradiction because \(|\varepsilon_0+\varepsilon_1 t_1|\) would be smaller than \(t_0\) and not a multiple of \(t_0\).)  
+Hence \(t_1=1\), \(\varepsilon_1=-\varepsilon_0\).
+
+*Step 2:* Insert this into (3). The terms for \(i=0,1\) become \(\varepsilon_0 t_0 + (-\varepsilon_0)t_0=0\). So (3) reduces to
+\[
+\sum_{i=2}^{6}\varepsilon_i t_i t_0^{\,i} = -t_0^{7}.
+\]
+Divide by \(t_0\):
+\[
+\varepsilon_2 t_2 + \varepsilon_3 t_3 t_0 + \varepsilon_4 t_4 t_0^{2} + \varepsilon_5 t_5 t_0^{3} + \varepsilon_6 t_6 t_0^{4} = -t_0^{5}. \tag{4}
+\]
+Reduce (4) modulo \(t_0\): the terms for \(i\ge3\) contain a factor \(t_0\), so \(\varepsilon_2 t_2\equiv0\pmod{t_0}\).  
+As before, because \(t_2\mid t_0\) and \(t_0>1\), this forces \(t_2=t_0\) (and \(\varepsilon_2\) free). Thus \(t_2=t_0\).
+
+*Step 3:* Substitute \(t_2=t_0\) into (4) and divide by \(t_0\):
+\[
+\varepsilon_2 + \varepsilon_3 t_3 + \varepsilon_4 t_4 t_0 + \varepsilon_5 t_5 t_0^{2} + \varepsilon_6 t_6 t_0^{3} = -t_0^{4}. \tag{5}
+\]
+Modulo \(t_0\) we get \(\varepsilon_2+\varepsilon_3 t_3\equiv0\pmod{t_0}\).  
+Arguing as before, this forces \(t_3=1\) and \(\varepsilon_3=-\varepsilon_2\). (Any proper divisor would give a non‑zero residue of absolute value less than \(t_0\); \(t_3=t_0\) would lead to \(\varepsilon_2\equiv0\) impossible.)  
+Hence \(t_3=1\), \(\varepsilon_3=-\varepsilon_2\).
+
+*Step 4:* With these values the left side of (5) simplifies: \(\varepsilon_2+\varepsilon_3 t_3=0\). Dividing the rest by \(t_0\) gives
+\[
+\varepsilon_4 t_4 + \varepsilon_5 t_5 t_0 + \varepsilon_6 t_6 t_0^{2} = -t_0^{3}. \tag{6}
+\]
+Reduce (6) modulo \(t_0\): \(\varepsilon_4 t_4\equiv0\pmod{t_0}\Rightarrow t_4=t_0\) (and \(\varepsilon_4\) free). Thus \(t_4=t_0\).
+
+*Step 5:* Put \(t_4=t_0\) into (6) and divide by \(t_0\):
+\[
+\varepsilon_4 + \varepsilon_5 t_5 + \varepsilon_6 t_6 t_0 = -t_0^{2}. \tag{7}
+\]
+Modulo \(t_0\): \(\varepsilon_4+\varepsilon_5 t_5\equiv0\pmod{t_0}\Rightarrow t_5=1,\ \varepsilon_5=-\varepsilon_4\). So \(t_5=1\), \(\varepsilon_5=-\varepsilon_4\).
+
+*Step 6:* Then (7) reduces to \(\varepsilon_4+\varepsilon_5 t_5=0\), leaving
+\[
+\varepsilon_6 t_6 t_0 = -t_0^{2}\quad\Longrightarrow\quad \varepsilon_6 t_6 = -t_0.
+\]
+Since \(t_6\mid t_0\) and \(t_0>1\), we must have \(t_6=t_0\) and \(\varepsilon_6=-1\).  
+Thus \(t_6=t_0\), \(\varepsilon_6=-1\).
+
+Collecting the results:
+\[
+\begin{array}{ll}
+t_0=t_0,\ t_1=1,\ t_2=t_0,\ t_3=1,\ t_4=t_0,\ t_5=1,\ t_6=t_0;\\[2mm]
+\varepsilon_1=-\varepsilon_0,\ \varepsilon_3=-\varepsilon_2,\ \varepsilon_5=-\varepsilon_4,\ \varepsilon_6=-1.
+\end{array}
+\]
+So the absolute values are fixed: even‑indexed coefficients have absolute value \(t_0\), odd‑indexed have absolute value \(1\). The signs \(\varepsilon_0,\varepsilon_2,\varepsilon_4\) are still free; the others are determined by them.
+
+Now impose the sum condition (2):
+\[
+\sum_{i=0}^{6}\varepsilon_i t_i = \varepsilon_0 t_0 + (-\varepsilon_0) + \varepsilon_2 t_0 + (-\varepsilon_2) + \varepsilon_4 t_0 + (-\varepsilon_4) + (-1)t_0 = (T-1)t_0-T,
+\]
+where \(T=\varepsilon_0+\varepsilon_2+\varepsilon_4\). Setting this equal to \(-1\) yields
+\[
+(T-1)t_0 - T = -1\quad\Longrightarrow\quad (T-1)(t_0-1)=0.
+\]
+Since \(t_0>1\), we must have \(T=1\). Hence \(\varepsilon_0+\varepsilon_2+\varepsilon_4=1\), i.e. exactly two of them are \(+1\) and one is \(-1\). That gives \(3\) possibilities for the triple \((\varepsilon_0,\varepsilon_2,\varepsilon_4)\).
+
+Therefore, for every odd \(t_0\) with \(1<t_0<2025^{2}\), there are exactly \(3\) good polynomials given by the above pattern of signs. The condition \(|a_i|<2025^{2}\) requires \(t_0<2025^{2}\); the oddness condition is already satisfied because \(t_0\) is odd. The number of such \(t_0\) is the number of odd integers from \(3\) to \(2025^{2}-2\) inclusive, which is
+\[
+\frac{2025^{2}-3}{2}=2\,050\,311.
+\]
+Hence the number of good polynomials from this case is \(3\times2\,050\,311 = 6\,150\,933\).
+
+Adding the \(35\) from the \(t_0=1\) case gives the total
+\[
+35+6\,150\,933 = 6\,150\,968.
+\]
+
+\[
+\boxed{6150968}
+\]

@@ -1,0 +1,47 @@
+## Solution
+
+**Setup.** Write $b_i = P/a_i = \prod_{j\neq i} a_j$, so we are studying $g=\gcd_i(b_i+1)$. By definition $b_i \equiv -1 \pmod g$ for every $i$.
+
+**Step 1: All the $a_i$ lie in one residue class mod $g$.**
+
+Since $b_i \equiv -1 \pmod g$, we have $\gcd(b_i,g)=1$, so each $b_i$ is a unit mod $g$. As every $a_j$ appears as a factor of some $b_i$ (with $j\neq i$, possible since $k\ge 2$), each $a_j$ is a unit mod $g$.
+
+For all $i$ we have $a_i b_i = P$, hence $a_i b_i \equiv a_\ell b_\ell \pmod g$. Using $b_i\equiv b_\ell \equiv -1$ this gives $a_i \equiv a_\ell \pmod g$. So there is a common unit $c$ with
+$$a_i \equiv c \pmod g \quad\text{for all } i.$$
+Then $-1 \equiv b_i = \prod_{j\neq i} a_j \equiv c^{\,k-1} \pmod g$, i.e.
+$$c^{\,k-1}\equiv -1 \pmod g. \tag{$\ast$}$$
+
+**Step 2: $k\ge 4$ cannot beat $k=3$.**
+
+The $k$ numbers are distinct positive integers in a fixed class mod $g$, so their sum is at least $\sum_{j=0}^{k-1}(r_0+jg)\ge g\cdot\tfrac{k(k-1)}{2}$ where $r_0\ge 1$. For $k\ge 4$ this is $\ge 6g$, so
+$$6g \le \sum a_i < 3\cdot 10^6 \implies g < 500000.$$
+Thus any $g$ above $500000$ must come from $k=3$.
+
+**Step 3: The constraint for $k=3$.**
+
+Here $(\ast)$ becomes $c^2\equiv -1\pmod g$. Let $r\in\{1,\dots,g-1\}$ be the residue of $c$; then
+$$r^2\equiv -1 \pmod g, \qquad\text{so } r^2+1 = mg \text{ for some integer } m\ge 1.$$
+The three distinct positive integers $\equiv c \pmod g$ have sum at least $r+(r+g)+(r+2g)=3(r+g)$, so
+$$3(r+g) < 3\cdot 10^6 \implies r+g \le 999999. \tag{$\dagger$}$$
+
+**Step 4: Upper bound $g\le 998285$.**
+
+Suppose $g\ge 998286$. By $(\dagger)$, $r\le 999999-g\le 1713$, hence $r^2+1\le 1713^2+1=2934370$. Since $r^2+1=mg\ge m\cdot 998286$:
+
+- If $m\ge 3$: $r^2+1\ge 3\cdot 998286 = 2994858 > 2934370$ — impossible.
+- If $m=1$: $g=r^2+1\ge 998286 \Rightarrow r\ge 1000$ (as $999^2=998001$), so $r+g = r+r^2+1 \ge 1001001 > 999999$, contradicting $(\dagger)$.
+- If $m=2$: $g=\tfrac{r^2+1}{2}\ge 998286 \Rightarrow r^2\ge 1996571 \Rightarrow r\ge 1414$ (as $1413^2=1996569$); $r$ is odd so $r\ge 1415$, giving $r+g \ge 1415 + \tfrac{1415^2+1}{2} = 1415+1001113 = 1002528 > 999999$, again contradicting $(\dagger)$.
+
+Every case is impossible, so $g\le 998285$.
+
+**Step 5: Construction achieving $g=998285$.**
+
+Take $r=1413$, $g = \dfrac{1413^2+1}{2} = \dfrac{1996570}{2} = 998285$, and
+$$a_1 = 1413,\quad a_2 = 1413+g = 999698,\quad a_3 = 1413+2g = 1997983.$$
+These are distinct, and their sum is $2999094 < 3\cdot 10^6$. Each $a_i\equiv 1413 \pmod{g}$, and
+$$1413^2 = 1996569 = 2g-1 \equiv -1 \pmod g.$$
+Therefore every $b_i$ (a product of two of the $a_j$) satisfies $b_i\equiv 1413^2\equiv -1\pmod g$, so $g \mid b_i+1$ for all $i$. Hence $\gcd_i(b_i+1)\ge 998285$, and by Step 4 it equals $998285$.
+
+**Conclusion.** Steps 2–4 show no configuration gives $g>998285$, and Step 5 attains it.
+
+$$\boxed{g_{\max} = 998285}$$

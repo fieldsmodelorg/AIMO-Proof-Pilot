@@ -1,0 +1,94 @@
+We place triangle \(ABC\) in the coordinate plane with \(B=(0,0)\), \(C=(17,0)\). Since \(AB=26\) and \(AC=25\), solving \(x_A^2+y_A^2=26^2\) and \((x_A-17)^2+y_A^2=25^2\) gives \(A=(10,24)\).  
+The orthocenter \(H\) is the intersection of altitudes: altitude from \(A\) is \(x=10\), altitude from \(B\) is perpendicular to \(AC\) (slope \(-24/7\) so altitude slope \(7/24\)): \(y=\frac{7}{24}x\); thus \(H=(10,\frac{35}{12})\).
+
+The feet of the altitudes are  
+\(D=(10,0)\) (foot from \(A\) to \(BC\)),  
+\(E\) = foot from \(B\) to \(AC\): projection gives \(E=\left(\frac{9792}{625},\frac{2856}{625}\right)\),  
+\(F\) = foot from \(C\) to \(AB\): \(F=\left(\frac{425}{169},\frac{1020}{169}\right)\).
+
+Line \(EF\) meets \(BC\) (the \(x\)-axis) at \(X\). Using the two‑point form, after simplification we obtain  
+\(X=\left(\frac{170}{3},0\right)\).
+
+The circumcircle \(\Omega\) of \(ABC\): its centre is the intersection of perpendicular bisectors of \(BC\) and \(AB\). The perpendicular bisector of \(BC\) is \(x=\frac{17}{2}\); the perpendicular bisector of \(AB\) (midpoint \((5,12)\), slope of \(AB\) is \(\frac{12}{5}\) so perpendicular slope \(-\frac{5}{12}\)) gives \(y= \frac{253}{24}\) at \(x=\frac{17}{2}\). Hence \(O=\left(\frac{17}{2},\frac{253}{24}\right)\) and radius \(R=OB=\frac{325}{24}\).
+
+The line \(AX\) has direction vector \(\vec v = X-A = \left(\frac{140}{3},-24\right)\).  
+The second intersection \(Q\) of \(AX\) with \(\Omega\) is given by the chord formula  
+\(Q = A + t\vec v\) where \(t = -\frac{2(A-O)\cdot\vec v}{|\vec v|^2}\).  
+Compute \(A-O = \left(\frac{3}{2},\frac{323}{24}\right)\) and \((A-O)\cdot\vec v = \frac{3}{2}\cdot\frac{140}{3}+\frac{323}{24}\cdot(-24)=70-323=-253\).  
+\(|\vec v|^2 = \left(\frac{140}{3}\right)^2+24^2 = \frac{19600}{9}+576 = \frac{24784}{9}\).  
+Thus \(t = -2(-253)\big/ \frac{24784}{9} = \frac{506\cdot9}{24784}= \frac{2277}{12392}\).  
+Therefore  
+\(Q = \left(10+\frac{140}{3}\cdot\frac{2277}{12392},\;24-24\cdot\frac{2277}{12392}\right) = \left(\frac{57545}{3098},\frac{60690}{3098}\right)\).
+
+The nine‑point circle (circle \(DEF\)) is the image of the circumcircle under the homothety with centre \(H\) and factor \(\frac12\) (it sends \(O\) to the midpoint of \(OH\), the nine‑point centre, and any point on \(\Omega\) to the midpoint of the segment joining \(H\) to that point). Hence for \(Q\in\Omega\) the midpoint \(M\) of \(HQ\) lies on the nine‑point circle.  
+Triangle \(ABC\) is acute (all squares of sides are less than the sum of squares of the other two), so \(OH<R\) and consequently \(H\) is inside the nine‑point circle. The segment \(HQ\) therefore meets the nine‑point circle exactly at \(M\). Hence \(P=M\) is the midpoint of \(HQ\).
+
+Now compute the required ratio. Since \(P\) is the midpoint, \(PQ = \frac12 HQ\) and \(PE = \bigl|\frac{H+Q}{2}-E\bigr| = \frac12|H+Q-2E|\). Thus  
+\[
+\frac{PQ}{PE} = \frac{HQ}{2PE} = \frac{|Q-H|}{|H+Q-2E|}.
+\]  
+Set \(V = Q-H\), \(W = H+Q-2E\). Then the ratio equals \(|V|/|W|\).
+
+Compute \(V\):
+\[
+V = \left(\frac{57545}{3098}-10,\; \frac{60690}{3098}-\frac{35}{12}\right) = \left(\frac{26565}{3098},\; \frac{309925}{18588}\right).
+\]  
+Writing the first component with denominator \(18588\): \(\frac{26565}{3098}= \frac{159390}{18588}\), so  
+\(V = \frac{1}{18588}(159390,309925)\).  
+Factor \(159390 = 8855\cdot18\), \(309925 = 8855\cdot35\) (because \(8855=35\cdot253\)). Hence  
+\(V = \frac{8855}{18588}(18,35)\).
+
+Next, \(H-E = \left(10-\frac{9792}{625},\;\frac{35}{12}-\frac{2856}{625}\right) = \left(-\frac{3542}{625},\;-\frac{12397}{7500}\right)\).  
+Factor \(3542=14\cdot253\), \(12397=49\cdot253\), and \(7500=12\cdot625\), so  
+\(H-E = \frac{253}{625}(-14,-\frac{49}{12})\).
+
+Now \(W = V + 2(H-E)\). Compute squares:
+\[
+|V|^2 = \frac{8855^2}{18588^2}\cdot(18^2+35^2) = \frac{8855^2}{18588^2}\cdot1549.
+\]  
+Since \(8855=35\cdot253\) and \(18588=12\cdot1549\),  
+\[
+\frac{8855^2}{18588^2} = \frac{35^2\cdot253^2}{12^2\cdot1549^2} = \frac{1225\cdot253^2}{144\cdot1549^2},
+\]  
+so \(|V|^2 = \frac{1225\cdot253^2}{144\cdot1549}\).
+
+For \(|H-E|^2\):
+\[
+|H-E|^2 = \left(\frac{253}{625}\right)^2\left(14^2+\left(\frac{49}{12}\right)^2\right) = \frac{253^2}{625^2}\cdot\frac{30625}{144} = \frac{253^2\cdot49}{625\cdot144}.
+\]  
+Thus \(4|H-E|^2 = \frac{196\cdot253^2}{625\cdot144}\).
+
+For the dot product:
+\[
+V\cdot(H-E) = \frac{8855}{18588}\cdot\frac{253}{625}\bigl(18\cdot(-14)+35\cdot(-\tfrac{49}{12})\bigr) = \frac{8855\cdot253}{18588\cdot625}\cdot\left(-\frac{4739}{12}\right).
+\]  
+Using \(8855=35\cdot253\) and \(18588=12\cdot1549\),  
+\(V\cdot(H-E) = -\frac{35\cdot253^2\cdot4739}{144\cdot1549\cdot625}\),  
+so \(4V\cdot(H-E) = -\frac{140\cdot253^2\cdot4739}{144\cdot1549\cdot625}\).
+
+Then
+\[
+|W|^2 = |V|^2 + 4|H-E|^2 + 4V\cdot(H-E) = \frac{253^2}{144}\left(\frac{1225}{1549}+\frac{196}{625}-\frac{140\cdot4739}{1549\cdot625}\right).
+\]  
+The bracket simplifies to \(\frac{405769}{1549\cdot625}\) because  
+\(1225\cdot625 + 196\cdot1549 - 140\cdot4739 = 765625+303604-663460 = 405769\).  
+Hence  
+\[
+|W|^2 = \frac{253^2\cdot405769}{144\cdot1549\cdot625}.
+\]
+
+Now
+\[
+\left(\frac{|V|}{|W|}\right)^2 = \frac{\frac{1225\cdot253^2}{144\cdot1549}}{\frac{253^2\cdot405769}{144\cdot1549\cdot625}} = \frac{1225\cdot625}{405769} = \frac{765625}{405769}.
+\]  
+Since \(765625 = 5^6\cdot7^2 = 125^2\cdot49\) and \(405769 = 637^2\) with \(637=7^2\cdot13\),  
+\[
+\frac{765625}{405769} = \left(\frac{125}{91}\right)^2.
+\]  
+Thus \(\frac{|V|}{|W|} = \frac{125}{91}\), and therefore  
+\[
+\frac{PQ}{PE} = \frac{125}{91}.
+\]  
+The integers \(125\) and \(91\) are coprime, so \(a+b=125+91=216\).
+
+\boxed{216}

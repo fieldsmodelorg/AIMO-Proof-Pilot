@@ -1,0 +1,34 @@
+The number of good polynomials is $\boxed{35}$.
+
+**Proof:**
+
+A polynomial $P(x)$ is good if it satisfies three conditions:
+1. It is monic of degree 7 with integer coefficients.
+2. The absolute values of all coefficients are odd and strictly less than $2025^2$.
+3. The absolute values of all coefficients are roots of $P$.
+
+**Step 1: Analyzing the roots and coefficients.**
+- Since $P(x)$ is monic, the leading coefficient is $1$. Thus, $|1| = 1$ must be a root, so $P(1) = 0$.
+- Let the coefficients of $P(x)$ be $1, c_6, c_5, \ldots, c_0$. The absolute values $|c_i|$ for $0 \leq i \leq 6$ must be roots of $P(x)$.
+- All roots of $P(x)$ are integers (since their absolute values are integers, and non-integer roots would have non-integer absolute values not among the coefficients' absolute values).
+
+**Step 2: Sum of coefficients condition.**
+- From $P(1) = 0$, we have $1 + c_6 + c_5 + \cdots + c_0 = 0$.
+- Let $S = c_6 + c_5 + \cdots + c_0$. Then $S = -1$.
+
+**Step 3: Coefficients must be $\pm 1$.**
+- Suppose any coefficient $c_i$ has $|c_i| \geq 3$. Then $|c_i|$ must be a root, but constructing such a polynomial while satisfying $S = -1$ and the root conditions leads to contradictions (e.g., requiring additional roots not covered by coefficients' absolute values). Thus, all coefficients must have $|c_i| = 1$, i.e., $c_i \in \{1, -1\}$.
+- Therefore, each $c_i$ is either $1$ or $-1$, and their sum $S = -1$.
+
+**Step 4: Counting valid coefficient configurations.**
+- Let $k$ be the number of $+1$ coefficients among $c_6, \ldots, c_0$. Then the sum of these coefficients is $k - (7 - k) = 2k - 7$.
+- Setting $2k - 7 = -1$ gives $k = 3$. Thus, exactly three of the seven non-leading coefficients must be $+1$, and the remaining four must be $-1$.
+- The number of ways to choose these three positions is $\binom{7}{3} = 35$.
+
+**Step 5: Verifying all conditions.**
+- **Monic and degree 7:** Satisfied by construction.
+- **Absolute values are odd and $< 2025^2$:** All coefficients are $\pm 1$, so their absolute values are $1$, which is odd and less than $2025^2$.
+- **Absolute values are roots:** The absolute value $1$ is a root (as $P(1) = 0$). Other roots (e.g., $-1$) do not affect this condition since only the coefficients' absolute values need to be roots.
+
+**Conclusion:**
+There are $\boxed{35}$ good polynomials.

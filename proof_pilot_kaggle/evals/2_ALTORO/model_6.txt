@@ -1,0 +1,62 @@
+## Setting Up Coordinates
+
+Place $B=(0,0)$, $C=(17,0)$. If $A=(x,y)$, then $x^2+y^2=676$ and $(x-17)^2+y^2=625$. Subtracting gives $34x-289=51$, so $x=10$, $y=24$. Thus
+
+$$A=(10,24),\quad B=(0,0),\quad C=(17,0).$$
+
+**Feet of altitudes.** Since $BC$ is horizontal, $D=(10,0)$. Projecting $B$ onto $AC$ and $C$ onto $AB$:
+$$E=\left(\tfrac{9792}{625},\tfrac{2856}{625}\right),\qquad F=\left(\tfrac{425}{169},\tfrac{1020}{169}\right).$$
+
+**Orthocentre.** The altitude from $A$ is $x=10$; the altitude from $B$ is $y=\tfrac{7}{24}x$. Hence
+$$H=\left(10,\tfrac{35}{12}\right).$$
+
+**Circumcircle.** $\Omega:\;x^2+y^2-17x-\tfrac{253}{12}y=0$, with centre $O=(\tfrac{17}{2},\tfrac{253}{24})$ and $R=\tfrac{325}{24}$.
+
+The triangle is acute (e.g. $\cos A,\cos B,\cos C>0$ by the side lengths), so $H$ lies **inside** $\Omega$.
+
+## Locating $X$ and $Q$
+
+By Ceva on the concurrent altitudes and Menelaus on transversal $E,F,X$,
+$$\frac{BX}{XC}=\frac{BD}{DC}=\frac{10}{7}\quad(X\text{ outside }BC),$$
+so $X=\left(\tfrac{170}{3},0\right)$ (one checks directly that $X$ lies on line $EF$).
+
+Line $AX$ has direction $(35,-18)$. Substituting $(10+35t,\,24-18t)$ into $\Omega$:
+$$1549t^2-\tfrac{759}{2}t=0\;\Rightarrow\; t=\tfrac{759}{3098}.$$
+Therefore
+$$Q=\left(\tfrac{57545}{3098},\tfrac{60690}{3098}\right).$$
+
+## Two Homothety Reductions
+
+The nine‑point circle (circle $DEF$) is the image of $\Omega$ under the homothety $h$ centred at $H$ with ratio $\tfrac12$.
+
+**Identifying $P$.** Since $h(Q)=\tfrac{H+Q}{2}$ lies on circle $DEF$, the midpoint of $HQ$ is on it. The line $HQ$ meets $\Omega$ at $Q$ and a second point $Q'$ on the opposite side of $H$ (as $H$ is interior), so the two intersections with circle $DEF$ are the midpoints of $HQ$ and $HQ'$; only the former lies on **segment** $HQ$. Hence
+$$P=\tfrac{H+Q}{2},\qquad PQ=\tfrac12 HQ.$$
+
+**Bringing in $E$.** Let $E^\*=2E-H$, the reflection of $H$ in $E$. Because $HE\perp AC$, $E^\*$ is the reflection of $H$ over line $AC$, which lies on $\Omega$. Since $E=\tfrac{H+E^\*}{2}$,
+$$P-E=\frac{H+Q}{2}-\frac{H+E^\*}{2}=\frac{Q-E^\*}{2}\;\Rightarrow\; PE=\tfrac12\,QE^\*.$$
+
+Therefore
+$$\boxed{\dfrac{PQ}{PE}=\dfrac{HQ}{QE^\*}}.$$
+
+## Computing the Two Lengths
+
+**Length $HQ$.** With $Q-H=\left(\tfrac{26565}{3098},\tfrac{309925}{18588}\right)$ and $\tfrac{26565}{3098}=\tfrac{159390}{18588}$:
+$$HQ^2=\frac{159390^2+309925^2}{18588^2}.$$
+Now $159390=18\cdot 8855$, $309925=35\cdot 8855$, $18588=12\cdot1549$, and $18^2+35^2=1549$:
+$$HQ^2=\frac{8855^2\cdot1549}{144\cdot1549^2}=\frac{8855^2}{144\cdot1549}\;\Rightarrow\; HQ=\frac{8855}{12\sqrt{1549}}.$$
+
+**Length $QE^\*$.** Here $E^\*=2E-H=\left(\tfrac{13334}{625},\tfrac{46669}{7500}\right)$. Over the common denominator $11617500$:
+$$Q-E^\*=\left(\frac{-32058642}{11617500},\,\frac{155297219}{11617500}\right).$$
+Factor $32058642=12397\cdot2586$ and $155297219=12397\cdot12527$, where $12397=7^2\cdot11\cdot23$. Then
+$$32058642^2+155297219^2=12397^2\bigl(2586^2+12527^2\bigr)=12397^2\cdot163613125,$$
+and $163613125=5^4\cdot13^2\cdot1549$ with $12397\cdot13=161161$, so the numerator equals $161161^2\cdot 5^4\cdot1549$. Since $11617500^2=2^4\cdot3^2\cdot5^8\cdot1549^2$,
+$$QE^{*2}=\frac{161161^2\cdot5^4\cdot1549}{2^4\cdot3^2\cdot5^8\cdot1549^2}=\frac{161161^2}{300^2\cdot1549}\;\Rightarrow\; QE^\*=\frac{161161}{300\sqrt{1549}}.$$
+
+## The Ratio
+
+$$\frac{PQ}{PE}=\frac{HQ}{QE^\*}=\frac{8855/(12\sqrt{1549})}{161161/(300\sqrt{1549})}=\frac{8855\cdot 25}{161161}=\frac{221375}{161161}=\frac{125}{91},$$
+dividing by $1771=7\cdot11\cdot23$ (so $221375=125\cdot1771$, $161161=91\cdot1771$).
+
+Since $125=5^3$ and $91=7\cdot13$ are coprime, $a=125$, $b=91$, giving
+
+$$a+b=216.$$

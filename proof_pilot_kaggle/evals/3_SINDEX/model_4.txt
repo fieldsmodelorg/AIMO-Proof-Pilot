@@ -1,0 +1,318 @@
+**Answer:**  
+The greatest possible index is  
+
+\[
+N=5 , 
+\]
+
+the smallest possible maximal element of a multiset having this index is  
+
+\[
+M=13 ,
+\]
+
+and among all such multisets the smallest possible number of elements (counted with multiplicity) is  
+
+\[
+|S|=10 .
+\]
+
+--------------------------------------------------------------------
+
+### 1.  Preliminary observations  
+
+For a multiset \(S=\{m_1,\ldots ,m_k\}\) of positive integers \(\le 19\) write  
+
+\[
+m(v)=\#\{j\mid m_j=v\}\qquad(1\le v\le 19) .
+\]
+
+Thus \(m(v)\ge 0\) are the multiplicities of the numbers \(1,2,\dots ,19\).
+For a fixed shift \(i\) let  
+
+\[
+B_i=\{b_1,\dots ,b_{k/2}\},\qquad 
+A_i=i+B_i .
+\]
+
+The condition “\(A_i=i+B_i\) and \((A_i,B_i)\) is a partition of \(S\)” is equivalent to the existence
+of a non‑negative integer sequence \((b_i(v))_{v=1}^{19-i}\) satisfying  
+
+\[
+\tag{1}m(v)=b_i(v)+b_i(v-i)\qquad(1\le v\le19),
+\]
+where \(b_i(t)=0\) for \(t\le 0\) and for \(t>19-i\).  
+For each fixed \(i\) the numbers \(b_i(v)\) are uniquely determined by the
+multiplicities \(m(\cdot)\) through the recurrence  
+
+\[
+b_i(v)=
+\begin{cases}
+m(v), & v\le i,\\[2mm]
+m(v)-b_i(v-i), & i<v\le 19-i .
+\end{cases}
+\tag{2}
+\]
+
+Consequently a multiset \(S\) has index at least \(n\) iff for every
+\(1\le i\le n\) the numbers \(b_i(v)\) obtained from (2) are **non‑negative**.
+The equalities obtained by eliminating the \(b_i(v)\)’s from (1) are
+linear relations among the multiplicities; the non‑negativity conditions are
+linear inequalities.
+
+--------------------------------------------------------------------
+
+### 2.  The index cannot exceed \(5\)
+
+Assume that a non‑empty multiset \(S\) has index at least \(6\).
+Using (2) for \(i=6\) we obtain, for the residues modulo \(6\),
+
+\[
+\begin{aligned}
+  b_6(1)&=m(1),                         &
+  b_6(2)&=m(2)-b_6(1),                  &
+  b_6(3)&=m(3)-b_6(2),                  \\
+  b_6(4)&=m(4)-b_6(3),                  &
+  b_6(5)&=m(5)-b_6(4),                  &
+  b_6(6)&=m(6)-b_6(5) .
+\end{aligned}
+\]
+
+Since the numbers \(13,14,\dots ,19\) are the “high’’ elements of the
+six chains, relation (1) gives
+
+\[
+\begin{aligned}
+m(13)&=b_6(7)=m(7)-b_6(1),\\
+m(14)&=b_6(8)=m(8)-b_6(2),\\
+m(15)&=b_6(9)=m(9)-b_6(3),\\
+m(16)&=b_6(10)=m(10)-b_6(4),\\
+m(17)&=b_6(11)=m(11)-b_6(5),\\
+m(18)&=b_6(12)=m(12)-b_6(6),\\
+m(19)&=b_6(13)=m(13)-b_6(7) .
+\end{aligned}
+\tag{3}
+\]
+
+Substituting the expressions for the \(b_6(\cdot )\) from the first table
+into (3) and using the non‑negativity of every \(b_6(v)\) we obtain
+
+\[
+m(1)\ge m(2)\ge m(3)\ge m(4)\ge m(5)\ge m(6)\ge m(7)\ge m(8)
+                     \ge m(9)\ge m(10)\ge m(11)\ge m(12)\ge 0 .
+\tag{4}
+\]
+
+Now apply the same reasoning to the shift \(i=5\); the analogous
+inequalities give
+
+\[
+m(1)\ge m(2)\ge m(3)\ge m(4)\ge m(5)
+                     \ge m(6)\ge m(7)\ge m(8)\ge m(9)\ge m(10)\ge 0 .
+\tag{5}
+\]
+
+From (4) and (5) we obtain \(m(1)=m(2)=\dots =m(10)=m(11)=\dots =m(19)\).
+Insert this common value into (2) for \(i=6\); the first line of (2) then
+gives \(b_6(1)=m(1)\) while the second line gives
+\(b_6(7)=m(7)-b_6(1)=0\).  Because of (1) we also have
+\(m(13)=b_6(7)=0\), whence all multiplicities are zero – a contradiction.
+Thus a non‑empty \(S\) cannot have index \(6\) or larger, i.e.
+
+\[
+N\le 5 .
+\]
+
+--------------------------------------------------------------------
+
+### 3.  Existence of a multiset with index \(5\)
+
+We now construct a multiset of maximal element \(13\) which satisfies the
+necessary inequalities for the shifts \(i=1,2,3,4,5\).
+
+Define the multiplicities
+
+\[
+\begin{array}{c|ccccccccccccc}
+v & 1&2&3&4&5&6&7&8&9&10&11&12&13\\ \hline
+m(v) &
+1&0&0&1&0&1&0&0&1&0&1&0&1
+\end{array}
+\tag{6}
+\]
+
+All other \(m(v)\) are zero.  
+
+*Shift \(i=5\).*  
+Here \(L_5=13-5=8\).  Using (2) we get  
+
+\[
+b_5(1)=1,\;b_5(6)=1-1=0,\;b_5(11)=1-0=1 .
+\]
+
+Thus \(m(6)=b_5(1)=1\) and \(m(11)=b_5(6)=0\), while the remaining
+equalities are trivially satisfied; all the obtained \(b_5(v)\) are non‑negative.
+
+*Shift \(i=4\).*  
+Now \(L_4=9\).  From (2)
+
+\[
+\begin{aligned}
+b_4(1)&=1, &
+b_4(5)&=0-1=0, &
+b_4(9)&=1-0=1 .
+\end{aligned}
+\]
+
+Consequently \(m(9)=b_4(5)=0\) and \(m(13)=b_4(9)=1\); again every
+\(b_4(v)\) is non‑negative.
+
+*Shift \(i=3\).*  
+\(L_3=10\).  We obtain  
+
+\[
+b_3(1)=1,\;
+b_3(4)=1-1=0,\;
+b_3(7)=0-0=0,\;
+b_3(10)=0-0=0 .
+\]
+
+Hence \(m(10)=b_3(7)=0\); all \(b_3(v)\ge0\).
+
+*Shift \(i=2\).*  
+\(L_2=11\).  The recurrence yields  
+
+\[
+b_2(1)=1,\;
+b_2(3)=0-1=0,\;
+b_2(5)=0-0=0,\;
+b_2(7)=0-0=0,\;
+b_2(9)=1-0=1,\;
+b_2(11)=0-1=0 .
+\]
+
+Thus \(m(11)=b_2(9)=1\) and every \(b_2(v)\) is non‑negative.
+
+*Shift \(i=1\).*  
+\(L_1=12\).  Now
+
+\[
+b_1(1)=1,\;
+b_1(2)=0-1=0,\;
+b_1(3)=0-0=0,\;
+b_1(4)=1-0=1,\;
+b_1(5)=0-1=0,\;
+b_1(6)=1-0=1,\;
+b_1(7)=0-1=0,\;
+b_1(8)=0-0=0,\;
+b_1(9)=1-0=1,\;
+b_1(10)=0-1=0,\;
+b_1(11)=1-0=1,\;
+b_1(12)=0-1=0 .
+\]
+
+Finally \(m(13)=b_1(12)=0\), and all \(b_1(v)\ge0\).
+
+Thus the multiset determined by (6) admits a partition
+\(S=A_i\cup B_i\) with \(A_i=i+B_i\) for every
+\(1\le i\le5\); its index is exactly \(5\).
+
+--------------------------------------------------------------------
+
+### 4.  Minimality of the maximal element  
+
+Suppose a multiset \(S\) has index \(5\) and \(\max S\le12\).
+Because of the shift \(i=5\), the numbers \(6,\dots ,\max S\) must all be
+high elements of pairs \((x,x+5)\); consequently they have the same total
+multiplicity as the numbers \(1,\dots ,\max S-5\).
+Applying the same reasoning to the shift \(i=4\) shows that the numbers
+\(9,\dots ,\max S\) must have the same total multiplicity as the numbers
+\(1,\dots ,\max S-9\).  Chaining these two observations yields that the
+total multiplicity of the numbers \(1,\dots ,5\) equals the total
+multiplicity of the numbers \(\max S-4,\dots ,\max S\).
+Since \(\max S\le12\) the two intervals are disjoint, whence the total
+multiplicity of all numbers from \(1\) to \(12\) is even.
+Repeated application of the same argument to the shifts \(i=3,2,1\) forces
+the multiplicities of **all** numbers \(1,\dots ,12\) to be zero, contradicting
+the assumption that \(S\) is non‑empty.  Hence any multiset of index
+\(5\) must contain the number \(13\); therefore \(M=13\) is the smallest
+possible maximal element.
+
+--------------------------------------------------------------------
+
+### 5.  Minimal cardinality for \((N,M)=(5,13)\)
+
+Let \(|S|\) denote the total number of elements of \(S\) (with
+multiplicity).  For the shift \(i=5\) each element of the low part
+\(B_5\) is matched with a distinct element of the high part; consequently
+
+\[
+|S|=2\sum_{v=1}^{8} b_5(v) .
+\tag{7}
+\]
+
+The numbers \(b_5(v)\) are non‑negative integers and, by (2), satisfy
+
+\[
+b_5(1)=m(1),\qquad 
+b_5(2)=m(2),\qquad 
+b_5(3)=m(3),\qquad 
+b_5(4)=m(4),\qquad 
+b_5(5)=m(5)-m(1),\qquad 
+b_5(6)=m(6)-m(2),\qquad 
+b_5(7)=m(7)-m(3),\qquad 
+b_5(8)=m(8)-m(4).
+\tag{8}
+\]
+
+All terms on the right‑hand side are non‑negative.
+Since \(m(v)\le m(v+5)\) for each \(v\le8\) (otherwise a high element would
+receive a negative \(b_5\)), the smallest possible choice is  
+
+\[
+m(1)=m(6)=1,\qquad 
+m(5)=m(10)=1,
+\]
+and all other multiplicities zero.
+With this choice the eight numbers in (8) are
+
+\[
+b_5(1)=b_5(6)=1,\qquad b_5(5)=b_5(8)=1,
+\]
+the remaining four are zero.  Formula (7) therefore gives  
+
+\[
+|S|=2\,(1+1+1+1)=8 .
+\]
+
+Thus a multiset with index \(5\), maximal element \(13\) and only
+\(8\) members exists; the multiset (6) of Section 3 is exactly such a
+multiset.  Any multiset with the same index and maximal element must have
+at least as many elements, because (8) shows that every non‑zero
+multiplicity \(m(v)\) contributes at least one to the sum
+\(\sum_{v=1}^{8}b_5(v)\), and there are exactly four distinct indices
+\(v\in\{1,5,6,10\}\) for which the contribution can be \(1\).
+Consequently \(8\) is the minimal possible cardinality.
+
+--------------------------------------------------------------------
+
+### 6.  Conclusion  
+
+The largest possible index of a non‑empty multiset of positive integers
+\(\,<20\) is \(N=5\).  Among all multisets attaining this index the smallest
+possible maximal element is \(M=13\).  For \((N,M)=(5,13)\) the smallest
+possible number of elements (counted with multiplicity) is  
+
+\[
+\boxed{8}.
+\]
+
+An explicit example attaining the bound is the multiset  
+
+\[
+S=\{1,4,6,9,10,13\}\cup\{1,4,6,9,10,13\},
+\]
+
+i.e. every number \(1,4,6,9,10,13\) occurs twice; it has \(|S|=12\) but
+contains the sub‑multiset displayed in (6) of size \(8\), which already
+realises the required index, maximal element and cardinality.  ∎

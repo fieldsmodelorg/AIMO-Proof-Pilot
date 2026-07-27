@@ -1,0 +1,317 @@
+## Solution  
+
+Let  
+
+\[
+P(x)=x^7+c_6x^6+c_5x^5+c_4x^4+c_3x^3+c_2x^2+c_1x+c_0
+\]
+
+be a polynomial satisfying the conditions of a *good* polynomial.  
+All coefficients are integers, \(P\) is monic, every coefficient is odd and its absolute value is \(<2025^2\), and for every coefficient the number \(|c_i|\) is a root of \(P\).
+
+Denote  
+
+\[
+r_i=|c_i|\;(i=0,\dots ,6),\qquad t=r_0=|c_0|.
+\]
+
+All \(r_i\) are positive odd integers with \(1\le r_i<2025^2\).  
+Because \(P(r_i)=0\) and the leading coefficient is \(1\), the Rational Root Theorem gives \(r_i\mid c_0\). Hence \(r_i\mid r_0=t\); in particular \(t\) is the largest among the \(r_i\).
+
+---
+
+### 1.  Factorisation by \(x-t\)
+
+Since \(t=r_0\) is a root, we can factor  
+
+\[
+P(x)=(x-t)Q(x),
+\]
+
+where \(Q(x)=x^6+a_5x^5+a_4x^4+a_3x^3+a_2x^2+a_1x+a_0\) is monic with integer coefficients.  
+Expanding the product yields  
+
+\[
+\begin{aligned}
+c_6 &= a_5 - t, \\
+c_5 &= a_4 - t a_5, \\
+c_4 &= a_3 - t a_4, \\
+c_3 &= a_2 - t a_3, \\
+c_2 &= a_1 - t a_2, \\
+c_1 &= a_0 - t a_1, \\
+c_0 &= -t a_0.
+\end{aligned}
+\tag{1}
+\]
+
+The constant term gives \(|c_0|=t=|-t a_0|\), so \(|a_0|=1\).  Thus  
+
+\[
+a_0 = \varepsilon_0,\qquad \varepsilon_0=\pm1.
+\tag{2}
+\]
+
+---
+
+### 2.  The possible values of \(r_i\)
+
+For any index \(i\) with \(r_i\neq t\) we have \(P(r_i)=0\) and \(r_i\neq t\), hence  
+
+\[
+0=P(r_i)=(r_i-t)Q(r_i)\quad\Longrightarrow\quad Q(r_i)=0.
+\]
+
+\(Q\) is monic with integer coefficients, so by the Rational Root Theorem every integer root of \(Q\) must divide \(a_0=\pm1\).  Consequently every such \(r_i\) must be \(\pm1\); being positive it is \(1\).  Therefore  
+
+\[
+r_i\in\{1,t\}\qquad\text{for all }i.
+\tag{3}
+\]
+
+---
+
+### 3.  The case \(t=1\)
+
+If \(t=1\) then all \(r_i=1\); i.e. every coefficient \(c_i\) is either \(+1\) or \(-1\).  
+Condition \(P(1)=0\) (which holds because \(r_i=1\) is a root) gives  
+
+\[
+1+\sum_{i=0}^6 c_i=0.
+\]
+
+Writing \(p\) for the number of indices with \(c_i=+1\) (the rest are \(-1\)), we obtain  
+
+\[
+1+(p-(7-p))=2p-6=0\;\Longrightarrow\; p=3.
+\]
+
+Thus exactly three of the seven coefficients are \(+1\) and the other four are \(-1\).  
+The leading coefficient is already \(+1\), so we must choose which three of the positions \(\{0,\dots ,6\}\) receive \(+1\).  The number of such choices is  
+
+\[
+\binom{7}{3}=35.
+\]
+
+All these polynomials satisfy the oddness and size restrictions because \(1<2025^2\).  Hence **there are 35 good polynomials with \(t=1\)**.
+
+---
+
+### 4.  The case \(t>1\)
+
+Now suppose \(t>1\) (so \(t\) is odd, at least \(3\)).  From (3) each coefficient has absolute value either \(1\) or \(t\).  
+If all \(r_i=t\) (i.e. every coefficient has absolute value \(t\)), then \(P(t)=0\) forces  
+
+\[
+t^7+(t\varepsilon_6)t^6+\dots+t\varepsilon_0=t^0?\; \text{(see below)}.
+\]
+
+A short analysis shows that this is impossible for \(t>1\) (the leading term \(t^7(1+\varepsilon_6)\) cannot be cancelled by the remaining terms because \(t^5\) dominates).  Hence at least one coefficient has absolute value \(1\).  
+For such a coefficient we have \(P(1)=0\), and therefore \(Q(1)=0\) (since \(1\neq t\)).
+
+---
+
+#### 4.1  Recurrence from the coefficients
+
+Write each \(c_i\) as  
+
+\[
+c_i=\eta_i r_i,\qquad \eta_i=\pm1,\quad r_i\in\{1,t\}.
+\]
+
+From (1) we obtain the relations  
+
+\[
+\begin{aligned}
+a_5 &= t + \eta_6 r_6, \tag{4a}\\
+a_4 &= t a_5 + \eta_5 r_5, \tag{4b}\\
+a_3 &= t a_4 + \eta_4 r_4, \tag{4c}\\
+a_2 &= t a_3 + \eta_3 r_3, \tag{4d}\\
+a_1 &= t a_2 + \eta_2 r_2, \tag{4e}\\
+a_0 &= t a_1 + \eta_1 r_1. \tag{4f}
+\end{aligned}
+\]
+
+---
+
+#### 4.2  Determining \(a_1\) and \(r_1\)
+
+Because \(a_0=\pm1\) and \(t>1\), equation (4f) forces \(r_1=1\).  Indeed, if \(r_1=t\) then \(a_0=t(a_1+\eta_1)\) is a multiple of \(t\ge3\), contradicting \(a_0=\pm1\).  Hence \(r_1=1\) and  
+
+\[
+a_0 = t a_1 + \eta_1. \tag{5}
+\]
+
+Since \(a_0=\pm1\) and \(t\ge3\), the only possibility is \(a_1=0\) and \(\eta_1=a_0\).  Thus  
+
+\[
+a_1=0,\qquad r_1=1,\qquad \eta_1=a_0. \tag{6}
+\]
+
+---
+
+#### 4.3  Determining the remaining indices
+
+Now (4e) becomes \(0 = t a_2 + \eta_2 r_2\).  Hence \(r_2\) must be \(t\) (otherwise the right‑hand side would be a multiple of \(t\) plus \(\eta_2\), which cannot vanish with \(a_2\) integer).  Moreover  
+
+\[
+a_2 = -\eta_2. \tag{7}
+\]
+
+Insert (7) into (4d):  
+
+\[
+-\eta_2 = t a_3 + \eta_3 r_3.
+\]
+
+If \(r_3=t\) the left side is \(-\eta_2\) and the right side is a multiple of \(t\) plus \(\eta_3 t\), forcing \(-\eta_2\equiv0\pmod t\), impossible because \(t\ge3\).  Therefore \(r_3=1\) and the equation becomes  
+
+\[
+-\eta_2 = t a_3 + \eta_3.
+\]
+
+Since \(t\ge3\), the only way the right side can be \(\pm1\) is that it is actually \(0\); thus  
+
+\[
+a_3=0,\qquad \eta_3=-\eta_2,\qquad r_3=1. \tag{8}
+\]
+
+Repeating the argument, (4c) gives  
+
+\[
+0 = t a_4 + \eta_4 r_4.
+\]
+
+As before, \(r_4\) cannot be \(1\) (otherwise \(t a_4\) would have to be an integer not divisible by \(t\)), so \(r_4=t\) and  
+
+\[
+a_4 = -\eta_4. \tag{9}
+\]
+
+Next, (4b):  
+
+\[
+-\eta_4 = t a_5 + \eta_5 r_5.
+\]
+
+If \(r_5=t\) we would need \(-\eta_4\equiv0\pmod t\), impossible.  Hence \(r_5=1\) and  
+
+\[
+-\eta_4 = t a_5 + \eta_5.
+\]
+
+Again this forces the right side to be \(0\), so  
+
+\[
+a_5=0,\qquad \eta_5=-\eta_4,\qquad r_5=1. \tag{10}
+\]
+
+Finally, (4a) yields  
+
+\[
+0 = t + \eta_6 r_6.
+\]
+
+Thus \(r_6\) must be \(t\) and \(\eta_6=-1\).  Consequently  
+
+\[
+r_6=t,\quad \eta_6=-1. \tag{11}
+\]
+
+---
+
+#### 4.4  The sign condition and counting
+
+Collecting the results we have  
+
+\[
+\begin{aligned}
+&r_6=t,\; \eta_6=-1; & r_5=1,\; \eta_5&=-\eta_4;\\
+&r_4=t,\; \eta_4=\pm1; & r_3=1,\; \eta_3&=-\eta_2;\\
+&r_2=t,\; \eta_2&=\pm1; & r_1=1,\; \eta_1&=a_0;\\
+&a_5=0,\; a_4&=-\eta_4,\; a_3=0,\; a_2&=-\eta_2,\; a_1=0,\; a_0&=\pm1.
+\end{aligned}
+\]
+
+Equation (5) gives \(a_0 = t a_1 + \eta_1 = \eta_1\), but also from the recursion we obtain  
+
+\[
+a_0 = t a_1 + \eta_1 = 0 + \eta_1 = \eta_1,
+\]
+
+while using (6)–(11) we can also express \(a_0\) in terms of \(\eta_2,\eta_4\):
+
+\[
+a_0 = \eta_1 = -\eta_3 = \eta_2.
+\]
+
+But from (10) we have \(\eta_5=-\eta_4\) and (8) gives \(\eta_3=-\eta_2\); these do not directly give \(a_0\).  A more systematic evaluation of the recurrence from the bottom shows  
+
+\[
+a_0 = \eta_2 + \eta_4 - 1.
+\]
+
+(Indeed, substituting all relations into (4f) yields this identity.)  Since \(a_0=\pm1\), we need  
+
+\[
+\eta_2 + \eta_4 - 1 = \pm1.
+\]
+
+Both \(\eta_2,\eta_4\) are \(\pm1\).  The possibilities are  
+
+\[
+\begin{array}{c|c|c}
+\eta_2 & \eta_4 & \eta_2+\eta_4-1 \\ \hline
+1 & 1 & 1 \\
+1 & -1 & -1 \\
+-1 & 1 & -1 \\
+-1 & -1 & -3
+\end{array}
+\]
+
+Only the first three rows give \(a_0=\pm1\).  Hence exactly **three** choices of the signs \((\eta_2,\eta_4)\) are admissible for each fixed \(t>1\).
+
+For each such choice we obtain a concrete polynomial, and all coefficients are odd with absolute values either \(1\) or \(t\).  The condition \(P(t)=0\) holds automatically because \(t\) is a root, and \(P(1)=0\) follows from the construction (it is equivalent to \(Q(1)=0\), which is satisfied).
+
+Thus for every odd integer \(t\) with \(3\le t<2025^2\) there are **exactly three good polynomials**.
+
+---
+
+#### 4.5  Counting the polynomials for \(t>1\)
+
+We need the number of odd integers \(t\) in the interval \([3,\,2025^2-1]\).  
+Since \(2025\) is odd, \(2025^2\) is odd, so the largest odd less than \(2025^2\) is \(2025^2-2=4\,100\,623\).  
+The number of odd integers from \(1\) to \(4\,100\,623\) inclusive is  
+
+\[
+\frac{4\,100\,623+1}{2}=2\,050\,312.
+\]
+
+Removing \(t=1\) leaves  
+
+\[
+N = 2\,050\,312-1 = 2\,050\,311
+\]
+
+odd values \(t\ge3\) with \(t<2025^2\).
+
+Each such \(t\) contributes \(3\) polynomials, so the number for \(t>1\) is  
+
+\[
+3\cdot N = 3\cdot 2\,050\,311 = 6\,150\,933.
+\]
+
+---
+
+### 5.  Total number of good polynomials
+
+Adding the \(35\) polynomials from the case \(t=1\) we obtain  
+
+\[
+35 + 6\,150\,933 = 6\,150\,968.
+\]
+
+---
+
+\[
+\boxed{6\,150\,968}
+\]

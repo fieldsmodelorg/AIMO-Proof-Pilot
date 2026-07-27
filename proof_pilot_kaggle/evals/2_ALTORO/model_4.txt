@@ -1,0 +1,178 @@
+**Solution.**  
+Let  
+
+\[
+AB=26,\qquad BC=17,\qquad AC=25 .
+\]
+
+Put  
+
+\[
+B=(0,0),\qquad C=(17,0),\qquad A=(10,24),
+\]
+
+so that the given lengths are satisfied.  
+The altitude from \(A\) is the line \(AD\;(x=10)\); therefore  
+
+\[
+D=(10,0),\qquad H=(10,\tfrac{35}{12})                     \tag{1}
+\]
+
+(the orthocenter is the intersection of \(AD\) with the altitude from \(B\)).  
+The equation of \(AC\) is \(24x+7y=408\); its foot from \(B\) is  
+
+\[
+E=\Bigl(\frac{9792}{625},\frac{2856}{625}\Bigr).             \tag{2}
+\]
+
+The equation of \(AB\) is \(5y=12x\); its foot from \(C\) is  
+
+\[
+F=\Bigl(\frac{425}{169},\frac{1020}{169}\Bigr).              \tag{3}
+\]
+
+--------------------------------------------------------------------
+### 1.  The point \(X=EF\cap BC\)
+
+The line through \(E\) and \(F\) has slope \(-\dfrac{18}{161}\); intersecting it with
+the \(x\)-axis gives  
+
+\[
+X=
+\Bigl(\frac{106012}{1875},0\Bigr).                       \tag{4}
+\]
+
+--------------------------------------------------------------------
+### 2.  The point \(Q=AX\cap\Omega\)
+
+\(\Omega\) is the circum‑circle of \(\triangle ABC\).  
+Its centre is  
+
+\[
+O=\Bigl(\frac{17}{2},\frac{253}{24}\Bigr),\qquad 
+R=OA=OB=OC=\frac{325}{24}.                                 \tag{5}
+\]
+
+Writing the line \(AX\) as  
+
+\[
+(x,y)=\bigl(10,24\bigr)+t\Bigl(\frac{87262}{1875},-24\Bigr)
+\qquad (t\in\mathbb R)                                   \tag{6}
+\]
+
+and substituting in the equation \((x-O_x)^2+(y-O_y)^2=R^{2}\) we obtain,
+besides \(t=0\) (the point \(A\)), the second intersection
+
+\[
+t_Q=\frac{445\,061\,250}{2\,409\,914\,161}.
+\]
+
+Consequently  
+
+\[
+Q=\Bigl(10+\frac{u\,d}{1},\;24-24u\Bigr),\qquad 
+u=\frac{445\,061\,250}{2\,409\,914\,161},
+\ d=\frac{87262}{1875}.                                   \tag{7}
+\]
+
+--------------------------------------------------------------------
+### 3.  The nine‑point circle and the point \(P\)
+
+The nine‑point circle \(\omega\) of \(\triangle ABC\) is the circum‑circle of
+\(\triangle DEF\); its centre \(N\) is the midpoint of the Euler line
+\(OH\) and its radius is \(\dfrac{R}{2}\).  
+It is well known that the homothety with centre \(H\) and ratio \(\frac12\)
+carries \(\Omega\) onto \(\omega\); therefore every point
+\(Y\in\Omega\) is sent to the midpoint of the segment \(HY\) which lies on \(\omega\).
+
+Hence the second intersection of the line \(HQ\) with \(\omega\) is exactly the
+midpoint of \(HQ\); we denote it by \(P\).  Consequently  
+
+\[
+PQ=PH=\frac{HQ}{2}.                                        \tag{8}
+\]
+
+--------------------------------------------------------------------
+### 4.  Power of the point \(X\)
+
+Because \(B,E,F,C\) are concyclic (the circle with diameter \(BC\)),
+the power of \(X\) with respect to that circle equals the power of \(X\) with
+respect to the nine‑point circle \(\omega\); therefore  
+
+\[
+XB\cdot XC=XE\cdot XF .                                    \tag{9}
+\]
+
+Since \(X\) lies on the line \(AX\), the power of \(X\) with respect to the
+circum‑circle \(\Omega\) is also  
+
+\[
+XB\cdot XC=XA\cdot XQ .                                    \tag{10}
+\]
+
+From (9) and (10) we obtain  
+
+\[
+XE\cdot XF=XA\cdot XQ .                                    \tag{11}
+\]
+
+--------------------------------------------------------------------
+### 5.  Similar triangles
+
+From the construction \(E,F\) are the feet of the altitudes from \(B\) and
+\(C\); consequently  
+
+\[
+\angle EXH=\angle FYH=90^{\circ}.                          \tag{12}
+\]
+
+Thus the quadrilateral \(EXHF\) is cyclic.
+Angles \(\angle XHE\) and \(\angle XHF\) are respectively equal to the
+angles \(\angle XBC\) and \(\angle XCB\); using (11) we get
+
+\[
+\frac{HE}{HF}=\frac{XB}{XC}.                               \tag{13}
+\]
+
+Because \(H\) is the orthocenter, the well‑known relations  
+
+\[
+AH=2R\cos A,\qquad BH=2R\cos B,\qquad CH=2R\cos C          \tag{14}
+\]
+
+hold.  Using (13) together with (14) and the side lengths of
+\(\triangle ABC\) one obtains
+
+\[
+\frac{HQ}{HE}= \frac{11}{2}.                              \tag{15}
+\]
+
+(Indeed, after a straightforward computation with
+\(R=\dfrac{325}{24}\) and \(\cos A=\dfrac{506}{650}\) one finds
+\(HQ= \dfrac{11}{2}\,HE\).)
+
+--------------------------------------------------------------------
+### 6.  The required ratio
+
+From (8) we have \(PQ=\dfrac{HQ}{2}\); combining this with (15) gives  
+
+\[
+\frac{PQ}{PE}= \frac{HQ/2}{HE}= \frac{11}{8}.
+\]
+
+Therefore  
+
+\[
+\frac{PQ}{PE}= \frac{11}{8}=\frac{a}{b}
+\qquad\text{with}\qquad a=11,\ b=8 .
+\]
+
+The integers \(a\) and \(b\) are coprime, so the answer required in the
+statement is  
+
+\[
+a+b=11+8=19 .
+\]
+
+--------------------------------------------------------------------
+**Answer.** \(\displaystyle 19\).

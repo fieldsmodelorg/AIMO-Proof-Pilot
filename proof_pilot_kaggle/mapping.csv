@@ -1,0 +1,15 @@
+type,number,name,how_run
+model,1,Qwen/Qwen3.6-35B-A3B,vllm
+model,2,deepseek-ai/DeepSeek-V4-Flash,vllm
+model,3,allenai/Olmo-3-32B-Think,vllm
+model,4,openai/gpt-oss-120b,vllm
+model,5,openai/gpt-5.5-pro (extended),browser
+model,6,anthropic/claude-opus-4.8 (high),browser
+model,7,anthropic/claude-opus-4.8 (high),claude_code
+model,8,google/gemini-3.1-pro,browser
+team,1,Andreas Bisiadis,
+team,2,Just a test,
+team,3,Bogo de Chãn,
+team,4,Yi-Chia Chen,
+team,5,Nguyen,
+team,6,Natapong Nitarach (Schwyter),

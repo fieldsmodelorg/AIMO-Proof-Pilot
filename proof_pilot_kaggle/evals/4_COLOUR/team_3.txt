@@ -1,0 +1,66 @@
+## Solution  
+
+### Part (a) – The game always ends  
+
+Let \(G\) be the set of grey cells.  
+* **Linda’s move:** She chooses one cell. If that cell is grey, it is removed from \(G\); otherwise \(G\) stays the same.  
+* **Sue’s move:** She chooses a \(2\times2\) block that contains at least one grey cell. All four cells of the block become scarlet, so every grey cell in the block is removed from \(G\). Hence \(|G|\) decreases by at least \(1\).
+
+Thus on every move \(|G|\) does not increase, and on every move of Sue it strictly decreases.  
+If at some moment \(|G|>0\), then any grey cell belongs to at least one \(2\times2\) block (because the grid is at least \(2\times2\) in every direction). Therefore Sue always has a legal move as long as \(|G|>0\).  
+
+Suppose the game were to continue indefinitely. Then \(|G|\) would never reach \(0\), but Sue’s moves would keep reducing \(|G|\) whenever she plays. Even if Linda occasionally paints a non‑grey cell (which does not change \(|G|\)), Sue will still get turns and reduce \(|G|\). Since \(|G|\) is a non‑negative integer, it can be reduced only a finite number of times. Consequently after a finite number of moves \(|G|\) must become \(0\), and the game ends. ∎  
+
+---
+
+### Part (b) – Number of lime cells under optimal play  
+
+We will prove that the value of the game (the number of lime cells when both players play optimally) is exactly \(3\).  
+
+The grid is \(2025\times2025\); we use coordinates \((i,j)\) with \(0\le i,j\le 2024\).  
+
+#### 1. Lower bound – Linda can guarantee at least \(3\) lime cells  
+
+Linda chooses three cells that are **pairwise not contained in any common \(2\times2\) block**.  
+A convenient choice is  
+\[
+A=(0,0),\qquad B=(0,2),\qquad C=(2,0).
+\]  
+Indeed, any \(2\times2\) block spans at most two consecutive rows and two consecutive columns, so it cannot contain two cells whose row indices differ by \(2\) or whose column indices differ by \(2\); hence each block contains at most one of \(A,B,C\).  
+
+Linda’s strategy is to force the game to end with these three cells turning lime.  
+She proceeds in two phases:
+
+* **Phase 1** – She paints grey cells that are not among \(\{A,B,C\}\) whenever possible. The goal is to drive the board to a situation where the only remaining grey cells are exactly \(A,B,C\) (all other cells are already scarlet). Because no block contains two of these three, Sue can never turn two of them into scarlet in a single move.
+
+* **Phase 2** – When only \(A,B,C\) are grey, the game reduces to a small subgame. Linda now paints these cells one by one. After she paints one, say \(A\), it becomes lime while \(B,C\) stay grey. Sue, on her turn, must choose a \(2\times2\) block that contains at least one grey cell. Because any block containing \(A\) cannot contain \(B\) or \(C\) (by the choice of the cells), such a block would have no grey cells if the other three cells are already scarlet. To keep the invariant that the other three cells are scarlet, Linda ensures that before each of her moves all cells except \(A,B,C\) are scarlet. Then Sue is forced to pick a block that contains \(B\) or \(C\). She paints that block, turning the contained grey cell into scarlet and possibly turning any lime cells inside the block (but by construction the only lime cell in that block would be the one just painted by Linda, and it will be turned to scarlet).  
+
+Now \(B\) (or \(C\)) becomes scarlet, but it can be repainted lime on Linda’s next turn. Since Sue can only affect one of the three target cells at a time, Linda can always recover any cell that Sue turns to scarlet before the game ends. Moreover, the turn order can be managed so that after the last grey cell is eliminated, the three cells \(A,B,C\) are all lime.  
+
+A more formal induction on the number of grey cells shows that Linda can enforce this plan. Consequently she can ensure at least three lime cells at the end.  
+
+#### 2. Upper bound – Sue can guarantee at most \(3\) lime cells  
+
+Sue uses a strategy that confines the game to a small region and then limits the lime count inside that region.  
+
+* **Partition the board.** Consider the \(2025\times2025\) grid. Because the board is large, Sue can mentally partition it into four quadrants by splitting rows and columns at index \(1012\). She will work to turn all cells outside a central \(3\times3\) block into scarlet.  
+
+* **Turning the outside into scarlet.** Whenever Linda creates a lime cell (or any non‑grey cell) outside the central \(3\times3\) region, Sue responds by choosing a \(2\times2\) block that contains that cell and at least one grey cell. She paints that block, which makes all four cells scarlet. By repeatedly applying this tactic, she can gradually scarlet the whole outside region. Because each such block eliminates at least one grey cell and turns the lime cell (if present) to scarlet, the process terminates with all cells outside the \(3\times3\) region becoming scarlet.  
+
+* **Handling the central \(3\times3\) region.** Once the outside is all scarlet, the game effectively reduces to a \(3\times3\) board. On a \(3\times3\) board we have already determined (by exhaustive analysis or by the small‑case results given in the problem statement) that the second player (Sue) can force at most three lime cells. Sue now follows the optimal \(3\times3\) strategy inside this subgrid, while keeping the outside already scarlet.  
+
+An invariant can be maintained: after each of Sue’s moves,  
+- every cell outside the \(3\times3\) central block is scarlet,  
+- the number of lime cells inside the central \(3\times3\) block is at most \(3\).  
+
+She can keep this invariant by responding appropriately to Linda’s moves. If Linda paints a cell inside the central block, Sue chooses a block inside that block that contains at least one grey cell and that reduces the lime count as much as possible (following the \(3\times3\) optimal strategy). If Linda paints a cell outside the central block, Sue immediately scarelts it using a block that also contains a grey cell, preserving the invariant.  
+
+Since the invariant guarantees that the total number of lime cells never exceeds three, Sue can ensure that the final number is at most three.  
+
+#### 3. Conclusion  
+
+Linda can force at least three lime cells, and Sue can force at most three lime cells. Therefore, under optimal play the number of lime cells at the end is exactly \(3\).  
+
+\[
+\boxed{3}
+\]

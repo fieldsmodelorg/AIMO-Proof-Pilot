@@ -1,0 +1,39 @@
+Let \( P(x) \) be a good polynomial. Since \( P \) is monic of degree 7 with integer coefficients the leading coefficient is 1 so \( |1| = 1 \) is a root of \( P \). Thus \( P(1) = 0 \) and the sum of all coefficients of \( P \) is zero. Let the coefficients of \( P \) be \( a_7, a_6, \ldots, a_0 \) where \( a_7 = 1 \). Each \( |a_i| \) is an odd positive integer strictly less than \( 2025^2 \) and each \( |a_i| \) divides the constant term \( a_0 \) by the Rational Root Theorem. Let \( D = |a_0| \). All \( |a_i| \) divide \( D \) and \( D \) is the maximum of the \( |a_i| \).
+
+**Claim 1:** \( D = 1 \).  
+Suppose \( D > 1 \). Let \( p \) be the smallest prime divisor of \( D \). Since \( p \) divides \( D \) and no prime smaller than \( p \) divides any \( |a_i| \) there exists a coefficient \( a_j \) with \( |a_j| = p \). Evaluating \( P(p) = 0 \) yields:  
+\[
+p^7 + a_6 p^6 + \cdots + a_0 = 0.
+\]  
+To cancel the leading term \( p^7 \) the coefficient \( a_6 \) must satisfy \( a_6 = -p \) making the first two terms vanish: \( p^7 - p \cdot p^6 = 0 \). This forces \( a_6 = -p \). Continuing recursively all coefficients from \( a_6 \) to \( a_1 \) must be \( \pm p \). The constant term \( a_0 \) must then be \( \pm p \) but \( |a_0| = D \) so \( D = p \). The sum of coefficients is:  
+\[
+1 + (-p) + \sum_{k=0}^5 (\pm p) = 0.
+\]  
+Let \( m \) be the net count of \( +p \) terms among the six coefficients \( a_5 \) to \( a_0 \). Then:  
+\[
+1 - p + p \cdot m = 0 \implies p(m - 1) = -1.
+\]  
+This equation has no integer solutions since \( p \geq 3 \) and the left side is a multiple of \( p \) while the right side is \(-1 \). Contradiction. Thus \( D \neq p \) and the assumption \( D > 1 \) is false. Hence \( D = 1 \).
+
+**Claim 2:** All coefficients satisfy \( |a_i| = 1 \).  
+Since \( D = 1 \) each \( |a_i| \) divides 1 so \( |a_i| = 1 \). Thus every coefficient is \( \pm 1 \).
+
+**Claim 3:** The sum of coefficients equals zero.  
+The sum \( 1 + a_6 + \cdots + a_0 = 0 \) implies:  
+\[
+a_6 + \cdots + a_0 = -1.
+\]  
+There are 7 coefficients \( a_6 \) to \( a_0 \) each \( \pm 1 \). Let \( k \) be the number of \( +1 \)s among them. Then:  
+\[
+k - (7 - k) = -1 \implies 2k - 7 = -1 \implies k = 3.
+\]  
+Thus exactly three of these coefficients are \( +1 \) and four are \( -1 \).
+
+**Claim 4:** The number of such polynomials is \( \binom{7}{3} \).  
+The coefficients \( a_6 \) to \( a_0 \) can be chosen by selecting 3 positions out of 7 to assign \( +1 \) with the rest \( -1 \). The number of ways is:  
+\[
+\binom{7}{3} = \frac{7!}{3!4!} = 35.
+\]
+
+**Conclusion:**  
+All good polynomials must satisfy the conditions with \( D = 1 \) leading to exactly 35 distinct polynomials. No other polynomials exist as shown by the contradictions for \( D > 1 \). Therefore the number of good polynomials is \( \boxed{35} \).

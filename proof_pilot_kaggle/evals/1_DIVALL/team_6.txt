@@ -1,0 +1,5 @@
+The maximum possible value of \( g \) is achieved by selecting \( k = 4 \) and choosing the numbers \( a_1 = g - 1 \), \( a_2 = 2g - 1 \), \( a_3 = 3g - 1 \), and \( a_4 = 4g - 1 \). These numbers are distinct positive integers, and their sum is \( 10g - 4 \), which must be strictly less than \( 3 \times 10^6 \). This inequality gives \( g < 300,000.4 \), so the largest integer \( g \) is \( 300,000 \).
+
+For this choice of \( g \), each \( a_i \equiv -1 \pmod{g} \). The product \( P = (g - 1)(2g - 1)(3g - 1)(4g - 1) \). For any \( i \), \( P/a_i \) is the product of three terms each congruent to \( -1 \pmod{g} \), so \( P/a_i \equiv -1 \pmod{g} \). Thus, \( g \) divides \( (P/a_i) + 1 \) for all \( i \). The sum \( 10 \times 300,000 - 4 = 2,999,996 \) is less than \( 3 \times 10^6 \), satisfying the problem's conditions. No larger \( g \) is possible because the sum would exceed the limit.
+
+\boxed{300000}

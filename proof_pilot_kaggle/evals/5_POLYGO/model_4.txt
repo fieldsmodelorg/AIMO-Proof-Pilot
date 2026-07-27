@@ -1,0 +1,283 @@
+**Solution.**  
+Let  
+
+\[
+P(x)=x^{7}+a_{6}x^{6}+a_{5}x^{5}+a_{4}x^{4}+a_{3}x^{3}+a_{2}x^{2}+a_{1}x+a_{0}
+\qquad (a_i\in\mathbb Z)
+\]
+
+be a *good* polynomial.
+For \(i=0,\dots ,6\) put  
+
+\[
+c_i:=|a_i|\;(>0),\qquad c_7:=|a_7|=1 .
+\]
+
+All the numbers \(c_i\) are odd, satisfy \(c_i<2025^{2}\) and, by definition of a good
+polynomial,
+
+\[
+P(c_i)=0\qquad (i=0,\dots ,7). \tag{1}
+\]
+
+--------------------------------------------------------------------
+### 1.  Preliminary observations
+
+*Because the leading coefficient is \(1\), evaluating at \(x=1\) gives*
+
+\[
+P(1)=1+a_6+\dots +a_0=0 \quad\Longrightarrow\quad 
+a_6+\dots +a_0=-1 .\tag{2}
+\]
+
+Since each \(a_i\) is odd, (2) implies that among the seven
+numbers \(a_0,\dots ,a_6\) exactly three are \(+1\) and four are \(-1\).  
+Consequently every \(c_i\) equals either \(1\) or \(|a_i|>1\).
+
+--------------------------------------------------------------------
+### 2.  The largest absolute coefficient
+
+Let  
+
+\[
+r:=\max\{c_0,c_1,\dots ,c_6\}.
+\]
+
+If every \(c_i=1\) we shall deal with this case in §4.
+Hence assume from now on that \(r>1\).
+
+--------------------------------------------------------------------
+#### Lemma 2.1  
+\(c_0=r\) and \(c_0\) is the absolute value of the product of all
+roots of \(P\).
+
+*Proof.*  
+Write the factorisation of \(P\) by its roots \(\alpha_1,\dots ,\alpha_7\) :
+
+\[
+P(x)=\prod_{j=1}^{7}(x-\alpha_j),\qquad
+\alpha_j\in\mathbb C .
+\]
+
+The constant term is
+\[
+a_0=(-1)^{7}\prod_{j=1}^{7}\alpha_j=-\prod_{j=1}^{7}\alpha_j .
+\]
+Hence  
+
+\[
+c_0=|a_0|=\Bigl|\prod_{j=1}^{7}\alpha_j\Bigr| .\tag{3}
+\]
+
+All numbers \(c_i\) are roots of \(P\) by (1), thus
+\(1\) (the absolute value of the leading coefficient) is a root.
+Consequently \(\prod_{j=1}^{7}\alpha_j\) is a product of numbers each
+of which has absolute value at least \(1\); therefore the
+right‑hand side of (3) is at least the largest of the numbers
+\(|\alpha_j|\).  By (1) every \(|\alpha_j|\) belongs to the set
+\(\{c_0,\dots ,c_6\}\); hence \(\max_j |\alpha_j|=r\).
+Thus \(c_0\ge r\).
+On the other hand \(c_0\) itself belongs to the set
+\(\{c_0,\dots ,c_6\}\); therefore \(c_0\le r\).
+Consequently \(c_0=r\).  ∎
+
+
+
+--------------------------------------------------------------------
+### 3.  Reduction to a quadratic factor
+
+Because of \(P(1)=0\) (see (2)), the linear factor \((x-1)\) divides
+\(P\).  By Lemma 2.1 the integer \(r=c_0\) is a root of \(P\);
+hence \((x-r)\) also divides \(P\).
+Write
+
+\[
+P(x)=(x-1)(x-r)Q(x) ,
+\tag{4}
+\]
+
+where \(Q\) is monic of degree \(5\) and has integer coefficients.
+Put  
+
+\[
+Q(x)=x^{5}+b_{4}x^{4}+b_{3}x^{3}+b_{2}x^{2}+b_{1}x+b_{0},
+\qquad b_j\in\mathbb Z .
+\]
+
+Expanding (4) and comparing coefficients with the generic form of
+\(P\) yields
+
+\[
+\begin{aligned}
+a_{6}&=b_{4}-(1+r),\\[2mm]
+a_{5}&=b_{3}-(1+r)b_{4}+r,\\
+a_{4}&=b_{2}-(1+r)b_{3}+rb_{4},\\
+a_{3}&=b_{1}-(1+r)b_{2}+rb_{3},\\
+a_{2}&=b_{0}-(1+r)b_{1}+rb_{2},\\
+a_{1}&=-(1+r)b_{0}+rb_{1},\\
+a_{0}&=r\,b_{0}.
+\end{aligned}\tag{5}
+\]
+
+Recall that \(c_i=|a_i|\) equals either \(1\) or \(r\); the latter is
+the maximal value.
+From the last line of (5),
+
+\[
+c_0=|a_{0}|=|r\,b_{0}| .
+\]
+
+Since \(c_0=r>1\), the only possibility is  
+
+\[
+|b_{0}|=1 \qquad\text{and}\qquad c_0=r.\tag{6}
+\]
+
+Let us write \(b_{0}= \varepsilon _0\) with \(\varepsilon _0\in\{\pm1\}\).
+
+--------------------------------------------------------------------
+#### Lemma 3.1  
+\(c_{1}=1\) and \(b_{1}=-\varepsilon _0\).
+
+*Proof.*  
+From (5) and (6),
+
+\[
+a_{1}=-(1+r)\varepsilon _0+r b_{1},
+\qquad 
+c_{1}=|a_{1}|\le r .
+\]
+
+If \(c_{1}=r\) then  
+
+\[
+r=|-(1+r)\varepsilon _0+r b_{1}|
+   =|r(b_{1}-\varepsilon _0)-\varepsilon _0| .
+\]
+
+Dividing by \(r\) gives \(|b_{1}-\varepsilon _0-\varepsilon _0/r|=1\).
+Because \(r>1\) the fraction \(\varepsilon _0/r\) is not integral,
+hence the equality is impossible.  Thus \(c_{1}\neq r\); consequently
+\(c_{1}=1\).
+Now \( |-(1+r)\varepsilon _0+r b_{1}| =1\) implies
+\(r b_{1} = (1+r)\varepsilon _0\pm1\).
+Since \(r\) does not divide the integer \(\pm1\) (again because \(r>1\)),
+the only way to obtain an integer \(b_{1}\) is  
+
+\[
+b_{1} = -\varepsilon _0 .
+\tag{7}
+\]
+
+∎
+
+
+
+--------------------------------------------------------------------
+#### Lemma 3.2  
+No odd integer \(r>1\) satisfies the remaining equations (5).
+
+*Proof.*  
+Insert \(b_{0}=\varepsilon _0\) and \(b_{1}=-\varepsilon _0\) from (6)–(7)
+into the expression for \(a_{2}\) in (5):
+
+\[
+a_{2}= \varepsilon _0-(1+r)(-\varepsilon _0)+r b_{2}
+      = r b_{2}+\varepsilon _0(r+2).   \tag{8}
+\]
+
+Hence  
+
+\[
+c_{2}=|a_{2}|=|r b_{2}+ \varepsilon _0(r+2)|
+          =|r(b_{2}+\varepsilon _0)+2\varepsilon _0| .\tag{9}
+\]
+
+Because the absolute values of the coefficients may only be
+\(1\) or \(r\), we must have \(c_{2}\in\{1,r\}\).
+
+*Case \(c_{2}=1\).*  
+Then \(|r(b_{2}+\varepsilon _0)+2\varepsilon _0|=1\).
+The term \(r|b_{2}+\varepsilon _0|\) is a multiple of \(r\ge3\)
+and therefore its absolute value is at least \(3\) unless it is
+zero.  If it is zero we obtain \(|2\varepsilon _0|=2\neq1\).
+Hence this case is impossible.
+
+*Case \(c_{2}=r\).*  
+Now \(|r(b_{2}+\varepsilon _0)+2\varepsilon _0|=r\), i.e.  
+
+\[
+|\,b_{2}+\varepsilon _0+\frac{2\varepsilon _0}{r}\,|=1 .
+\]
+
+Since \(0<\bigl|\frac{2\varepsilon _0}{r}\bigr|<1\) (recall \(r\ge3\)),
+the left‑hand side can be equal to \(1\) only when
+\(b_{2}+\varepsilon _0=0\) and \(\frac{2\varepsilon _0}{r}=0\),
+the latter being impossible for \(r>1\).
+Thus this case also leads to a contradiction.
+
+Both possibilities for \(c_{2}\) are impossible; therefore no odd
+\(r>1\) can satisfy the system (5). ∎
+
+
+
+--------------------------------------------------------------------
+From Lemmas 3.1 and 3.2 we deduce that the assumption \(r>1\) is
+false. Consequently
+
+\[
+\boxed{c_0=c_1=\dots =c_6=1 } .
+\tag{10}
+\]
+
+That is, **every coefficient of a good polynomial has absolute value
+\(1\).**  Hence each coefficient is either \(+1\) or \(-1\).
+
+--------------------------------------------------------------------
+### 4.  Determining all good polynomials
+
+Because all \(|a_i|=1\), condition (1) reduces to the single requirement
+that \(1\) be a root of \(P\); indeed \(P(1)=0\) is equivalent to  
+
+\[
+1+a_6+\dots +a_0=0 .
+\tag{11}
+\]
+
+Let \(p\) be the number of coefficients equal to \(+1\) among
+\(a_0,\dots ,a_6\); then the remaining \(7-p\) coefficients equal \(-1\).
+Equation (11) becomes  
+
+\[
+1+(p-(7-p))=0\quad\Longleftrightarrow\quad 2p-6=0
+\quad\Longleftrightarrow\quad p=3 .
+\]
+
+Thus exactly three of the seven coefficients \(a_{0},\dots ,a_{6}\) are
+\(+1\) and the other four are \(-1\).  
+Choosing the three positions of the \(+1\)’s determines the polynomial
+uniquely; there are  
+
+\[
+\binom{7}{3}=35
+\]
+
+such choices.
+
+Every polynomial obtained in this way is monic of degree \(7\),
+has all coefficients odd and smaller than \(2025^{2}\),
+and satisfies \(P(1)=0\); because each absolute coefficient equals
+\(1\), condition (1) is fulfilled.  Hence all \(35\) polynomials are
+good.
+
+--------------------------------------------------------------------
+### 5.  Conclusion
+
+The only possible good polynomials are those whose coefficients are
+\(\pm1\) with exactly three \(+1\)’s and four \(-1\)’s; there are  
+
+\[
+\boxed{35}
+\]
+
+such polynomials. ∎

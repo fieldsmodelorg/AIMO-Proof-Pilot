@@ -1,0 +1,122 @@
+## Solution  
+
+We are given $k\ge 3$ distinct positive integers $a_1,\dots,a_k$ with product $P$ and $\sum a_i < 3\cdot 10^6$.  
+Define $g$ as the greatest common divisor of the numbers $\frac{P}{a_i}+1$ ($1\le i\le k$).  
+We want the maximum possible value of $g$ over all choices of $k\ge 3$ and $a_i$.
+
+---
+
+### 1.  Basic properties of $g$
+
+Let $N_i = \frac{P}{a_i}+1$.  
+Take two indices $i\neq j$. Because $g\mid N_i$ and $g\mid N_j$, we have  
+$$g\mid N_i-N_j = \bigl(\prod_{t\neq i}a_t\bigr)-\bigl(\prod_{t\neq j}a_t\bigr) = (a_j-a_i)\!\prod_{t\neq i,j}a_t.$$
+
+We first show that $\gcd(g,a_t)=1$ for every $t$.  
+Suppose a prime $p$ divides both $g$ and some $a_t$. Consider the number $N_t = \prod_{u\neq t}a_u+1$.  
+Since $p\mid a_t$ and $p\mid g$, the congruence $N_t\equiv 0\pmod p$ gives $\prod_{u\neq t}a_u\equiv -1\pmod p$.  
+For any $i\neq t$, $N_i = a_t\cdot\prod_{u\neq i,t}a_u+1\equiv 1\pmod p$ (because $a_t\equiv 0\pmod p$).  
+But $p\mid g$ and $g\mid N_i$, so $p\mid N_i$, contradicting $N_i\equiv 1\pmod p$. Hence $\gcd(g,a_t)=1$ for all $t$.
+
+Consequently $\gcd\bigl(g,\prod_{t\neq i,j}a_t\bigr)=1$, and from $g\mid (a_j-a_i)\prod_{t\neq i,j}a_t$ we deduce  
+$$g\mid a_j-a_i\qquad\text{for all }i,j.$$  
+Thus all $a_i$ are congruent modulo $g$. Write  
+$$a_i = r + m_i g\qquad (i=1,\dots,k)$$  
+with $1\le r\le g-1$ (since $\gcd(r,g)=1$ follows from $\gcd(g,a_i)=1$) and the $m_i$ are distinct non‑negative integers.
+
+Now reduce $N_i$ modulo $g$. Because $a_j\equiv r\pmod g$ for all $j$, we have  
+$$\prod_{t\neq i}a_t \equiv r^{k-1}\pmod g.$$  
+Since $g\mid N_i = \prod_{t\neq i}a_t+1$, we obtain  
+$$r^{k-1}+1\equiv 0\pmod g\quad\Longrightarrow\quad g\mid r^{k-1}+1. \tag{1}$$
+
+---
+
+### 2.  Why $k=3$ gives the largest possible $g$
+
+For fixed $r,g$ the sum $S=\sum a_i$ is at least the sum with the smallest possible distinct non‑negative $m_i$, namely $0,1,\dots,k-1$:  
+$$S \ge k r + g\cdot\frac{k(k-1)}{2}.$$  
+If we try to make $g$ large we want $S$ as small as possible, so we take this minimal sum.
+
+For $k=3$ this gives $S_{\min}=3r+3g$.  
+For $k=4$ we get $S_{\min}=4r+6g$, and for larger $k$ the $g$‑term grows quadratically.  
+Since $S<3\cdot10^6$, we obtain for $k=4$: $6g < 3\cdot10^6$ $\Rightarrow$ $g<500\,000$.  
+For $k=5$ the bound becomes even smaller.  
+Thus the maximum possible $g$ can only be achieved when $k=3$ (the smallest allowed $k$).  
+
+From now on we set $k=3$.  
+Then condition (1) becomes  
+$$g\mid r^2+1. \tag{2}$$  
+The minimal sum condition $3(r+g)<3\cdot10^6$ is equivalent to  
+$$r+g < 10^6. \tag{3}$$  
+Conversely, if (2) and (3) hold we can simply take  
+$$a_1 = r,\quad a_2 = r+g,\quad a_3 = r+2g,$$  
+which are distinct, positive, and satisfy the sum bound.  
+Moreover, modulo $g$ we have $a_i\equiv r$, so  
+$$\frac{P}{a_i}+1 \equiv r^2+1\equiv 0\pmod g,$$  
+hence $g$ divides each $\frac{P}{a_i}+1$. As argued in §1, any common divisor must divide the differences $a_j-a_i$, which are $g$ and $2g$, so the gcd of the three numbers is exactly $g$.  
+
+Therefore the problem reduces to:
+
+> Find the largest integer $g$ for which there exist positive integers $r,g$ with  
+> $$1\le r < g,\qquad g\mid r^2+1,\qquad r+g < 10^6.$$
+
+---
+
+### 3.  Maximising $g$
+
+Write $r^2+1 = g\,h$ with $h\in\mathbb{N}$. Then $g = \dfrac{r^2+1}{h}$ and because $g>r$ we have $h\le r$.  
+Condition (3) becomes  
+$$r + \frac{r^2+1}{h} < 10^6 \;\Longleftrightarrow\; r^2 + h r + 1 < h\cdot10^6. \tag{4}$$  
+For a given $h$, (4) gives an upper bound on $r$. To make $g$ as large as possible we want $h$ as small as possible (since $g$ decreases when $h$ increases). We examine the smallest admissible values of $h$.
+
+* **$h=1$.** Then $g = r^2+1$ and (4) reads $r^2+r+1 < 10^6$.  
+  The largest integer $r$ satisfying this is $r=999$ (for $r=1000$ we get $1\,001\,001 > 10^6$).  
+  This yields $g = 999^2+1 = 998\,001$.
+
+* **$h=2$.** Here $r$ must be odd so that $r^2+1$ is even. Then $g = \frac{r^2+1}{2}$ and (4) becomes  
+  $$r + \frac{r^2+1}{2} < 10^6 \;\Longleftrightarrow\; (r+1)^2 < 2\cdot10^6.$$  
+  The largest integer $r$ with $(r+1)^2 < 2\,000\,000$ is $r=1413$ (since $1414^2 = 1\,999\,396$ but $1415^2 = 2\,002\,025$).  
+  Because $r$ must be odd, $r=1413$ is admissible. Then  
+  $$g = \frac{1413^2+1}{2} = \frac{1\,996\,569+1}{2} = \frac{1\,996\,570}{2} = 998\,285.$$  
+  This is larger than $998\,001$.
+
+* **$h=3$.** $r^2+1$ is never divisible by $3$ because a square modulo $3$ is $0$ or $1$, so $r^2+1\equiv 1$ or $2\pmod 3$. Hence $h=3$ is impossible.
+
+* **$h=4$.** $r^2+1\equiv 0\pmod 4$ would require $r^2\equiv 3\pmod 4$, which is impossible (squares are $0$ or $1$ modulo $4$). So $h=4$ impossible.
+
+* **$h=5$.** This is possible when $r\equiv \pm2\pmod 5$. Condition (4) gives $r^2+5r+1<5\cdot10^6$, i.e. $r^2+5r-4\,999\,999<0$, whose positive root is approximately $2233.5$, so $r\le 2233$. The resulting $g$ is at most $\frac{2233^2+1}{5}\approx 997\,258$, which is smaller than $998\,285$.
+
+* For any $h\ge 5$ the bound on $r$ becomes even tighter and the maximum possible $g$ is even smaller.
+
+Consequently the overall maximum $g$ is obtained with $h=2$, $r=1413$, giving $g=998\,285$.
+
+---
+
+### 4.  Construction achieving $g=998\,285$
+
+Take $k=3$, $r=1413$, $g=998\,285$. Define  
+$$a_1 = 1413,\qquad a_2 = 1413+998\,285 = 999\,698,\qquad a_3 = 1413+2\cdot998\,285 = 1\,997\,983.$$  
+These are distinct positive integers. Their sum is  
+$$1413+999\,698+1\,997\,983 = 2\,999\,094 < 3\cdot10^6.$$  
+Their product $P = a_1a_2a_3$ is huge, but we only need to check that $g$ divides each $\frac{P}{a_i}+1$.  
+Modulo $g$ we have $a_i\equiv r=1413$, so  
+$$\frac{P}{a_i} = \prod_{j\ne i}a_j \equiv r^2 = 1413^2 \pmod g.$$  
+Hence  
+$$\frac{P}{a_i}+1 \equiv r^2+1 \equiv 0 \pmod g,$$  
+because $r^2+1 = 1\,996\,570 = 2\cdot 998\,285$ is a multiple of $g$.  
+As argued in §1, any common divisor of the three numbers must divide the differences $a_j-a_i$, which are $g$ and $2g$, and since $g$ itself divides all of them, the gcd is exactly $g$.
+
+Thus $g=998\,285$ is attainable.
+
+---
+
+### 5.  Upper bound
+
+We have shown that any feasible configuration with $k=3$ must satisfy $g\mid r^2+1$ and $r+g<10^6$.  
+The analysis in §3 shows that for any such $r,g$, the value $g$ cannot exceed $998\,285$ (the maximum obtained for $h=2$, $r=1413$).  
+For $k\ge 4$ we already proved $g<500\,000$, which is smaller.  
+Hence $998\,285$ is the absolute maximum possible value of $g$.
+
+---
+
+**Answer:** $\boxed{998285}$

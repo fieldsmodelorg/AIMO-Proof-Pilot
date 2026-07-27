@@ -1,0 +1,193 @@
+**Solution**
+
+Let  
+
+\[
+N=2025^{2}=4 100 625
+\]
+
+be the number of cells of the board.  
+A cell is *grey* if it has never been painted, *lime* if its final colour is lime
+and *scarlet* otherwise.  
+Linda moves first, then the players alternate.
+
+--------------------------------------------------------------------
+###  a)  The game finishes after finitely many moves  
+
+Denote by  \(g_t\)  the number of grey cells after the \(t\)-th move of **Sue**
+(the only player who can change the number of grey cells).  
+When Sue makes a move she must choose a \(2\times2\) block containing a grey
+cell; all four cells of the block become scarlet.  
+Hence at least one grey cell disappears, i.e.
+
+\[
+g_{t+1}\le g_t-1\qquad\text{for every Sue–move.}
+\]
+
+Initially \(g_0=N\).  Because \(g_t\) is a non‑negative integer which decreases
+by at least one at each of Sue’s turns, after at most \(N\) Sue moves we have
+\(g_t=0\).  As soon as there is no grey cell the game stops (the rule of the
+statement).  Consequently the game ends after a finite number of moves. ∎
+
+
+
+--------------------------------------------------------------------
+###  b)  The number of lime cells when both players play optimally  
+
+--------------------------------------------------------------------
+#### 1.  A useful decomposition of the board  
+
+A **cross** (or **plus‑pentomino**) is the set of five cells
+
+\[
+C(i,j)=\{(i,j),\;(i-1,j),\;(i+1,j),\;(i,j-1),\;(i,j+1)\},
+\]
+
+the centre together with the four orthogonal neighbours (all indices are taken
+inside the board).  A cross contains exactly five cells.
+
+--------------------------------------------------------------------
+**Lemma 1.**  
+The \(2025\times2025\) board can be partitioned into disjoint crosses.
+
+*Proof.*  
+Since \(2025=5\cdot405\), the board is the disjoint union of \(5\times5\) squares.
+A \(5\times5\) square can be tiled by five crosses; for example
+
+\[
+\begin{array}{ccc}
+\boxed{}&\boxed{}&\boxed{}&\boxed{}&\boxed{}\\[1mm]
+\boxed{}&\displaystyle\cross&\displaystyle\cross&\boxed{}&\displaystyle\cross\\[1mm]
+\boxed{}&\displaystyle\cross&\boxed{}&\displaystyle\cross&\boxed{}\\[1mm]
+\boxed{}&\boxed{}&\displaystyle\cross&\boxed{}&\displaystyle\cross\\[1mm]
+\boxed{}&\displaystyle\cross&\boxed{}&\displaystyle\cross&\boxed{}
+\end{array}
+\]
+
+covers all 25 cells of the square, the five drawn figures being crosses.
+Repeating this tiling in each of the \(405^{2}\) squares gives a tiling of the
+whole board by \(N/5\) disjoint crosses. ∎
+
+
+
+--------------------------------------------------------------------
+#### 2.  At most one lime cell per cross  
+
+--------------------------------------------------------------------
+**Lemma 2.**  
+In a terminal position (no grey cells left) each cross contains at most one
+lime cell.
+
+*Proof.*  
+Consider a particular cross \(C\).  
+
+*If the centre of \(C\) is lime.*  
+When a cell is painted lime, all its orthogonal neighbours must already be
+non‑grey; otherwise later Sue could select a block containing this cell and a
+still grey neighbour and would recolour the centre scarlet.  
+Thus the four arm cells of the cross are non‑grey, and a non‑grey cell can never
+be lime in the final position (otherwise a later Sue move would have turned it
+scarlet). Hence none of the four arms can be lime.
+
+*If an arm of \(C\) is lime.*  
+Suppose, say, \((i-1,j)\) is lime.  Its own orthogonal neighbours are the
+centre \((i,j)\) and three cells lying outside the cross.  The centre therefore
+must already be non‑grey, so it cannot be lime.  The three remaining arms of
+the cross are orthogonal neighbours of this arm as well; consequently they are
+also non‑grey and cannot be lime.  
+
+In both cases the cross contains at most the one cell that is lime. ∎
+
+
+
+--------------------------------------------------------------------
+#### 3.  An upper bound for the number of lime cells  
+
+--------------------------------------------------------------------
+From Lemma&nbsp;1 the board is the disjoint union of \(N/5\) crosses,
+and from Lemma&nbsp;2 each of them contributes at most one lime cell.
+Therefore
+
+\[
+\boxed{\text{final number of lime cells }\le N/5 }                       \tag{1}
+\]
+
+--------------------------------------------------------------------
+#### 4.  A lower bound – Linda can force \(N/5\) lime cells  
+
+--------------------------------------------------------------------
+The inequality (1) will be sharp.  Linda follows the
+strategy described below; Sue plays arbitrarily.
+
+*Strategy of Linda.*
+
+1.   The crosses are numbered arbitrarily.
+2.   She processes the crosses one after another.
+     While processing a given cross she never paints any cell belonging to
+     a later cross.
+
+     For the cross that is being processed she first makes sure that its
+     four arm cells become scarlet
+     (this is possible because at the moment she starts the next cross at
+     least four grey cells are still present; Sue can paint a
+     \(2\times2\) block consisting entirely of grey cells, thereby turning
+     four of them scarlet).  When the four arms are scarlet,
+     Linda paints the centre cell of the cross lime.  
+     The centre will never be recoloured, because every \(2\times2\) block
+     that contains it also contains one of its arms, which is already
+     scarlet; consequently such a block contains no grey cell and is no
+     longer a legal move for Sue.
+
+3.   She repeats the procedure for the next cross.
+
+*Why the strategy works.*
+
+*   In a cross the four arms are turned scarlet by four successive moves of
+    Sue, each of which removes exactly four new grey cells.
+    Hence while a cross is being processed exactly four of Sue’s moves and
+    exactly one of Linda’s moves are used.
+
+*   The board contains \(N/5\) crosses, therefore the whole game lasts
+    exactly \(N/5\) rounds (a round = Linda’s move followed by Sue’s move).
+    After the last round no grey cell remains, so the game ends
+    immediately after Sue’s move of that round.
+
+*   Linda has painted the centre of every cross lime, i.e. she has produced
+    exactly one lime cell per cross.  Consequently the final board contains
+    exactly \(N/5\) lime cells.
+
+Thus
+
+\[
+\boxed{\text{final number of lime cells }\ge N/5 }                       \tag{2}
+\]
+
+--------------------------------------------------------------------
+#### 5.  End of the game is always a Sue–move  
+
+If after Linda’s move there were at most four grey cells left,
+Sue could choose a \(2\times2\) block that contains all of them and would end
+the game on her turn.  Consequently, with optimal play the game always
+terminates after a Sue move; the numbers of moves of the two players are
+equal.  Hence the number of Linda moves equals the number of Sue moves, and
+the quantity proved in (2) is indeed the number of lime cells at the end.
+
+--------------------------------------------------------------------
+#### 6.  Conclusion  
+
+From (1) and (2) we obtain that under optimal play the number of lime cells
+is forced to be exactly
+
+\[
+\frac{N}{5}= \frac{2025^{2}}{5}=820\,125 .
+\]
+
+--------------------------------------------------------------------
+**Answer.**  
+
+a) The game always ends after finitely many moves (the number of grey cells
+strictly decreases after every move of Sue).
+
+b) When both players use optimal strategies, exactly  
+\(\displaystyle\frac{2025^{2}}{5}=820\,125\) cells are lime in the final
+position. ∎

@@ -1,0 +1,220 @@
+We are given triangle \(ABC\) with side lengths \(AB = 26\), \(BC = 17\), \(AC = 25\).  We set up a coordinate system with \(B = (0,0)\), \(C = (17,0)\), and solve for \(A\).  From the distances we find \(A = (10,24)\).  The orthocenter \(H\) is the intersection of the altitudes; since \(BC\) is horizontal, the altitude from \(A\) is the vertical line \(x = 10\).  The altitude from \(B\) is perpendicular to \(AC\); its equation is \(24t = 10\) giving \(t = \frac{5}{12}\), so \(H = \left(10, \frac{35}{12}\right)\).
+
+The feet of the altitudes are
+\[
+D = (10,0),\qquad 
+E = \left(\frac{9792}{625},\frac{2856}{625}\right),\qquad 
+F = \left(\frac{425}{169},\frac{1020}{169}\right).
+\]
+
+Line \(EF\) meets \(BC\) (the \(x\)-axis) at \(X\).  Using the two‑point form we obtain
+\[
+X = \left(\frac{170}{3},0\right).
+\]
+
+The circumcircle \(\Omega\) has centre \(O = \left(\frac{17}{2},\frac{253}{24}\right)\) and radius \(R = \frac{325}{24}\).
+
+Line \(AX\) is parametrised as \(A + s\,(X-A)\).  Substituting into the equation of \(\Omega\) gives a quadratic in \(s\).  Besides \(s=0\) (point \(A\)) we obtain
+\[
+s = \frac{759}{12392}.
+\]
+Hence the second intersection \(Q\) of \(AX\) with \(\Omega\) is
+\[
+Q = \left(10 + 140\cdot\frac{759}{12392},\; 24 - 72\cdot\frac{759}{12392}\right)
+   = \left(\frac{57545}{3098},\;\frac{30345}{1549}\right).
+\]
+
+The nine‑point circle (circle \(DEF\)) has centre \(N = \left(\frac{37}{4},\frac{323}{48}\right)\) and radius \(R_N = \frac{325}{48}\).  A well‑known homothety with centre \(H\) and factor \(\frac12\) sends the circumcircle to the nine‑point circle.  Therefore the image of \(Q\) under this homothety lies on the nine‑point circle and on the segment \(HQ\).  That image is exactly the midpoint of \(H\) and \(Q\); call it \(P\).  Thus
+\[
+P = \frac{H+Q}{2}.
+\]
+
+Because \(P\) is the midpoint of \(HQ\), we have \(PQ = \frac12 HQ\).  The required ratio is
+\[
+\frac{PQ}{PE} = \frac{HQ}{2\,PE}.
+\]
+
+We now compute \(HQ^2\) and \(PE^2\) using the coordinates.  Let \(d = 1549\) (note that \(3098 = 2d\)).  Then
+\[
+Q = \left(\frac{57545}{2d},\;\frac{30345}{d}\right),\qquad 
+H = \left(10,\;\frac{35}{12}\right).
+\]
+
+\[
+\Delta x = Q_x-H_x = \frac{57545-20d}{2d},\qquad 
+\Delta y = Q_y-H_y = \frac{364140-35d}{12d}.
+\]
+
+With \(d=1549\) we get \(57545-20d = 26565\) and \(364140-35d = 309925\).  Hence
+\[
+HQ^2 = \frac{26565^2}{4d^2} + \frac{309925^2}{144d^2}
+      = \frac{36\cdot26565^2 + 309925^2}{144d^2}.
+\]
+
+Evaluating the squares:
+\[
+26565^2 = 705\,699\,225,\qquad 
+309925^2 = 96\,053\,505\,625,
+\]
+\[
+36\cdot26565^2 = 25\,405\,172\,100,\qquad 
+\text{sum} = 121\,458\,677\,725.
+\]
+
+Thus
+\[
+HQ^2 = \frac{121\,458\,677\,725}{144\,d^2}.
+\]
+
+Factorising the numerator shows it is \(1549 \times 78\,411\,025\).  Since \(d=1549\), we obtain
+\[
+HQ^2 = \frac{78\,411\,025}{144\,d}.
+\]
+
+But \(78\,411\,025 = 8855^2\) (because \(8854^2 = 78\,393\,316\) and \(8855^2 = 78\,393\,316+17\,709 = 78\,411\,025\)).  Therefore
+\[
+HQ^2 = \frac{8855^2}{144\,d}\quad\Longrightarrow\quad 
+PQ^2 = \frac{HQ^2}{4} = \frac{8855^2}{576\,d}.
+\]
+
+Now we compute \(PE^2\).  Because \(P\) and \(E\) lie on the nine‑point circle, we use the relation
+\[
+PE^2 = 2R_N^2 - 2\,\overrightarrow{NP}\cdot\overrightarrow{NE}.
+\]
+
+In the scaled system (multiplied by \(48\) to clear denominators) we have
+\[
+N' = (444,323),\qquad 
+P' = \left(240+\frac{690540}{d},\;70+\frac{728280}{d}\right),\qquad 
+E' = \left(\frac{470016}{625},\;\frac{137088}{625}\right).
+\]
+
+The dot product \(\overrightarrow{NP}\cdot\overrightarrow{NE}\) in the original coordinates is
+\[
+\overrightarrow{NP}\cdot\overrightarrow{NE} = \frac{50\,312\,467\,283}{625\,d\cdot 2304}.
+\]
+
+The squared radius is \(R_N^2 = \left(\frac{325}{48}\right)^2 = \frac{105625}{2304}\).  Hence
+\[
+PE^2 = 2\cdot\frac{105625}{2304} - 2\cdot\frac{50\,312\,467\,283}{625\,d\cdot 2304}
+      = \frac{211250}{2304} - \frac{100\,624\,934\,566}{625\,d\cdot 2304}.
+\]
+
+Writing the first term with denominator \(625d\cdot2304\) gives
+\[
+PE^2 = \frac{211250\cdot625d - 100\,624\,934\,566}{625d\cdot2304}.
+\]
+
+Compute \(211250\cdot625 = 132\,031\,250\).  Then
+\[
+211250\cdot625d = 132\,031\,250\cdot1549 = 204\,516\,406\,250,
+\]
+and subtracting \(100\,624\,934\,566\) yields \(103\,891\,471\,684\).  Therefore
+\[
+PE^2 = \frac{103\,891\,471\,684}{625d\cdot2304}.
+\]
+
+Factorising the numerator: \(103\,891\,471\,684 = 4\cdot25\,972\,867\,921\).  Notice that \(25\,972\,867\,921 = 161\,? \) Actually we observe that
+\[
+103\,891\,471\,684 = 8855^2 \cdot 625d.
+\]
+Indeed, \(8855^2 = 78\,411\,025\) and
+\[
+78\,411\,025 \times 625d = 78\,411\,025 \times 625 \times 1549.
+\]
+Compute \(78\,411\,025 \times 625 = 49\,013\,140\,625\) (since \(78\,411\,025\times 600 = 47\,046\,615\,000\) and \(\times 25 = 1\,960\,275\,625\), sum \(49\,006\,890\,625\)? Let's do carefully:
+\[
+78\,411\,025 \times 625 = 78\,411\,025 \times \left(\frac{5^4}{1}\right) = \frac{78\,411\,025 \times 5^4}{1}.
+\]
+But it is easier to verify the equality by checking that
+\[
+\frac{103\,891\,471\,684}{625d} = 8855^2.
+\]
+Compute \(103\,891\,471\,684 \div (625d) = \frac{103\,891\,471\,684}{625\times1549}\).  Since \(103\,891\,471\,684 = 8855^2 \times 625d\) is exactly what we need, we can confirm by noting that
+\[
+8855^2 \times 625d = 78\,411\,025 \times 625 \times 1549.
+\]
+Now \(78\,411\,025 \times 625 = 49\,013\,140\,625\) (multiply by \(5^4\): \(78\,411\,025 \times 5 = 392\,055\,125\), \(\times 5 = 1\,960\,275\,625\), \(\times 5 = 9\,801\,378\,125\), \(\times 5 = 49\,006\,890\,625\)? Wait, we need to be systematic:
+\[
+78\,411\,025 \times 5 = 392\,055\,125,
+\]
+\[
+392\,055\,125 \times 5 = 1\,960\,275\,625,
+\]
+\[
+1\,960\,275\,625 \times 5 = 9\,801\,378\,125,
+\]
+\[
+9\,801\,378\,125 \times 5 = 49\,006\,890\,625.
+\]
+So \(78\,411\,025 \times 625 = 49\,006\,890\,625\).  Then
+\[
+49\,006\,890\,625 \times 1549 = 49\,006\,890\,625 \times (1500+49) = 73\,510\,335\,937\,500 + 2\,401\,337\,640\,625 = 75\,911\,673\,578\,125.
+\]
+That is far larger than \(103\,891\,471\,684\).  Something is off.  Let's recalc: Actually \(625d = 625\times1549 = 968\,125\).  So we need to check whether
+\[
+8855^2 \times 968\,125 = 103\,891\,471\,684.
+\]
+Compute \(8855^2 = 78\,411\,025\).  Multiply by \(968\,125\):
+\[
+78\,411\,025 \times 968\,125.
+\]
+We can compute \(78\,411\,025 \times 968\,125 = 78\,411\,025 \times (1\,000\,000 - 31\,875)\)?  That seems messy.  Instead, note that earlier we derived
+\[
+PE^2 = \frac{103\,891\,471\,684}{625d\cdot2304}.
+\]
+We also have \(PQ^2 = \frac{8855^2}{576d}\).  Therefore
+\[
+\frac{PQ^2}{PE^2} = \frac{8855^2/(576d)}{103\,891\,471\,684/(625d\cdot2304)} = \frac{8855^2}{576d} \cdot \frac{625d\cdot2304}{103\,891\,471\,684} = \frac{8855^2 \cdot 625 \cdot 2304}{576 \cdot 103\,891\,471\,684}.
+\]
+Simplify \(2304/576 = 4\).  Hence
+\[
+\frac{PQ^2}{PE^2} = \frac{8855^2 \cdot 625 \cdot 4}{103\,891\,471\,684} = \frac{8855^2 \cdot 2500}{103\,891\,471\,684}.
+\]
+Now compute \(103\,891\,471\,684 \div 2500 = 41\,556\,588.6736\), not an integer.  But we suspect that \(103\,891\,471\,684 = 8855^2 \times 2500\)?  Let's test: \(8855^2 = 78\,411\,025\).  Multiply by \(2500 = 78\,411\,025 \times 2500 = 78\,411\,025 \times 1000 \times 2.5 = 78\,411\,025\,000 \times 2.5 = 196\,027\,562\,500\).  That is far larger.  So my earlier guess that numerator equals \(8855^2 \times 625d\) is incorrect.
+
+We need to find the correct factorisation.  Let's compute \(103\,891\,471\,684\) divided by \(d = 1549\).  \(1549 \times 67\,000\,000 = 103\,783\,000\,000\), remainder \(108\,471\,684\).  \(1549 \times 70\,000 = 108\,430\,000\), remainder \(41\,684\).  \(1549 \times 27 = 41\,823\), too high.  So not a simple multiple.
+
+Maybe we made an arithmetic mistake in the dot product or in the subtraction.  Let's recompute the dot product more carefully.
+
+We had
+\[
+\overrightarrow{NP}\cdot\overrightarrow{NE} = \frac{50\,312\,467\,283}{625\,d\cdot 2304}.
+\]
+But we should verify this number.  It came from a lengthy computation that might contain errors.  Instead of trusting that, we can compute \(PE^2\) directly from the coordinates of \(P\) and \(E\) using the simplified expressions we found for \(\Delta x\) and \(\Delta y\).
+
+Recall we obtained
+\[
+\Delta x = P_x - E_x = -\frac{5\,318\,107}{2500\,d},\qquad 
+\Delta y = P_y - E_y = \frac{155\,347\,219}{15000\,d}.
+\]
+But note that the denominators are different: \(2500d\) and \(15000d\).  To combine them for the squared distance we need a common denominator.  The least common multiple of \(2500\) and \(15000\) is \(15000\).  So rewrite \(\Delta x\) with denominator \(15000d\):
+\[
+\Delta x = -\frac{5\,318\,107}{2500d} = -\frac{5\,318\,107 \times 6}{15000d} = -\frac{31\,908\,642}{15000d}.
+\]
+Indeed \(5\,318\,107 \times 6 = 31\,908\,642\).  And \(\Delta y = \frac{155\,347\,219}{15000d}\).  Therefore
+\[
+PE^2 = \frac{31\,908\,642^2 + 155\,347\,219^2}{(15000d)^2}.
+\]
+
+Now compute the squares.  Let \(A = 31\,908\,642\), \(B = 155\,347\,219\).  We need \(A^2 + B^2\).  Notice that \(B = 5 \times A + ?\)  \(A \times 5 = 159\,543\,210\), not \(B\).  Perhaps \(A\) and \(B\) are multiples of \(8855\)?  \(8855 \times 3600 = 31\,898\,000\), close to \(A\).  \(8855 \times 3601 = 31\,907\,855\), difference \(787\).  Not exact.
+
+Given the enormous numbers, it is likely that \(A^2+B^2\) simplifies to a multiple of \(d^2\) times a perfect square, leading to a nice ratio.  However, the algebra is extremely heavy.  Perhaps there is a much simpler synthetic approach that yields the ratio directly.
+
+We already know that \(P\) is the midpoint of \(HQ\).  Maybe we can compute \(HQ\) and \(PE\) using known lengths in the triangle.  Let's try to find coordinates for \(Q\) in a different way.
+
+From the homothety, \(Q\) is the point on the circumcircle such that \(P\) is the midpoint of \(HQ\).  Since \(P\) lies on the nine‑point circle, \(Q\) is the reflection of \(H\) across \(P\).  But \(P\) is also the midpoint of \(HQ\), so \(Q\) is the reflection of \(H\) across \(P\).  Not helpful.
+
+Maybe we can use complex numbers with the circumcircle as unit circle.  Set the circumradius to \(1\) by scaling the triangle.  The side lengths become
+\[
+a' = \frac{17}{R},\quad b' = \frac{25}{R},\quad c' = \frac{26}{R},
+\]
+where \(R = \frac{325}{24}\).  So \(a' = \frac{17\cdot24}{325} = \frac{408}{325}\), \(b' = \frac{600}{325} = \frac{24}{13}\), \(c' = \frac{624}{325}\).  These are rational.  Place the circumcenter at the origin.  Let the vertices be complex numbers \(a,b,c\) on the unit circle.  Then \(h = a+b+c\).  The nine‑point circle has centre \(n = h/2\) and radius \(1/2\).  The point \(E\) (foot from \(B\) to \(AC\)) can be expressed as
+\[
+e = \frac{a+c - b + a c \bar{b}}{2}? 
+\]
+I recall a formula:  In a triangle with circumcenter \(0\), the foot of the altitude from \(B\) to \(AC\) is
+\[
+e = \frac{a+c - a c \bar{b}}{2}.
+\]
+Let's verify:  The line \(AC\) has equation \(z + a c \bar{z} = a + c\).  The altitude from \(B\) is perpendicular to \(AC\), so it satisfies \((z-b) \perp (c-a)\).  One can derive that the foot is \(e = \frac{a+c - a c \bar{b}}{2}\).  Indeed, this is a known formula.  Similarly, the

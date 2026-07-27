@@ -1,0 +1,247 @@
+**Answer:  \(\displaystyle g_{\max}=998\,285\).**  
+
+--------------------------------------------------------------------
+
+### 1.  Preliminary observations  
+
+Let  
+
+\[
+P=a_{1}a_{2}\dots a_{k},\qquad   
+g=\gcd\!\Bigl(\frac P{a_{1}}+1,\dots ,\frac P{a_{k}}+1\Bigr) .
+\]
+
+For each \(i\),
+
+\[
+g\mid \frac P{a_i}+1\quad\Longrightarrow\quad 
+\frac P{a_i}\equiv -1\pmod g .
+\]
+
+Multiplying by \(a_i\) gives  
+
+\[
+P+a_i\equiv 0\pmod g\qquad (1)
+\]
+
+hence \(g\mid P+a_i\) for every \(i\).  Subtracting two such relations,
+\(g\mid a_i-a_j\) for all \(i,j\); in particular all the numbers
+\(a_i\) are congruent modulo \(g\).  
+Write this common residue as  
+
+\[
+a_i=g\,n_i+r\qquad (0\le r<g)                               \tag{2}
+\]
+
+with integers \(n_i\) that are distinct (the \(a_i\) are distinct).
+Because \(g\mid P+r\) by (1), reducing the product 
+\(P\equiv r^k\pmod g\) and using (1) we obtain  
+
+\[
+r^k+r\equiv0\pmod g\quad\Longrightarrow\quad 
+g\mid r\bigl(r^{k-1}+1\bigr).                         \tag{3}
+\]
+
+If \(r=0\) then each \(a_i\) is a multiple of \(g\);
+but then \(\frac P{a_i}+1\equiv1\pmod g\), contradicting \(g>1\).
+Hence \(r\neq0\) and \(r\) is coprime to \(g\); consequently from (3)
+
+\[
+\boxed{\,g\mid r^{\,k-1}+1\,}.                        \tag{4}
+\]
+
+--------------------------------------------------------------------
+
+### 2.  The number of terms  
+
+From (2) we have  
+
+\[
+\sum_{i=1}^{k}a_i
+      =g\sum_{i=1}^{k}n_i+kr .
+\]
+
+Since the \(n_i\) are distinct non‑negative integers,
+\(\sum n_i\ge0+1+\dots +(k-1)=\frac{k(k-1)}2\); therefore  
+
+\[
+\sum a_i\ge g\frac{k(k-1)}2+kr<3\cdot10^{6}.
+\tag{5}
+\]
+
+From (5),
+
+\[
+g\le\frac{3\cdot10^{6}-kr}{k(k-1)/2}
+     <\frac{3\cdot10^{6}}{k(k-1)/2}
+     =\frac{6\cdot10^{6}}{k(k-1)} .
+\]
+
+The right–hand side decreases as \(k\) grows, so the largest possible
+\(g\) can occur only for the smallest admissible value \(k=3\).
+For \(k=3\) inequality (5) becomes  
+
+\[
+3(g+r)<3\cdot10^{6}\quad\Longrightarrow\quad
+\boxed{\,g+r\le 999\,999\,}.                         \tag{6}
+\]
+
+--------------------------------------------------------------------
+
+### 3.  The case \(k=3\)
+
+With \(k=3\), condition (4) gives  
+
+\[
+\boxed{\,g\mid r^{2}+1\,}.                           \tag{7}
+\]
+
+Thus \(r^{2}+1=g\,t\) for an integer \(t\ge1\);  
+\(t\) is a divisor of \(r^{2}+1\) and by (6)
+
+\[
+\frac{r^{2}+1}{t}+r=g+r\le 999\,999 .                \tag{8}
+\]
+
+For a fixed divisor \(t\) the left side of (8) is increasing in \(r\);
+hence, for that \(t\), the largest admissible \(r\) is the greatest
+integer satisfying
+
+\[
+\frac{r^{2}+1}{t}+r\le 999\,999
+\qquad\Longleftrightarrow\qquad
+r^{2}+tr+1\le t\cdot999\,999 .                       \tag{9}
+\]
+
+Solving (9) for \(r\) gives the estimate  
+
+\[
+r\le \sqrt{t\cdot999\,999}\;-\;\frac t2 .            \tag{10}
+\]
+
+--------------------------------------------------------------------
+
+### 4.  Maximising \(g\)
+
+From (7) we have \(g=(r^{2}+1)/t\).  
+Using (10),
+
+\[
+g\;=\;\frac{r^{2}+1}{t}\;\le\;
+\frac{\bigl(\sqrt{t\cdot999\,999}-\frac t2\bigr)^{2}+1}{t}
+=999\,999-\sqrt{t\cdot999\,999}+\frac t2+\frac1t .
+\tag{11}
+\]
+
+The right–hand side is a decreasing function of \(t\) for
+\(t\ge2\) (its derivative in \(t\) is negative).
+Consequently the greatest possible \(g\) is obtained for the smallest
+admissible \(t\).
+
+* **\(t=1\).**  
+Then \(g=r^{2}+1\) and (8) becomes \(r^{2}+r+1\le999\,999\); the
+largest integer \(r\) satisfying this is \(r=999\).  
+Hence \(g\le 999^{2}+1=998\,002\).
+
+* **\(t=2\).**  
+Now \(r\) must be odd (otherwise \(r^{2}+1\) would be odd and could not
+contain the factor \(2\)).  
+From (9) we obtain \((r+1)^{2}\le2\cdot999\,999\), i.e.
+
+\[
+r\le\bigl\lfloor\sqrt{2\cdot999\,999}\;-\;1\big\rfloor=1413 .
+\]
+
+Taking the maximal odd \(r=1413\) gives  
+
+\[
+g=\frac{1413^{2}+1}{2}=998\,285 .
+\]
+
+* **\(t\ge3\).**  
+Using (11) with \(t=3\) gives  
+
+\[
+g<999\,999-\sqrt{3\cdot999\,999}+\frac32
+   \;<\;998\,268 .
+\]
+
+Since the right‑hand side is already smaller than the value obtained for
+\(t=2\), any larger \(t\) yields an even smaller upper bound.
+Thus no \(t\ge3\) can produce a \(g\) larger than \(998\,285\).
+
+Consequently the absolute maximum of \(g\) is \(998\,285\), attained
+when \(t=2\) and \(r=1413\).
+
+--------------------------------------------------------------------
+
+### 5.  A concrete construction attaining \(g=998\,285\)
+
+Let  
+
+\[
+g=998\,285,\qquad r=1413,
+\]
+\[
+a_{1}=r=1413,\qquad 
+a_{2}=g+r=999\,698,\qquad 
+a_{3}=2g+r=1\,997\,983 .
+\]
+
+All three numbers are positive and distinct, and  
+
+\[
+a_{1}+a_{2}+a_{3}=3(g+r)=2\,999\,094<3\cdot10^{6}.
+\]
+
+Because all \(a_i\equiv r\pmod g\) and \(r^{2}+1=2g\),
+we have \(r^{2}\equiv-1\pmod g\).  Hence for each \(i\),
+
+\[
+\frac{P}{a_i}\equiv r^{2}\equiv-1\pmod g\quad\Longrightarrow\quad
+g\mid\frac{P}{a_i}+1 .
+\]
+
+Writing the three quotients explicitly (using \(P=a_{1}a_{2}a_{3}\))
+
+\[
+\begin{aligned}
+\frac{P}{a_{1}}+1&=g\bigl(2g+3r+1\bigr),\\
+\frac{P}{a_{2}}+1&=g\bigl(2r+1\bigr),\\
+\frac{P}{a_{3}}+1&=g\bigl(r+1\bigr).
+\end{aligned}
+\]
+
+Since  
+
+\[
+\gcd(r+1,2r+1)=\gcd(r+1,\,2r+1-2(r+1))=\gcd(r+1,-1)=1,
+\]
+
+the three numbers inside the parentheses are pairwise coprime; therefore
+
+\[
+\gcd\!\Bigl(\frac{P}{a_{1}}+1,\frac{P}{a_{2}}+1,
+           \frac{P}{a_{3}}+1\Bigr)=g .
+\]
+
+Thus the constructed set indeed yields the greatest common divisor
+\(g=998\,285\).
+
+--------------------------------------------------------------------
+
+### 6.  Conclusion  
+
+*For any admissible collection of distinct positive integers
+\(a_{1},\dots ,a_{k}\) (\(k\ge3\)) with sum \(<3\cdot10^{6}\), the integer*
+\(g=\gcd\!\bigl((P/a_{1})+1,\dots,(P/a_{k})+1\bigr)\) *satisfies*
+\(g\le998\,285\), *and the bound is attained (for example by the three
+numbers \(1413,\,999698,\,1997983\)).*  
+
+Hence the maximal possible value of \(g\) is  
+
+\[
+\boxed{998\,285}.
+\]  
+
+--------------------------------------------------------------------

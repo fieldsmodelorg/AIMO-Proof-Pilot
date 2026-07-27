@@ -1,0 +1,70 @@
+## Setup: generating functions
+
+Encode a multiset $S$ by the polynomial $f(x)=\sum_{s\in S}x^{s}$, where the coefficient of $x^{k}$ is the multiplicity of $k$. Since the elements lie in $\{1,\dots,19\}$, the polynomial $f$ has nonnegative integer coefficients, $f(0)=0$, and $\deg f=\max(S)$.
+
+A partition $S=A_i\sqcup B_i$ with $A_i=i+B_i$ corresponds exactly to writing
+$$f(x)=g_i(x)+x^i g_i(x)=(1+x^{i})\,g_i(x),$$
+where $g_i$ (the generating function of $B_i$) has nonnegative integer coefficients. Thus:
+
+> $S$ has index $\ge n$ $\iff$ for every $i\in\{1,\dots,n\}$, $\;f=(1+x^{i})g_i$ with $g_i\ge 0$ (all coefficients $\geq 0$).
+
+## A divisibility obstruction
+
+**Lemma 1.** If $S$ has index $\ge n$, then $f$ is divisible in $\mathbb{Z}[x]$ by $L_n:=\operatorname{lcm}_{1\le i\le n}(1+x^{i})$, and
+$$L_n=\prod_{\substack{d\text{ even}\\ d\le 2n}}\Phi_d(x),\qquad \deg L_n=\sum_{\substack{d\text{ even}\\ d\le 2n}}\varphi(d),$$
+where $\Phi_d$ is the $d$-th cyclotomic polynomial.
+
+*Proof.* Each $g_i\in\mathbb{Z}[x]$, so $1+x^{i}\mid f$ in $\mathbb{Z}[x]$ for all $i\le n$. Using $1+x^{i}=\frac{x^{2i}-1}{x^{i}-1}=\prod_{d\mid 2i,\,d\nmid i}\Phi_d$, one checks $\Phi_d\mid 1+x^{i}$ requires $d$ even, and for even $d$ the least such $i$ is $i=d/2$. Hence the cyclotomic factors appearing among $\{1+x^i:i\le n\}$ are exactly $\Phi_d$ with $d$ even, $d\le 2n$. These are distinct irreducibles each dividing $f$, so their product $L_n$ divides $f$. $\square$
+
+Computing $\sum_{d\text{ even}\le 2n}\varphi(d)$:
+
+| $n$ | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+|---|---|---|---|---|---|---|---|
+| $\deg L_n$ | 1 | 3 | 5 | 9 | 13 | 17 | 23 |
+
+Since $\deg f=\max(S)\le 19$, Lemma 1 with $\deg L_7=23>19$ gives **index $\le 6$**.
+
+## Ruling out index 6
+
+Suppose index $\ge 6$. Then $L_6\mid f$ with $\deg L_6=17$, and $f(0)=0$ forces $x\mid f$; as $\gcd(L_6,x)=1$ we get $f=L_6\,q$ with $q(0)=0$ and $\deg q=\deg f-17\le 2$, so $q=ax+bx^2$.
+
+Now $g_1=f/(1+x)=R\,q$ where $R:=L_6/(1+x)=\Phi_4\Phi_6\Phi_8\Phi_{10}\Phi_{12}$. The low‑order coefficients of $R$ are $r_0=1,\ r_1=-2,\ r_2=3$ (from $\Phi_6,\Phi_{10}$ contributing $-x$ each). Requiring $g_1\ge0$:
+$$[x^2]:\ -2a+b\ge0,\qquad [x^3]:\ 3a-2b\ge0,\qquad [x^1]:\ a\ge 0.$$
+These give $2a\le b\le \tfrac32 a$, hence $a\le 0$, so $a=b=0$. Thus no nonzero $f$ exists: **index $6$ is impossible.**
+
+## $N=5$ is attained
+
+Take $f(x)=x\prod_{i=1}^{5}(1+x^{i})$. For each $i\le 5$, $g_i=x\prod_{j\ne i}(1+x^{j})\ge 0$, so the index is $\ge 5$. Since $f=x(1+x)^2\,\Phi_2\Phi_4\Phi_6\Phi_8\Phi_{10}$ contains no factor $\Phi_{12}$, we have $1+x^{6}\nmid f$, so the index is exactly $5$. Its maximum element is $16\le 19$. Hence
+$$\boxed{N=5.}$$
+
+## The minimal maximum element $M$
+
+For index $5$, Lemma 1 gives $L_5\mid f$ with $L_5=\Phi_2\Phi_4\Phi_6\Phi_8\Phi_{10}$, $\deg L_5=13$; together with $x\mid f$, we get $f=L_5\,q$, $q(0)=0$, so $\deg f=13+\deg q$ with $\deg q\ge 1$.
+
+The key quotient is $g_1=R_1\,q$ with $R_1:=L_5/(1+x)=\Phi_4\Phi_6\Phi_8\Phi_{10}$, whose coefficients are
+$$R_1=[\,1,-2,4,-5,7,-7,8,-7,7,-5,4,-2,1\,].$$
+
+- $\deg q=1$ $(q=q_1x)$: $g_1=q_1xR_1$ inherits the negative coefficients of $R_1$ — impossible.
+- $\deg q=2$ $(q=q_1x+q_2x^2)$: the coefficients $[x^2],[x^3]$ of $g_1$ force $q_2=2q_1$, then $[x^5]=7q_1-5q_2=-3q_1\ge0$ forces $q_1=q_2=0$ — impossible.
+
+So $\deg q\ge 3$, i.e. $\deg f\ge 16$, giving $\max(S)\ge 16$. The set above attains $16$, so
+$$\boxed{M=16.}$$
+
+## Minimal number of elements
+
+Now $f=L_5\,q$ with $q=q_1x+q_2x^2+q_3x^3$, $q_3\ge 1$ (leading coefficient positive). The condition $g_1=R_1q\ge0$ gives, reading off coefficients of $g_1$:
+$$[x^1]:\ q_1\ge 0,\qquad [x^2]:\ q_2\ge 2q_1,\qquad [x^{15}]:\ q_3\ge0 .$$
+Also $q_1=0$ is impossible: then $[x^3]:\ q_3\ge 2q_2$ and $[x^{14}]:\ q_2\ge 2q_3$ give $q_3\ge 4q_3$, so $q_3=0$. Hence $q_1\ge 1$, and therefore $q_2\ge 2q_1\ge2$, $q_3\ge 1$, so
+$$q(1)=q_1+q_2+q_3\ge 4 .$$
+Since $L_5(1)=\Phi_2(1)\Phi_4(1)\Phi_6(1)\Phi_8(1)\Phi_{10}(1)=2\cdot2\cdot1\cdot2\cdot1=8$,
+$$|S|=f(1)=L_5(1)\,q(1)=8\,q(1)\ge 32 .$$
+
+Equality requires $(q_1,q_2,q_3)=(1,2,1)$, i.e. $q=x(1+x)^2$, giving exactly the multiset
+$$f=x\textstyle\prod_{i=1}^{5}(1+x^{i})=\{1,2,3,3,4,4,5,5,5,6,6,6,7,7,7,8,8,8,9,9,9,10,10,10,11,11,12,12,13,14,15,16\},$$
+which has index $5$, maximum element $16$, and $32$ elements. All constraints are met, so $32$ is achievable and minimal.
+
+## Conclusion
+
+$$N=5,\qquad M=16,\qquad \min|S|=32.$$
+
+32

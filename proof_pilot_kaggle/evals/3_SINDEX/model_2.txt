@@ -1,0 +1,87 @@
+We prove that the maximum index is \(N=5\), the smallest possible maximum element for such a multiset is \(M=16\), and among all multisets with these \(N\) and \(M\) the minimum number of elements is \(32\).
+
+**1. Generating function formulation**  
+For a multiset \(S\) with multiplicities \(f(k)\) \((1\le k\le 19)\) define  
+\[
+P(z)=\sum_{k=1}^{19} f(k)z^k.
+\]  
+The condition “\(S\) can be partitioned into multisets \(A_i\) and \(B_i\) with \(A_i=i+B_i\)” is equivalent to the existence of a polynomial \(Q_i(z)\) with non‑negative integer coefficients such that  
+\[
+P(z)=(1+z^i)Q_i(z).
+\]  
+(Indeed, writing \(Q_i(z)=\sum_t g_i(t)z^t\) where \(g_i(t)\) is the multiplicity of \(t\) in \(B_i\), the equality holds and \(Q_i\) automatically has degree at most \(19-i\).)  
+Hence the index of \(S\) is the largest \(n\) for which \(P(z)\) is divisible by \(1+z^1,\dots,1+z^n\) and each quotient has non‑negative coefficients.
+
+**2. Cyclotomic factorisation and the LCM**  
+For every \(i\),  
+\[
+1+z^i = \prod_{\substack{d\mid 2i\\ d\nmid i}} \Phi_d(z),
+\]  
+where \(\Phi_d\) is the \(d\)-th cyclotomic polynomial. The set of \(d\) that occur for all \(1\le i\le n\) is exactly the set of even integers \(d\) with \(2\le d\le 2n\). Consequently the least common multiple of \(1+z^1,\dots,1+z^n\) is  
+\[
+L_n(z)=\prod_{\substack{2\le d\le 2n\\ d\text{ even}}} \Phi_d(z).
+\]  
+Its degree is \(\sum_{k=1}^{n}\varphi(2k)\). For \(n=6\) this degree is  
+\(\varphi(2)+\varphi(4)+\varphi(6)+\varphi(8)+\varphi(10)+\varphi(12)=1+2+2+4+4+4=17\); for \(n=7\) it is \(23>19\).  
+Since \(P(z)\) must be a multiple of \(L_n(z)\) and \(\deg P\le 19\), we must have \(\deg L_n\le 19\); therefore \(n\le 6\).
+
+**3. Impossibility for \(n=6\)**  
+If an \(S\) had index \(6\), then \(P(z)=L_6(z)R(z)\) with \(R(0)=0\) and \(\deg R\le 2\) (because \(\deg L_6=17\)). Thus \(R(z)=r_1z+r_2z^2\) with integers \(r_1,r_2\). Write \(M_1(z)=L_6(z)/(1+z)\); then  
+\[
+Q_1(z)=\frac{P(z)}{1+z}=M_1(z)(r_1z+r_2z^2)
+\]  
+must have non‑negative coefficients. The coefficients of \(M_1(z)\) (obtained by dividing \(L_6\) by \(1+z\)) are  
+\[
+M_1(z)=1-2z+3z^2-3z^3+4z^4-4z^5+5z^6-5z^7+6z^8-5z^9+5z^{10}-4z^{11}+4z^{12}-3z^{13}+3z^{14}-2z^{15}+z^{16}.
+\]  
+The first few coefficients of \(Q_1\) give  
+\[
+q_1=r_1,\quad q_2=-2r_1+r_2,\quad q_{14}=r_1-2r_2,\quad\dots
+\]  
+The conditions \(q_2\ge0\) and \(q_{14}\ge0\) force \(r_2\ge2r_1\) and \(r_2\le r_1/2\), which imply \(r_1=r_2=0\). Hence no non‑zero solution exists, so index \(6\) is impossible. Therefore \(N\le5\).
+
+**4. Construction for \(n=5\)**  
+Take  
+\[
+P(z)=z\prod_{i=1}^{5}(1+z^i).
+\]  
+This polynomial has degree \(16\) and all coefficients are non‑negative (they count partitions into distinct parts). For each \(i=1,\dots,5\) we have  
+\[
+\frac{P(z)}{1+z^i}=z\prod_{\substack{j=1\\j\neq i}}^{5}(1+z^j),
+\]  
+which also has non‑negative coefficients. Hence the corresponding multiset \(S\) has index at least \(5\). By the previous part it cannot have index \(6\), so index exactly \(5\). Consequently the maximum possible index is \(N=5\).
+
+**5. Determining the minimal maximum element \(M\)**  
+Let \(S\) be a multiset of index \(5\). Then \(P(z)\) is a multiple of the LCM \(L_5(z)=\prod_{d=2,4,6,8,10}\Phi_d(z)\), which has degree \(13\); so \(P(z)=L_5(z)R(z)\) with \(R(0)=0\). The largest element of \(S\) is \(\deg P\).  
+If the maximum element were \(\le15\), then \(\deg P\le15\) and consequently \(\deg R\le2\).  
+* For \(\deg R=1\): \(R(z)=r_1z\). Then \(P(z)=r_1zL_5(z)\); but \(L_5\) has negative coefficients (e.g. the coefficient of \(z^1\) is \(-1\)), so \(P\) would have a negative coefficient – impossible.  
+* For \(\deg R=2\): \(R(z)=r_1z+r_2z^2\). The non‑negativity of the coefficients of \(P\) forces \(r_1=r_2>0\). Then  
+\[
+Q_1(z)=\frac{P(z)}{1+z}=r_1zL_5(z),
+\]  
+and \(L_5(z)\) contains the term \(-z\), so \(Q_1\) contains a negative term – contradicting the index condition for \(i=1\).  
+Hence the maximum element cannot be \(\le15\). The construction in step 4 gives a multiset with maximum element \(16\) and index \(5\), so the smallest possible maximum element is \(M=16\).
+
+**6. Minimising the size for index 5 and maximum 16**  
+For a multiset \(S\) with index \(5\) and maximum \(16\) we have \(\deg P=16\), so \(R(z)\) has degree \(3\). Write \(R(z)=r_1z+r_2z^2+r_3z^3\) with integers \(r_1,r_2,r_3\ge0\) (the coefficients of \(P\) must be non‑negative; from the expressions of the coefficients one easily deduces \(r_1,r_2,r_3\ge0\)).  
+The total number of elements is \(|S|=P(1)=L_5(1)\cdot R(1)\). Evaluating the cyclotomic polynomials at \(1\) gives  
+\[
+\Phi_2(1)=2,\quad \Phi_4(1)=2,\quad \Phi_6(1)=1,\quad \Phi_8(1)=2,\quad \Phi_{10}(1)=1,
+\]  
+so \(L_5(1)=8\). Hence \(|S|=8(r_1+r_2+r_3)\).  
+Now consider the condition for \(i=1\). Write \(M_1(z)=L_5(z)/(1+z)\) (the polynomial obtained by dividing \(L_5\) by \(1+z\)); its coefficients are  
+\[
+M_1(z)=1-2z+4z^2-5z^3+7z^4-7z^5+8z^6-7z^7+7z^8-5z^9+4z^{10}-2z^{11}+z^{12}.
+\]  
+The requirement that \(Q_1(z)=M_1(z)R(z)\) has non‑negative coefficients yields, in particular,  
+\[
+\text{(i)}\quad \text{coefficient of }z^2:\ -2r_1+r_2\ge0 \;\Rightarrow\; r_2\ge2r_1,
+\]  
+\[
+\text{(ii)}\quad \text{coefficient of }z^{14}:\ r_2-2r_3\ge0 \;\Rightarrow\; r_2\ge2r_3,
+\]  
+and also \(r_1>0\) (otherwise a contradiction with later inequalities) and \(r_3>0\) (because the coefficient of \(z^{16}\) in \(P\) equals \(r_3\), and the maximum element is \(16\)).  
+Therefore \(r_1\ge1\), \(r_3\ge1\) and \(r_2\ge2\), so \(r_1+r_2+r_3\ge1+2+1=4\). Consequently \(|S|\ge8\cdot4=32\).  
+The equality is attained by \((r_1,r_2,r_3)=(1,2,1)\), i.e. \(R(z)=z(1+z)^2\), which gives the polynomial of the construction in step 4. This choice indeed satisfies all the required non‑negativity conditions (all quotients \(Q_i\) are products of factors \(1+z^j\) with a factor \(z\), hence have non‑negative coefficients). Thus the minimal possible number of elements is \(32\).
+
+Hence the answer is \(\boxed{32}\).

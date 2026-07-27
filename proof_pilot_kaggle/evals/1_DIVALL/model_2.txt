@@ -1,0 +1,89 @@
+We consider distinct positive integers \(a_1,\dots,a_k\) (with \(k\ge3\)), product \(P=\prod a_i\), and define \(b_i=P/a_i+1\). Let \(g=\gcd(b_1,\dots,b_k)\). We want the maximum possible \(g\) under the condition \(\sum a_i<3\cdot10^6\).
+
+**Necessary conditions for \(g\).**  
+Since \(g\mid b_i\), we have \(b_i=g m_i\). Then \(P+a_i=a_i b_i=a_i g m_i\), so \(g\mid(P+a_i)\). Hence \(P\equiv -a_i\pmod g\) for all \(i\); consequently all \(a_i\) are congruent modulo \(g\). Denote the common residue by \(r\) (we may take \(1\le r\le g-1\) because if \(r=0\) then \(P\equiv0\pmod g\) but from later \(r^{k-1}\equiv-1\) gives a contradiction for \(g>1\)).  
+
+For each \(i\), \(b_i=\prod_{j\neq i}a_j+1\). Since \(a_j\equiv r\pmod g\), we have \(\prod_{j\neq i}a_j\equiv r^{k-1}\pmod g\). Because \(g\mid b_i\), this yields \(r^{k-1}+1\equiv0\pmod g\), i.e.  
+
+\[
+r^{k-1}\equiv-1\pmod g. \tag{1}
+\]
+
+In particular, \(\gcd(r,g)=1\) (any common prime divisor would divide \(-1\) modulo \(p\)).
+
+Write \(a_i=r+g t_i\) with integers \(t_i\). Because \(1\le r\le g-1\) and \(a_i>0\), we must have \(t_i\ge0\). The distinctness of the \(a_i\) gives the \(t_i\) distinct. The sum condition becomes  
+
+\[
+\sum a_i = kr + g\sum t_i < 3\cdot10^6. \tag{2}
+\]
+
+Since the \(t_i\) are distinct non‑negative integers, \(\sum t_i\ge 0+1+\dots+(k-1)=k(k-1)/2\). Hence from (2)
+
+\[
+kr + g\cdot\frac{k(k-1)}{2} < 3\cdot10^6. \tag{3}
+\]
+
+In particular, for \(k=3\) we obtain  
+
+\[
+3r+3g < 3\cdot10^6 \quad\Longrightarrow\quad r+g < 10^6. \tag{4}
+\]
+
+For \(k\ge4\), (3) gives \(g\cdot k(k-1)/2 < 3\cdot10^6\), so \(g < 6\cdot10^6/(k(k-1))\). For \(k=4\) this yields \(g<500\,000\); for \(k=5\), \(g<300\,000\); etc. Therefore any value of \(g\) larger than \(500\,000\) can only be attained when \(k=3\). Since we will later exhibit an example with \(g>500\,000\), the maximum possible \(g\) must come from \(k=3\); we may thus restrict ourselves to \(k=3\) in the search for the maximum.
+
+**Reduction for \(k=3\).**  
+For \(k=3\) we have (1): \(r^2\equiv-1\pmod g\), and (4): \(r+g<10^6\). Conversely, if integers \(r,g\) satisfy \(r^2\equiv-1\pmod g\) and \(r+g<10^6\), then taking \(a_1=r,\; a_2=r+g,\; a_3=r+2g\) yields distinct positive integers with sum \(3(r+g)<3\cdot10^6\), and because \(a_i\equiv r\pmod g\) and \(r^2\equiv-1\), each \(b_i\) is divisible by \(g\). Hence such a pair \((r,g)\) produces an admissible set whose gcd is at least \(g\).  
+
+For any admissible set with \(k=3\), the actual gcd \(g\) itself satisfies the two conditions (by the necessity argument). Therefore the greatest possible value of \(g\) across all choices (with any \(k\)) is exactly the largest integer \(D\) for which there exists an integer \(r\) with  
+
+\[
+r^2\equiv-1\pmod D\qquad\text{and}\qquad r+D<10^6. \tag{5}
+\]
+
+We now determine this maximum \(D\).
+
+**Upper bound.** Let \(D\) satisfy (5) for some \(r\). Write \(r^2+1 = t D\) with an integer \(t\ge1\). Since \(D>r\) (the residue \(r\) is taken in \([1,D-1]\)), we have \(t = (r^2+1)/D < (r^2+1)/r = r+1/r\), so \(t\le r\). Condition \(r+D<10^6\) becomes  
+
+\[
+r + \frac{r^2+1}{t} < 10^6 \quad\Longleftrightarrow\quad r^2 + t r + 1 < t\cdot10^6. \tag{6}
+\]
+
+Assume \(D>998285\). Then from \(r+D<10^6\) we obtain \(r < 10^6-D < 1715\), so \(r\le 1714\). Consequently  
+
+\[
+r^2+1 \le 1714^2+1 = 2\,937\,797.
+\]
+
+Since \(D>998285\), the quotient \(t = (r^2+1)/D\) satisfies \(t \le 2\,937\,797/998286 < 3\); thus \(t=1\) or \(t=2\).
+
+* If \(t=1\), then \(D=r^2+1\) and \(r+D = r^2+r+1 < 10^6\). The last inequality forces \(r\le 999\) (because \(1000^2+1000+1=1\,001\,001>10^6\)), so \(D\le 999^2+1 = 998\,002\). This contradicts \(D>998285\).
+* If \(t=2\), then \(D=(r^2+1)/2\) and \(r+D = r+(r^2+1)/2 = (r+1)^2/2 < 10^6\) gives \((r+1)^2 < 2\cdot10^6\). Hence \(r+1\le 1414\) (since \(1414^2=1\,999\,396<2\cdot10^6\) and \(1415^2>2\cdot10^6\)), so \(r\le1413\). Then \(D\le (1413^2+1)/2 = 998\,285\), again contradicting \(D>998285\).
+
+Therefore no integer \(D>998285\) can satisfy (5). Hence any admissible \(g\) (for any \(k\)) satisfies \(g\le998285\).
+
+**Achievability.** Take \(k=3\), \(r=1413\), \(g=998285\). Then \(r^2+1 = 1\,996\,569+1 = 1\,996\,570 = 2\cdot998285\), so \(r^2\equiv-1\pmod g\). Also \(r+g=1413+998285=999\,698<10^6\). Set  
+
+\[
+a_1=1413,\qquad a_2=1413+998285=999\,698,\qquad a_3=1413+2\cdot998285=1\,997\,983.
+\]
+
+They are distinct positive integers and their sum is  
+
+\[
+1413+999\,698+1\,997\,983=2\,999\,094<3\cdot10^6.
+\]
+
+Because \(a_i\equiv r\pmod g\) and \(r^2\equiv-1\pmod g\), we have  
+
+\[
+b_1 = a_2a_3+1 \equiv r\cdot r+1 = r^2+1\equiv0\pmod g,
+\]  
+and similarly \(b_2,b_3\equiv0\pmod g\). Hence \(g\) divides all \(b_i\); therefore the greatest common divisor of the \(b_i\) is at least \(g\). But we have proved that no admissible set can have a common divisor larger than \(998285\); consequently the gcd for this set is exactly \(998285\).  
+
+Thus the value \(998285\) is attained as the largest integer dividing each \(b_i\).
+
+**Conclusion.** The maximum possible value of \(g\) across all choices of distinct positive integers \(a_1,\dots,a_k\) (\(k\ge3\)) with product \(P\) and sum \(<3\cdot10^6\) is  
+
+\[
+\boxed{998285}.
+\]

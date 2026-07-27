@@ -1,0 +1,9 @@
+Let $ABC$ be a triangle with $AB = 26$, $BC = 17$, and $AC = 25$. We place $B$ at $(0,0)$, $C$ at $(17,0)$, and find $A$ at $(10,24)$ using coordinate geometry. The feet of the altitudes are $D(10,0)$ (from $A$), $E\left(\frac{9792}{625}, \frac{2856}{625}\right)$ (from $B$), and $F\left(\frac{425}{169}, \frac{1020}{169}\right)$ (from $C$).
+
+Using Menelaus' theorem on $\triangle ABC$ with transversal $EFX$, we find $BX/XC = 170/119$, leading to $X = D(10,0)$. The line $AX$ (which is $AD$) intersects the circumcircle $\Omega$ again at $Q(10, -\frac{35}{12})$, the reflection of the orthocenter $H(10, \frac{35}{12})$ over $BC$.
+
+The nine-point circle (circle $DEF$) has center at $\left(\frac{37}{4}, \frac{323}{48}\right)$ and radius $\frac{\sqrt{(3/4)^2 + (323/48)^2}}{2}$. The line $HQ$ (vertical line $x=10$) intersects this circle at $D(10,0)$ and $\left(10, \frac{323}{24}\right)$. Only $D$ lies on segment $HQ$, so $P = D$.
+
+Calculating distances, $PQ = \frac{35}{12}$ and $PE = ED = \frac{182}{25}$. The ratio $\frac{PQ}{PE} = \frac{35/12}{182/25} = \frac{125}{312}$, where $125$ and $312$ are coprime. Thus, $a + b = 125 + 312 = 437$.
+
+\boxed{437}

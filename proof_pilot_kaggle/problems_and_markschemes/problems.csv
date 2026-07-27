@@ -1,0 +1,36 @@
+problem_number,problem_text
+1,"There are $k \geq 3$ different positive integers $a_1, \ldots, a_k$ with product $P$, and sum strictly less than $3 \cdot 10^{6}$. Let $g$ be the largest positive integer that divides each of $(P/a_i)+1$ for $1 \leq i \leq k$. Across all possible choices for $a_i$ and $k \geq 3$, what is the maximum possible value of $g$?"
+2,"Let $ABC$ be a triangle such that $AB = 26$, $BC = 17$, and $AC = 25$. Let $\Omega$ and $H$ be the circumcircle and orthocentre of triangle $ABC$, respectively. Let the feet of the altitudes from $A$, $B$, and $C$ in triangle $ABC$ be $D$, $E$, and $F$, respectively. Let lines $EF$ and $BC$ intersect at $X$ and let $AX$ intersect $\Omega$ again at $Q \neq A$. Segment $HQ$ intersects circle $DEF$ at a point $P$. Suppose the ratio $PQ/PE = a/b$ where $a$ and $b$ are coprime positive integers. What is the value of $a+b$?"
+3,"For a finite, nonempty multiset $S$ of positive integers strictly less than $20$, we define its \emph{index} to be the greatest positive integer $n$ such that for every $i$ with $1 \leq i \leq n$ we can partition $S$ into multisets $A_i$ and $B_i$ in such a way that $A_i=i+B_i$. If no such $n$ exists, we define the index to be equal to $0$.
+
+Let $N$ denote the maximum index across all choices for $S$. Across all choices of $S$ with index $N$, let $M$ denote the smallest possible value for the maximum element in $S$. 
+
+Across all multisets $S$ with index $N$ and maximum element $M$, what is the smallest possible number of elements of $S$ (counted with multiplicity)?
+
+\textit{For two multisets $X$ and $Y$ and a positive integer $l$, we write $X=l+Y$ if $X=\{l+y: y \in Y\}$ where the right-hand side is interpreted as a multiset.}"
+4,"Linda and Sue play a game on a $2025\times 2025$ grid of cells. Initially, every cell is grey. Linda moves first, and the players then alternate turns.
+
+On each of Linda's turns, she chooses one cell and paints it lime, regardless of its current colour. On each of Sue's turns, she chooses an axis-aligned $2 \times 2$ block of cells containing at least one grey cell, and paints all four cells scarlet, regardless of their current colours.
+
+After each move, if there are no grey cells left, the game ends immediately. Linda wants to maximise the number of cells whose final colour is lime, and Sue wants to maximise the number of cells whose final colour is scarlet.
+
+\begin{enumerate}[label=\alph*)]
+    \item Prove that the game always ends after finitely many moves.
+    \item Suppose both players play optimally. Determine the number of lime cells at the end of the game.
+\end{enumerate}"
+5,"A polynomial $P(x)$ is called \emph{good} if it has integer coefficients and:
+\begin{itemize}
+    \item It is a monic polynomial of degree 7;
+    \item The absolute values of all of the coefficients of $P$ are odd and strictly less than $2025^2$;
+    \item The absolute values of all the coefficients of $P$ are roots of $P$.
+\end{itemize}
+How many good polynomials are there?"
+6,"Let $ABC$ be an acute triangle with $\angle CBA=75^{\circ}$, orthocentre $H$, and circumcircle $\Omega$. Let line $AH$ meet $\Omega$ again at $H_A \neq A$. Similarly, let line $CH$ meet $\Omega$ again at $H_C$. Let the circle centred at $B$ with radius $BH$ meet the line $BC$ at $X$ on the opposite side of $B$ from $C$. Assume that lines $XH_A$ and $CH$ are not parallel, and let them intersect at $P$. Let lines $XH_C$ and $AH$ intersect at $Q$. 
+
+Let $n$ be an odd positive integer. We call a triangle $ABC$ $n$-\textit{good} if $\frac{CP}{CH} = \sqrt{n}$ and the length $AQ$ is a positive integer. We say $n$ is \textit{amazing} if there exists an $n$-good triangle where the length $H_C Q$ is also a positive integer.
+
+Let $1 \leq n_1<n_2<n_3<\cdots$ be a list of all amazing, odd positive integers.
+
+Let $x$ be the largest real number for which there exists a positive real number $y$ such that for all sufficiently large $i$, $n_{2i} \geq y \cdot x^i$. For this choice of $x$, let $z$ be the largest real number such that for all sufficiently large $i$, $n_{2i} \geq z \cdot x^i$. 
+
+It is possible to write $x+2016z=p+q\sqrt{r}$ where $p$, $q$, and $r$ are positive integers with $r$ square-free. What is $p+q+r$?"

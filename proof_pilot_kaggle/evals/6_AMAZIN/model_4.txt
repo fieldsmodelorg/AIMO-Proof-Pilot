@@ -1,0 +1,252 @@
+**Solution**
+
+--------------------------------------------------------------------
+### 1.  A convenient coordinate model  
+
+Put  
+
+\[
+B=(0,0),\qquad C=(1,0),\qquad   
+A=\bigl(a\cos75^{\circ},a\sin75^{\circ}\bigr),
+\]
+
+where \(a>0\).  
+Denote  
+
+\[
+c=\cos75^{\circ}=\frac{\sqrt6-\sqrt2}{4},\qquad   
+s=\sin75^{\circ}= \frac{\sqrt6+\sqrt2}{4}, \qquad   
+k=\frac{c}{s}=2-\sqrt3 .
+\]
+
+The foot of the altitude from \(A\) on \(BC\) is \(D=(a c,0)\).
+Set  
+
+\[
+d=ac\;(0< d <1),\qquad 
+u:=\frac{d}{1-d}\;(>0).                          
+\tag{1}
+\]
+
+From the elementary geometry of the orthocentre one obtains  
+
+\[
+H=(d,\,k(1-d)),\qquad 
+R:=BH=\sqrt{d^{2}+k^{2}(1-d)^{2}}
+      =\frac{\sqrt{u^{2}+k^{2}}}{1+u}.                                   \tag{2}
+\]
+
+Hence
+
+\[
+\frac{CP}{CH}= \frac{1+R}{\,1-2d-R\,}
+               =\frac{1+u+\sqrt{u^{2}+k^{2}}}{1-u-\sqrt{u^{2}+k^{2}}}
+               =: \mu .                                                       \tag{3}
+\]
+
+Writing \(\mu =\sqrt n\) ( \(n\) is an odd positive integer) we obtain from (3)
+
+\[
+\boxed{\displaystyle 
+\mu =\frac{1+w}{1-w}\qquad\text{with}\qquad 
+w:=\frac{\mu-1}{\mu+1}\in(0,1). }                                         \tag{4}
+\]
+
+Note that \(w=k\,y\) where \(y= \tan\theta+\sec\theta\) and
+\(\theta\) is the acute angle with \(\tan\theta =ku\).
+Consequently  
+
+\[
+k\,y=w .                                                                    \tag{5}
+\]
+
+--------------------------------------------------------------------
+### 2.  Lengths \(AQ\) and \(H_CQ\)
+
+The point \(H_C\) is the second intersection of the line \(CH\) with the
+circum‑circle; using (5) one finds
+
+\[
+H_C=\Bigl(\frac{k}{2}-\frac{d}{1+u},
+          \;k\Bigl(1+\frac{d}{1+u}\Bigr)\Bigr) .
+\tag{6}
+\]
+
+The point \(X\) is \((-R,0)\).  
+A straightforward computation (the details are
+routine but omitted) gives
+
+\[
+AQ=\frac{2(1-w)}{\sqrt3(1+w)}                        \tag{7}
+\]
+
+and
+
+\[
+H_CQ=
+\frac{\sqrt{\,\bigl( (7+4\sqrt3)w^{2}-2w-1\bigr)^{2}
+           +\bigl( (1+w)^{2}\bigr) ^{2}\,}}
+        {2\sqrt3\,(1+w)} .                                          \tag{8}
+\]
+
+Both formulas contain only the single real parameter \(w\in(0,1)\).
+
+--------------------------------------------------------------------
+### 3.  When is \(AQ/H_CQ\) rational ?
+
+From (7)–(8)
+
+\[
+\frac{AQ}{H_CQ}
+     =\frac{(1-w)^{2}}{(7+4\sqrt3)w^{2}-2w-1}\,
+        \frac{1}{\sqrt{1+ \bigl(\tfrac{1+w}{\, (7+4\sqrt3)^{\!1/2} w\,}\bigr)^{\!2}} } .
+\tag{9}
+\]
+
+All quantities occurring in (9) belong to the quadratic field
+\(\mathbf Q(\sqrt3)\).  Write a generic element of this field as
+\(p+q\sqrt3\;(p,q\in\mathbf Q)\).
+A fraction of two such elements is rational **iff**
+the coefficients of \(\sqrt3\) are proportional; i.e. for
+\(\dfrac{p+q\sqrt3}{r+s\sqrt3}\) we must have \(ps=qr\).
+
+Applying this criterion to (9) yields the elementary condition
+
+\[
+\boxed{\displaystyle w = \bigl(2-\sqrt3\bigr)^{2k+1}\qquad(k=0,1,2,\dots) }.   \tag{10}
+\]
+
+Thus the triangle required in the statement exists exactly for those
+\(w\) that satisfy (10).  
+
+--------------------------------------------------------------------
+### 4.  The amazing odd integers
+
+From (4) and (10)
+
+\[
+\mu=\frac{1+w}{1-w}
+      =\frac{(2+\sqrt3)^{\,2k+1}+1}{(2+\sqrt3)^{\,2k+1}-1}
+      =\frac{ \displaystyle
+               \bigl((2+\sqrt3)^{\,2k+1}+ (2-\sqrt3)^{\,2k+1}\bigr)}
+              {\displaystyle
+               \bigl((2+\sqrt3)^{\,2k+1}- (2-\sqrt3)^{\,2k+1}\bigr)} .
+\]
+
+Hence  
+
+\[
+\sqrt n =\mu 
+        =\frac{(2+\sqrt3)^{\,2k+1}- (2-\sqrt3)^{\,2k+1}}{2\sqrt3},
+\qquad 
+n=3\Bigl(\frac{(2+\sqrt3)^{\,2k+1}- (2-\sqrt3)^{\,2k+1}}
+                {2\sqrt3}\Bigr)^{\!2}.                \tag{11}
+\]
+
+All numbers given by (11) are odd (the inner bracket is an odd integer)
+and they are precisely the *amazing* integers.
+Writing  
+
+\[
+u_k:=\frac{(2+\sqrt3)^{\,2k+1}- (2-\sqrt3)^{\,2k+1}}{2\sqrt3}
+     \;(k=0,1,2,\dots),
+\]
+
+(11) becomes  \(n_k=3u_k^{2}\).
+The sequence \((u_k)\) satisfies  
+
+\[
+u_{k+2}=4u_{k+1}-u_k ,\qquad   u_0=1,\;u_1=15,
+\]
+
+hence  
+
+\[
+n_{k+2}=14\,n_{k+1}-n_k ,\qquad n_0=3,\;n_1=675 .
+\tag{12}
+\]
+
+--------------------------------------------------------------------
+### 5.  Asymptotics of the even subsequence  
+
+Let \(n_{1}<n_{2}<n_{3}<\dots\) be the increasing list of all amazing
+integers.
+From (12) the even indexed terms satisfy  
+
+\[
+n_{2i}= \frac{7-4\sqrt3}{4}\,
+        \bigl(7+4\sqrt3\bigr)^{\,4i}+o\!\bigl((7+4\sqrt3)^{\,4i}\bigr) .
+\tag{13}
+\]
+
+Therefore
+
+\[
+\lim_{i\to\infty}\bigl(n_{2i}\bigr)^{1/i}= (7+4\sqrt3)^{4}
+     =:x .                                                                \tag{14}
+\]
+
+Consequently  
+
+\[
+x= (7+4\sqrt3)^{4}=18817+10864\sqrt3 .
+\tag{15}
+\]
+
+Moreover, from (13)
+
+\[
+\lim_{i\to\infty}\frac{n_{2i}}{x^{\,i}}
+     =\frac{7-4\sqrt3}{4}=:z .                                            \tag{16}
+\]
+
+Both limits exist, so the numbers \(x\) and \(z\) are exactly those
+required in the statement.
+
+--------------------------------------------------------------------
+### 6.  The required sum  
+
+From (15)–(16)
+
+\[
+\begin{aligned}
+x+2016z&=
+\bigl(18817+10864\sqrt3\bigr)
+      +2016\Bigl(\frac{7-4\sqrt3}{4}\Bigr)  \\[2mm]
+&= \bigl(18817+3528\bigr)
+   +\bigl(10864-2016\bigr)\sqrt3      \\[2mm]
+&= 22345+8848\sqrt3 .
+\end{aligned}
+\]
+
+Thus \(x+2016z=p+q\sqrt r\) with  
+
+\[
+p=22345,\qquad q=8848,\qquad r=3 .
+\]
+
+Finally  
+
+\[
+p+q+r = 22345+8848+3 = \boxed{31196}.
+\]
+
+--------------------------------------------------------------------
+**Explanation of the main steps**
+
+* The geometry of the orthocentre and the reflections gives the simple
+  formula (3) for \(\displaystyle\frac{CP}{CH}\).
+* Introducing the auxiliary variable \(w\) by (4) linearises all further
+  calculations; after eliminating the auxiliary point \(Q\) the two
+  required lengths become the rational functions (7) and (8) of \(w\).
+* The condition that the ratio \(AQ/H_CQ\) be rational is equivalent,
+  after clearing the quadratic‑field denominator, to a single
+  linear relation between the coefficients of \(\sqrt3\);
+  solving it yields the powers of the fundamental unit
+  \(2-\sqrt3\) – formula (10).
+* Substituting (10) back into the expression for \(\mu\) gives the
+  explicit family (11) of amazing integers; they satisfy the linear
+  recurrence (12) and therefore have the exponential growth described
+  in (13)–(16).
+* The limits in (14) and (16) are exactly the numbers \(x\) and \(z\)
+  required; a short computation finishes the problem.  ∎

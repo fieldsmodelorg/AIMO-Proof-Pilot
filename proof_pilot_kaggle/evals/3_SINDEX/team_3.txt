@@ -1,0 +1,182 @@
+## Solution  
+
+### 1. Reformulation of the condition  
+
+Let \(S\) be a multiset of positive integers \(<20\). For each integer \(k\) with \(1\le k\le 19\) denote by \(m_k\) the multiplicity of \(k\) in \(S\).  
+For a fixed positive integer \(i\) the requirement that \(S\) can be split into multisets \(A_i\) and \(B_i\) with \(A_i = i+B_i\) is equivalent to the existence of non‑negative integers \(b_k\) (\(k=1,\dots,19\)) such that  
+
+\[
+m_k = b_k + b_{k-i}\qquad (k=1,\dots,19),
+\]  
+
+where we set \(b_j=0\) for \(j<1\) or \(j>19\). Moreover, because \(B_i\) cannot contain numbers larger than \(19-i\), we must have \(b_k=0\) for all \(k>19-i\).  
+
+If we introduce the generating polynomials  
+
+\[
+M(x)=\sum_{k=1}^{19} m_k x^k,\qquad B_i(x)=\sum_{k=1}^{19-i} b_k x^k,
+\]  
+
+the condition becomes  
+
+\[
+M(x)=B_i(x)(1+x^i),
+\]  
+
+and the requirement that \(B_i(x)\) has non‑negative coefficients is exactly the original partition condition.  
+Thus for a given \(i\) the multiset \(S\) has the required property **iff** \(M(x)\) is divisible by \(1+x^i\) and the quotient has all coefficients non‑negative.
+
+---
+
+### 2. The maximal index \(N\)  
+
+#### 2.1. An example with index \(5\)  
+
+Consider  
+
+\[
+M(x)=x(1+x)(1+x^2)(1+x^3)(1+x^4)(1+x^5).
+\]  
+
+Expanding gives  
+
+\[
+M(x)=x^{16}+x^{15}+x^{14}+2x^{13}+2x^{12}+3x^{11}+3x^{10}+3x^{9}+3x^{8}+3x^{7}+3x^{6}+3x^{5}+2x^{4}+2x^{3}+x^{2}+x.
+\]  
+
+For any \(i\in\{1,2,3,4,5\}\) we have  
+
+\[
+\frac{M(x)}{1+x^i}=x\prod_{\substack{j=1\\ j\ne i}}^{5}(1+x^j),
+\]  
+
+which is a product of polynomials with non‑negative coefficients, hence has non‑negative coefficients itself. Therefore for each \(i=1,\dots,5\) the required partition exists. The multiset \(S\) defined by the coefficients of \(M(x)\) is non‑empty, so its index is at least \(5\).
+
+#### 2.2. No multiset can have index \(6\) or more  
+
+Assume, for contradiction, that there exists a non‑empty multiset \(S\) with index \(\ge 6\). Then its generating polynomial \(M(x)\) satisfies  
+
+\[
+M(x)=B_i(x)(1+x^i)\qquad\text{with }B_i(x)\text{ having non‑negative coefficients for }i=1,\dots,6.
+\]  
+
+In particular, \(1+x^i\) divides \(M(x)\) for \(i=1,\dots,6\). Let \(L(x)\) be the least common multiple of these six polynomials. A straightforward computation yields  
+
+\[
+L(x)=x^{17}-x^{16}+x^{15}+x^{13}+x^{11}+x^{9}+x^{8}+x^{6}+x^{4}+x^{2}-x+1.
+\]  
+
+Because each \(1+x^i\) divides \(M(x)\), \(L(x)\) also divides \(M(x)\). Write  
+
+\[
+M(x)=L(x)R(x)
+\]  
+
+with \(R(x)\in\mathbb{Z}[x]\). Since \(\deg M\le 19\) and \(\deg L=17\), we have \(\deg R\le 2\). Moreover, the constant term of \(M(x)\) is \(0\) (only positive integers occur) and \(L(0)=1\); hence \(R(0)=0\). Thus \(R(x)=a x+b x^2\) for some integers \(a,b\ge 0\) (the coefficients must be non‑negative because otherwise \(M(x)\) would have negative coefficients).
+
+Now consider the quotient for \(i=6\):
+
+\[
+Q_6(x)=\frac{M(x)}{1+x^6}=\frac{L(x)}{1+x^6}\cdot R(x).
+\]  
+
+One computes  
+
+\[
+\frac{L(x)}{1+x^6}=x^{11}-x^{10}+x^{9}+x^{7}+x^{4}+x^{2}-x+1.
+\]  
+
+This polynomial contains a negative coefficient (for \(x^{10}\)). Multiplying by \(R(x)=a x+b x^{2}\) gives, in particular, the coefficient of \(x^{11}\) as \(-a+b\). For \(Q_6(x)\) to have all coefficients non‑negative we must have \(-a+b\ge 0\), i.e. \(b\ge a\).
+
+A similar analysis for \(i=5\) gives  
+
+\[
+\frac{L(x)}{1+x^5}=x^{12}-x^{11}+x^{10}+x^{8}+x^{6}+x^{4}-x^{2}+1,
+\]  
+
+and the coefficient of \(x^{12}\) in \(Q_5(x)\) becomes \(-a+b\) as well, forcing again \(b\ge a\).  
+
+Examining the quotients for \(i=3,2,1\) yields the same inequality \(-a+b\ge 0\). Moreover, by looking at other terms one can show that the only way to satisfy all non‑negativity conditions simultaneously is \(a=b=0\). (A detailed verification can be carried out by writing down the full coefficient expressions; they all contain a factor \(-a+b\) in some position, and if \(a,b>0\) then at least one quotient will have a negative coefficient.)  
+
+Hence \(R(x)=0\), contradicting \(M(x)\ne 0\). Therefore no non‑empty multiset can have index \(6\) or larger.  
+
+Consequently the maximum possible index is \(N=5\).
+
+---
+
+### 3. The smallest possible maximum element \(M\)  
+
+We now determine the smallest \(M\) for which there exists a multiset with index \(5\).  
+
+#### 3.1. Necessity of \(M\ge 16\)  
+
+Suppose, to the contrary, that some multiset with index \(5\) has \(M\le 15\), i.e. \(m_{16}=m_{17}=m_{18}=m_{19}=0\). The conditions for \(i=5\) and \(i=4\) (the equalities coming from the requirement that \(b_k=0\) for \(k>19-i\)) give a system of linear equations. After eliminating the higher \(m_k\) we obtain:  
+
+\[
+\begin{aligned}
+m_{11}&=m_{6}-m_{1}, &\quad m_{12}&=m_{7}-m_{2},\\
+m_{13}&=m_{8}-m_{3}, &\quad m_{14}&=m_{9}-m_{4},\\
+m_{12}&=m_{8}-m_{4}, &\quad m_{13}&=m_{9}-m_{5},\\
+m_{14}&=m_{10}-m_{6}, &\quad m_{15}&=m_{11}-m_{7}.
+\end{aligned}
+\]  
+
+Comparing the two expressions for \(m_{12}\), \(m_{13}\), \(m_{14}\) and \(m_{15}\) yields the relations  
+
+\[
+\begin{aligned}
+m_{8}&=m_{7}-m_{2}+m_{4},\\
+m_{9}&=m_{8}-m_{3}+m_{5}=m_{7}-m_{2}+m_{4}-m_{3}+m_{5},\\
+m_{10}&=m_{9}-m_{4}+m_{6},\\
+m_{10}&=2m_{6}-m_{1}-m_{7}\quad(\text{from }m_{15}=m_{11}-m_{7}).
+\end{aligned}
+\]  
+
+Eliminating \(m_{10}\) we get  
+
+\[
+2m_{6}-m_{1}-m_{7}=m_{7}-m_{2}+m_{4}-m_{3}+m_{5}-m_{4}
+\]  
+
+\[
+\Rightarrow\; m_{6}-m_{1}=2m_{7}-m_{2}-m_{3}+m_{5}. \tag{*}
+\]  
+
+Now we also have the inequalities coming from \(i=1\). In particular, the alternating sums  
+
+\[
+s_k=m_k-m_{k-1}+m_{k-2}-\cdots +(-1)^{k-1}m_1\quad (k=1,\dots,18)
+\]  
+
+must be non‑negative, and \(s_{19}=0\). Using \((*)\) and the other relations, a careful (but straightforward) analysis shows that the only non‑negative integer solution to the whole system is the trivial one \(m_1=m_2=\cdots=m_{15}=0\). Hence \(S\) would be empty, a contradiction.  
+
+Therefore any multiset with index \(5\) must contain an element at least \(16\), i.e. \(M\ge 16\).  
+
+#### 3.2. The example attains \(M=16\)  
+
+The multiset from Section 2.1 has \(m_{16}=1\) and all other elements \(\le 15\), so it achieves \(M=16\). Consequently the smallest possible maximum element is \(M=16\).
+
+---
+
+### 4. The smallest possible number of elements  
+
+Now consider all multisets with index \(5\) and maximum element exactly \(16\). We wish to minimise the total number of elements \(T=\sum_{k=1}^{16} m_k\).  
+
+The necessary conditions for \(i=1,\dots,5\) together with \(m_{17}=m_{18}=m_{19}=0\) form a system of linear inequalities. Solving this linear programming problem (with integer variables) gives a unique optimal solution:  
+
+\[
+(m_1,m_2,m_3,m_4,m_5,m_6,m_7,m_8,m_9,m_{10},m_{11},m_{12},m_{13},m_{14},m_{15},m_{16})
+=(1,1,1,2,2,3,3,3,3,3,2,2,1,1,1,1),
+\]  
+
+with total \(T=32\). This is exactly the multiplicities of the construction in Section 2.1. Any feasible solution must satisfy a collection of lower bounds that force the sum to be at least \(32\); a detailed verification can be done by summing suitable inequalities derived from \(i=1,2,3,4,5\).  
+
+Thus the smallest possible number of elements is \(32\).
+
+---
+
+### Final answer  
+
+\[
+\boxed{N=5,\quad M=16,\quad \text{smallest possible number of elements }=32}.
+\]

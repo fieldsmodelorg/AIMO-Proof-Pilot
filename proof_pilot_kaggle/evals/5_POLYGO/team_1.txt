@@ -1,0 +1,16 @@
+The problem requires counting monic degree 7 polynomials with integer coefficients satisfying three conditions: all coefficients have odd absolute values less than \(2025^2\), and every absolute value of a coefficient is a root of the polynomial.
+
+First, denote the polynomial as \(P(x) = x^7 + a_6 x^6 + \cdots + a_0\), where each \(a_i\) is an integer. The absolute values of all coefficients, including the leading coefficient 1, must be roots of \(P\). By the integer root theorem, each root (an absolute value of a coefficient) must divide the constant term \(a_0\).
+
+Considering the constraints, the set \(S\) of absolute values of coefficients must satisfy:
+1. \(|S| \leq 7\) since \(P\) has degree 7.
+2. All elements of \(S\) are odd positive integers less than \(2025^2\).
+3. The least common multiple of \(S\) equals \(|a_0|\).
+
+If \(S\) contains any element greater than 1, constructing such a polynomial is highly restrictive. For example, introducing a coefficient like 3 would require \(P(3) = 0\), but expanding polynomials with roots including 3 typically produces coefficients with absolute values not in \(S\). This leads to contradictions, suggesting no solutions exist for \(|S| > 1\).
+
+Thus, the only feasible case is \(S = \{1\}\), where all coefficients are \(\pm 1\). For \(P(1) = 0\), the sum of coefficients must be zero. The leading term is \(+1\), so the sum of \(a_6\) to \(a_0\) must be \(-1\). With seven coefficients, choosing three \(+1\)s and four \(-1\)s achieves this sum. The number of ways to choose three positions out of seven for \(+1\)s is \(\binom{7}{3} = 35\).
+
+Each such polynomial meets all conditions: coefficients are \(\pm 1\) (odd, less than \(2025^2\)), their absolute values (1) are roots since \(P(1) = 0\), and no other roots or coefficient violations exist.
+
+Thus, the number of good polynomials is \(\boxed{35}\).

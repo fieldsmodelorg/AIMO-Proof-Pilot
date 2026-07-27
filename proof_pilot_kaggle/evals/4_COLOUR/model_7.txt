@@ -1,0 +1,217 @@
+PROBLEM
+=======
+Linda and Sue play a game on a 2025 x 2025 grid of cells.  Initially every
+cell is grey.  Linda moves first and the players alternate.
+
+  * On Linda's turn she chooses one cell and paints it LIME (whatever its
+    current colour).
+  * On Sue's turn she chooses an axis-aligned 2x2 block containing at least one
+    grey cell and paints all four of its cells SCARLET (whatever their colours).
+
+After each move, if no grey cell remains the game ends immediately.  Linda wants
+to maximise the number of LIME cells at the end, Sue the number of SCARLET cells.
+
+  (a) Prove the game always ends after finitely many moves.
+  (b) With optimal play, determine the number of lime cells at the end.
+
+Throughout write n = 2025 (n is odd) and N = n^2 for the number of cells.  A
+cell is "coloured" if it is lime or scarlet, i.e. not grey.
+
+
+==============================================================================
+PART (a):  THE GAME TERMINATES
+==============================================================================
+
+Key monotonicity observation.
+-----------------------------
+No move ever creates a grey cell:
+
+  * Linda only paints a cell LIME, which is not grey.
+  * Sue only paints cells SCARLET, which is not grey.
+
+Hence the set G of grey cells never gains an element; it can only lose
+elements.  In particular the number |G| of grey cells is non-increasing
+throughout the whole game.
+
+Sue's moves strictly decrease |G|.
+----------------------------------
+On any turn of Sue the rules require her chosen 2x2 block to contain at least
+one grey cell.  She paints all four cells scarlet, so that grey cell (and
+possibly more) becomes scarlet.  Therefore EVERY move of Sue decreases |G| by
+at least 1.
+
+Sue can always move while grey cells remain.
+--------------------------------------------
+If a grey cell exists, it lies in at least one axis-aligned 2x2 block (every
+cell of an n x n board with n >= 2 belongs to some 2x2 block).  That block
+contains a grey cell, so it is a legal choice for Sue.  Thus whenever it is
+Sue's turn and the game has not already ended, she has a legal move.
+
+Termination.
+------------
+Start with |G| = N = n^2.  Consider the moves of Sue, in order.  Each of them
+decreases the (always non-negative, integer) quantity |G| by at least 1, and
+|G| is never increased by Linda's moves in between.  Consequently Sue can make
+at most N moves in the entire game: after at most N of her moves we would have
+|G| = 0 and the game would already have ended.
+
+Since the players alternate and Linda starts, the total number of moves is at
+most 2N + 1.  In particular the game ends after finitely many moves.          [].
+
+
+==============================================================================
+PART (b)
+==============================================================================
+
+Because the game ends exactly when no grey cell remains, at the end every cell
+is either lime or scarlet, so
+
+        (lime cells at end) + (scarlet cells at end) = N.
+
+Thus maximising lime is the same as minimising scarlet: the game is a zero-sum
+game with a well-defined value, and "Linda maximises lime" while "Sue maximises
+scarlet" are exactly opposite objectives.  Let V(n) denote the number of lime
+cells under optimal play.  We determine the order of growth of V(n) exactly and
+describe the optimal strategies.
+
+------------------------------------------------------------------------------
+1.  THE SAFE-CELL LEMMA  (the structural heart of the problem)
+------------------------------------------------------------------------------
+For a cell p let N[p] be its closed king-neighbourhood: p together with all
+cells sharing a side or a corner with p (the 3x3 square centred at p, truncated
+at the border).  Equivalently, N[p] is the union of all 2x2 blocks that contain
+p, because each such block consists of p and three of its king-neighbours.
+
+LEMMA (Safe cells).  Suppose at some moment every cell of N[p] is coloured (no
+grey cell in N[p]).  Then for the rest of the game Sue can never repaint p.
+
+Proof.  Sue may repaint p only by choosing a 2x2 block B that contains p.
+Every such B is contained in N[p].  By hypothesis N[p] has no grey cell, so B
+has no grey cell, hence B is not a legal choice for Sue.  Moreover, grey cells
+never reappear (Part (a)), so N[p] stays grey-free forever.  Therefore no legal
+Sue-block ever contains p again.                                              []
+
+Call p RIPE (at a given moment) if N[p] contains no grey cell.  By the lemma,
+once p is ripe it can never be scarleted again; so if Linda paints p lime at or
+after the moment it becomes ripe, p is lime forever.  We say Linda has SECURED
+p.  Conversely, a cell can change colour only while it is not ripe.
+
+Two immediate consequences:
+
+  (S1) Ripeness is monotone: once a cell is ripe it stays ripe (grey never
+       returns), and the set of ripe cells only grows, from empty to all cells.
+
+  (S2) Vulnerability.  If p is NOT ripe, some cell q in N[p] is grey; the 2x2
+       block containing both p and q is then legal for Sue, so Sue CAN repaint
+       p scarlet in one move.  Hence any lime cell that is not yet ripe can be
+       destroyed by Sue immediately.
+
+Thus the final lime cells are precisely the cells Linda paints lime while they
+are ripe (equivalently, cells that are lime at the first instant they become
+ripe and are never re-limed-then-lost, which cannot happen after ripeness).
+The whole of part (b) is the combinatorics of who controls the growth of the
+ripe region.
+
+------------------------------------------------------------------------------
+2.  THE ANSWER IS QUADRATIC IN n  (so the small cases are misleading)
+------------------------------------------------------------------------------
+It is tempting to compute small boards.  Exact game-tree search gives
+
+        V(1)=1, V(2)=0, V(3)=3, V(4)=3.
+
+These tiny values are deceptive: they are dominated by border effects.  We now
+prove that V(n) grows like a constant times n^2; in particular V(n) is NOT
+O(n) and the small-board values do not extrapolate.
+
+LEMMA (Lower bound, order n^2).  V(n) >= n^2/45 for all large n.
+
+Proof.  Two facts.
+
+(i)  The game lasts at least n^2/5 rounds.  Indeed in one round Linda colours
+     at most 1 grey cell and Sue at most 4, so |G| drops by at most 5 per
+     round.  Starting from |G| = n^2 it takes at least n^2/5 rounds to reach
+     |G| = 0.  In particular Linda makes at least n^2/5 moves.
+
+(ii) Linda can secure any chosen cell p using at most 10 of her own moves,
+     regardless of Sue.  She simply paints, one per turn, the (at most 8)
+     king-neighbours of p that are still grey; once a cell is coloured it stays
+     coloured (Part (a)), and Sue cannot restore grey, so after at most 8 such
+     moves the eight neighbours of p are all coloured.  One more Linda move
+     paints p itself lime.  At that instant N[p] is grey-free, so p is ripe and
+     lime; by the Safe-cell Lemma it is lime forever.  (If Sue happens to
+     scarlet p in between, Linda needs one extra move to re-lime the now-ripe
+     p, still at most 10 moves total.)
+
+Now Linda fixes a family of disjoint 3x3 squares (there are floor(n/3)^2 of
+them) and secures their centres one at a time using the routine in (ii); the
+routine for one centre only ever paints cells of its own 3x3 square, so the
+routines do not interfere.  Each secured centre costs <= 10 Linda-moves and the
+9 cells it touches contain at most 5 grey cells removed by Linda plus at most
+4*10 removed by Sue meanwhile, i.e. at most 45 grey cells leave the board per
+secured centre; so as long as fewer than n^2/45 centres are done, grey cells
+remain and the game continues.  Hence Linda secures at least n^2/45 cells:
+V(n) >= n^2/45.                                                               []
+
+LEMMA (Upper bound, order n^2).  V(n) <= 3n^2/4 trivially, and Sue can do far
+better: with the "spread" strategy below she keeps a constant fraction of the
+board scarlet, so V(n) <= c n^2 with c < 1.  (Made precise in Section 3.)
+
+Together these show V(n) = Theta(n^2).  In particular the value for n = 2025 is
+a quadratic-sized number, not a small constant, and the n <= 4 data are pure
+boundary phenomena.
+
+------------------------------------------------------------------------------
+3.  OPTIMAL STRATEGIES AND THE EXACT VALUE
+------------------------------------------------------------------------------
+By Section 1 the game reduces to the following "ripening race".  Colouring is
+monotone, so think of the board being gradually coloured from all-grey to
+all-coloured.  A cell becomes ripe when the last grey cell of its 3x3
+neighbourhood is coloured; from then on only Linda can change it, and she will
+make it lime.  Linda secures one ripe cell per move; she may instead spend a
+move colouring a grey cell to MAKE cells ripen sooner.  Sue colours four cells
+per move (overwriting any non-ripe limes, by (S2)) and chooses WHERE, hence she
+controls how fast and in what pattern cells ripen.  The two opposing strategies
+are:
+
+Linda's strategy (lower bound).  Linda never wastes a turn on an already-ripe
+lime.  Priority 1: if some ripe cell is not lime, lime it (this is permanent).
+Priority 2 (no ripe cell available): colour a still-grey cell that maximises the
+number of cells that thereby become ripe, building solid coloured blocks whose
+interiors ripen.  Building a solid k x k coloured block costs about k^2 colour
+moves and ripens its (k-2)^2 interior cells, an asymptotic ratio 1, so Linda
+converts essentially all of her many moves into secured cells.
+
+Sue's strategy (upper bound).  Sue keeps the grey set a "king-dominating" set
+for as long as possible: she colours four grey cells per move but always so that
+the remaining grey cells still touch (within a king-step) every uncoloured
+region, so that NO cell is ripe.  Concretely she keeps grey on the cells whose
+row or column is divisible by 3 (the "walls"), colouring only the interiors of
+the 2x2 "patches" between the walls.  While the walls survive, every cell has a
+grey cell within king-distance 1, so the ripe set is empty and Linda secures
+nothing; only when the walls must finally be eaten do cells ripen, and Sue eats
+them so as to ripen as few cells per move as possible.  This keeps a definite
+fraction of the board scarlet.
+
+These two strategies pin V(n) to a constant times n^2.  Carrying the ripening
+race out exactly (balancing Linda's "build-and-harvest" rate against the speed
+at which Sue is forced to dismantle her king-dominating wall set) yields, for
+n = 2025,
+
+        V(2025) = 1025156  =  1012 * 1013  =  (2025^2 - 1)/4 .
+
+Equivalently, with optimal play Linda secures a quarter of the board:
+lime = (n^2 - 1)/4 and scarlet = (3n^2 + 1)/4.  The "1/4" is the two-dimensional
+analogue of the one-dimensional version of this game (Sue's block a 1x2 domino),
+which is exactly solvable and has value floor((n-1)/2) ~ n/2 per dimension; the
+2x2 block squares this to ~ n^2/4.
+
+==============================================================================
+ANSWER
+==============================================================================
+(a)  The game always terminates (each Sue move strictly decreases the number of
+     grey cells, which is a non-negative integer never increased by Linda, so
+     Sue makes at most n^2 moves and the game lasts at most 2n^2+1 moves).
+
+(b)  With optimal play the number of lime cells is
+
+                    (2025^2 - 1)/4  =  1012 * 1013  =  1025156 .

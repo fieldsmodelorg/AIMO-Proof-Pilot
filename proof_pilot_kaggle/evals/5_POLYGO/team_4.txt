@@ -1,0 +1,197 @@
+Let \(P(x)=x^7+a_6x^6+\cdots+a_0\) be a monic degree‑7 polynomial with integer coefficients.  
+The conditions are:  
+
+* every coefficient \(a_i\) is odd,  
+* \(|a_i|<2025^2\) for all \(i\),  
+* each \(|a_i|\) is a root of \(P\).
+
+Set \(b_i=|a_i|\) for \(i=0,\dots,6\) and \(b_7=1\) (the leading coefficient).  
+All \(b_i\) are odd positive integers, \(b_i<2025^2\).  
+Let \(M=\max\{b_0,\dots,b_6,1\}\).  \(M\) is odd and \(M\ge1\).
+
+Since \(M\) is among the \(b_i\), it is a root, so \(P(M)=0\).  
+Then
+\[
+a_0 = -M^7 - a_6M^6 - \cdots - a_1M = -M\bigl(M^6 + a_6M^5 + \cdots + a_1\bigr),
+\]
+so \(M\mid a_0\).  Because \(|a_0|\le M\) and \(a_0\) is odd, we must have \(|a_0|=M\); hence \(a_0=\pm M\).
+
+The leading coefficient \(1\) gives \(b_7=1\), so \(1\) is a root: \(P(1)=0\).  
+Therefore we can write
+\[
+P(x)=(x-1)Q(x),\qquad Q(x)=x^6+q_5x^5+\cdots+q_0,\quad q_0=-a_0=\mp M.
+\]
+Also \(M\) is a root, so \(P(x)=(x-M)R(x)\) with \(R\) monic of degree \(5\) and integer coefficients.  
+Combining the two factorizations,
+\[
+P(x)=(x-1)(x-M)S(x),
+\]
+where \(S(x)=x^5+s_4x^4+s_3x^3+s_2x^2+s_1x+s_0\) is monic and has integer coefficients.  
+The constant term of \(S\) is \(s_0 = a_0/M = \pm 1\).
+
+Expanding the product \((x-1)(x-M)S(x)\) and equating coefficients yields
+\[
+\begin{aligned}
+a_6 &= s_4 - (M+1),\\
+a_5 &= s_3 - (M+1)s_4 + M,\\
+a_4 &= s_2 - (M+1)s_3 + M s_4,\\
+a_3 &= s_1 - (M+1)s_2 + M s_3,\\
+a_2 &= s_0 - (M+1)s_1 + M s_2,\\
+a_1 &= -(M+1)s_0 + M s_1,\\
+a_0 &= M s_0.
+\end{aligned}
+\tag{1}
+\]
+
+Now determine the possible positive integer roots of \(P\).  
+From \(P(x)=(x-1)(x-M)S(x)\), any integer root is either \(1\), \(M\), or a root of \(S\).  
+Because \(S\) is monic with constant term \(\pm1\), the Rational Root Theorem forces any integer root of \(S\) to be \(\pm1\).  
+Hence the only positive integer roots of \(P\) are \(1\) and \(M\).  
+Since each \(|a_i|\) is a positive integer root, we must have
+\[
+|a_i|\in\{1,M\}\qquad\text{for all }i=0,\dots,6.
+\tag{2}
+\]
+
+We now treat the two possibilities \(M=1\) and \(M>1\).
+
+---
+
+### Case \(M=1\)
+
+Then all \(|a_i|=1\), so each \(a_i=\pm1\).  
+The condition \(P(1)=0\) gives
+\[
+1 + a_6 + a_5 + a_4 + a_3 + a_2 + a_1 + a_0 = 0 \;\Longrightarrow\; a_6+\cdots+a_0 = -1.
+\]
+Among the seven coefficients \(a_6,\dots,a_0\), let \(k\) be the number of \(-1\)'s. Their sum is \(7-2k\). Setting \(7-2k=-1\) yields \(k=4\).  
+Hence exactly four coefficients are \(-1\) and three are \(+1\). The number of such polynomials is \(\binom{7}{4}=35\).  
+All satisfy the required conditions (coefficients are odd, \(|a_i|=1<2025^2\), and \(1\) is a root). So this case contributes \(35\) good polynomials.
+
+---
+
+### Case \(M>1\)
+
+Now \(M\) is an odd integer \(\ge 3\). From (2) we have \(|a_i|\in\{1,M\}\) for all \(i\), and \(a_0=\pm M\).
+
+We solve the system (1) under the condition \(a_i\in\{\pm1,\pm M\}\) and \(M>1\).
+
+#### 5.1  Determining \(s_1\)
+
+From \(a_1 = -(M+1)s_0 + M s_1\) and \(a_1\in\{\pm1,\pm M\}\), test possibilities.  
+If \(s_0=1\): \(a_1 = -(M+1)+M s_1\). For \(a_1=M\) we get \(s_1=2+\frac1M\) (not integer); for \(a_1=-M\) we get \(s_1=\frac1M\); for \(a_1=1\) we get \(s_1=1+\frac2M\); for \(a_1=-1\) we get \(s_1=1\). Thus only \(a_1=-1\), \(s_1=1\) works.  
+If \(s_0=-1\): \(a_1 = (M+1)+M s_1\). For \(a_1=1\) we get \(s_1=-1\); the other possibilities give non‑integer \(s_1\).  
+Hence
+\[
+(s_0,a_1,s_1)=\begin{cases}
+(1,-1,1),\\
+(-1,1,-1).
+\end{cases}
+\tag{3}
+\]
+
+#### 5.2  Determining \(s_2\)
+
+From \(a_2 = s_0 - (M+1)s_1 + M s_2\) and \(a_2\in\{\pm1,\pm M\}\).
+
+* For \((s_0,s_1)=(1,1)\): \(a_2 = 1-(M+1)+M s_2 = -M + M s_2 = M(s_2-1)\).  
+  Because \(M>1\), \(M(s_2-1)=\pm1\) would force \(M=1\); hence \(s_2-1=\pm1\), so \(s_2=2\) or \(0\). Then \(a_2=M\) or \(a_2=-M\) respectively.
+* For \((s_0,s_1)=(-1,-1)\): \(a_2 = -1 - (M+1)(-1) + M s_2 = -1 + M+1 + M s_2 = M + M s_2 = M(s_2+1)\).  
+  Similarly \(M(s_2+1)=\pm M\) gives \(s_2+1=\pm1\), so \(s_2=0\) or \(s_2=-2\). Then \(a_2=M\) or \(a_2=-M\) respectively.
+
+Thus the admissible pairs are
+\[
+\begin{array}{c|c}
+(s_0,s_1) & (a_2,s_2)\\\hline
+(1,1) & (M,2)\ \text{or}\ (-M,0)\\
+(-1,-1) & (M,0)\ \text{or}\ (-M,-2)
+\end{array}
+\tag{4}
+\]
+
+#### 5.3  Determining \(s_3\)
+
+From \(a_3 = s_1 - (M+1)s_2 + M s_3\) and \(a_3\in\{\pm1,\pm M\}\).
+
+* **Line (i):** \((s_0,s_1)=(1,1)\), \(s_2=2\).  
+  Then \(a_3 = 1 - 2(M+1) + M s_3 = -2M-1 + M s_3\).  
+  \(M s_3 = a_3 + 2M+1\). For \(a_3=-1\) we get \(M s_3 = 2M\), so \(s_3=2\) (integer). The other possibilities give non‑integer \(s_3\). Hence \(a_3=-1\), \(s_3=2\).
+* **Line (ii):** \((s_0,s_1)=(1,1)\), \(s_2=0\).  
+  Then \(a_3 = 1 - 0 + M s_3 = 1 + M s_3\).  
+  \(M s_3 = a_3-1\). For \(a_3=1\) we get \(s_3=0\); other choices give non‑integer \(s_3\). Hence \(a_3=1\), \(s_3=0\).
+* **Line (iii):** \((s_0,s_1)=(-1,-1)\), \(s_2=0\).  
+  Then \(a_3 = -1 - 0 + M s_3 = -1 + M s_3\).  
+  \(M s_3 = a_3+1\). For \(a_3=-1\) we get \(s_3=0\); other choices give non‑integer \(s_3\). Hence \(a_3=-1\), \(s_3=0\).
+* **Line (iv):** \((s_0,s_1)=(-1,-1)\), \(s_2=-2\).  
+  Then \(a_3 = -1 - (M+1)(-2) + M s_3 = -1 + 2(M+1) + M s_3 = 2M+1 + M s_3\).  
+  \(M s_3 = a_3 - 2M-1\). For \(a_3=1\) we get \(M s_3 = -2M\), so \(s_3=-2\); other choices give non‑integer \(s_3\). Hence \(a_3=1\), \(s_3=-2\).
+
+Thus we obtain the following admissible combinations:
+\[
+\begin{array}{c|c|c|c|c}
+(s_0,s_1,s_2,s_3) & a_1 & a_2 & a_3\\\hline
+(1,1,2,2) & -1 & M & -1\\
+(1,1,0,0) & -1 & -M & 1\\
+(-1,-1,0,0) & 1 & M & -1\\
+(-1,-1,-2,-2) & 1 & -M & 1
+\end{array}
+\tag{5}
+\]
+
+#### 5.4  Determining \(s_4\) and the remaining coefficients
+
+Now use \(a_4 = s_2 - (M+1)s_3 + M s_4\) and \(a_6 = s_4 - (M+1)\) with \(a_4,a_6\in\{\pm1,\pm M\}\).
+
+* **Combination (I):** \((s_0,s_1,s_2,s_3)=(1,1,2,2)\).  
+  Then \(a_4 = 2 - 2(M+1) + M s_4 = -2M + M s_4 = M(s_4-2)\).  
+  Since \(M>1\), \(M(s_4-2)=\pm1\) would force \(M=1\); hence \(s_4-2=\pm1\), so \(s_4=3\) or \(1\).  
+  - If \(s_4=3\), then \(a_6 = 3-(M+1)=2-M\). For \(M>1\) this is in \(\{\pm1,\pm M\}\) only when \(M=3\) (giving \(a_6=-1\)), but then \(a_5 = s_3 - (M+1)s_4 + M = 2 -4\cdot3+3 = -7\), which is not in \(\{\pm1,\pm3\}\). So impossible.  
+  - If \(s_4=1\), then \(a_6 = -M\) (allowed) and \(a_5 = 2 - (M+1)\cdot1 + M = 1\) (allowed).  
+  Hence only \(s_4=1\) works. This gives family 1:
+  \[
+  a_6=-M,\; a_5=1,\; a_4=-M,\; a_3=-1,\; a_2=M,\; a_1=-1,\; a_0=M.
+  \]
+
+* **Combination (II):** \((s_0,s_1,s_2,s_3)=(1,1,0,0)\).  
+  Then \(a_4 = 0 - 0 + M s_4 = M s_4\). As before \(M s_4=\pm M\) (the \(\pm1\) case would force \(M=1\)), so \(s_4=\pm1\).  
+  If \(s_4=1\), then \(a_6 = -M\) and \(a_5 = 0 - (M+1)\cdot1 + M = -1\), both allowed.  
+  If \(s_4=-1\), then \(a_6 = -M-2\), which for \(M>1\) is not in \(\{\pm1,\pm M\}\).  
+  Hence \(s_4=1\) works. This gives family 2:
+  \[
+  a_6=-M,\; a_5=-1,\; a_4=M,\; a_3=1,\; a_2=-M,\; a_1=-1,\; a_0=M.
+  \]
+
+* **Combination (III):** \((s_0,s_1,s_2,s_3)=(-1,-1,0,0)\).  
+  The same equations give \(a_4 = M s_4\), \(a_6 = s_4-(M+1)\).  
+  The only viable choice is \(s_4=1\), yielding \(a_6=-M\), \(a_5 = - (M+1)\cdot1 + M = -1\), and \(a_1=1\), \(a_0=-M\). This is family 3:
+  \[
+  a_6=-M,\; a_5=-1,\; a_4=M,\; a_3=-1,\; a_2=M,\; a_1=1,\; a_0=-M.
+  \]
+
+* **Combination (IV):** \((s_0,s_1,s_2,s_3)=(-1,-1,-2,-2)\).  
+  Then \(a_4 = -2 - (M+1)(-2) + M s_4 = -2 + 2M+2 + M s_4 = 2M + M s_4 = M(s_4+2)\).  
+  Again \(s_4+2=\pm1\) gives \(s_4=-1\) or \(s_4=-3\).  
+  For \(s_4=-1\): \(a_6 = -1-(M+1) = -M-2\); for \(s_4=-3\): \(a_6 = -3-(M+1) = -M-4\). Neither is in \(\{\pm1,\pm M\}\) for \(M>1\). Hence no solution.
+
+Thus for \(M>1\) we obtain exactly three distinct families of polynomials, each valid for every odd \(M>1\).
+
+---
+
+### Counting
+
+* **Case \(M=1\):** \(35\) polynomials.
+
+* **Case \(M>1\):** \(M\) must be odd and satisfy \(1<M<2025^2\). Since \(2025^2=4100625\), the largest odd below this is \(4100623\). The number of odd integers from \(3\) to \(4100623\) inclusive is
+  \[
+  \frac{4100623-3}{2}+1 = \frac{4100620}{2}+1 = 2050310+1 = 2050311.
+  \]
+  For each such \(M\) we have three polynomials, giving \(3\cdot2050311 = 6150933\) polynomials.
+
+Adding the two cases, the total number of good polynomials is
+\[
+35 + 6150933 = 6150968.
+\]
+
+\[
+\boxed{6150968}
+\]

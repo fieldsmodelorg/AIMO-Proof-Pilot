@@ -1,0 +1,84 @@
+% =====================================================================
+%  AIMO Proof Pilot — Final grade template (problem captain)
+%
+%  HOW TO USE THIS FILE
+%  --------------------
+%  This is the FINAL grade we share with the teams. It is completed by
+%  the problem captain once the independent grades have been reconciled.
+%
+%  1. COPY this file (do not edit it in place) and save it as
+%        team_N_FINAL.tex
+%     in the relevant problem's grades subfolder (e.g. grades/4_COLOUR/).
+%  2. Fill in the final agreed mark and the reasoning behind it.
+%  3. Compile with pdflatex.
+%
+%  Unlike the per-grader sheet, this records the single final decision:
+%  the mark and the reasoning. It does not include the errors/issues log
+%  or the qualitative proof-quality questions.
+% =====================================================================
+\documentclass[11pt]{article}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{longtable}
+\usepackage[hidelinks]{hyperref}
+\usepackage{parskip}
+
+\newcommand{\field}[1]{\textbf{#1:}\hspace{0.5em}}
+% Placeholder for text the captain replaces. Renders as italic in [brackets]
+% so it displays cleanly and is easy to spot. Delete it once filled in.
+\newcommand{\fillin}[1]{{\itshape[#1]}}
+
+\begin{document}
+
+% ----------------------------------------------------------------------
+%  Header — identify the submission
+% ----------------------------------------------------------------------
+{\centering\Large\bfseries AIMO Proof Pilot — Final Grade\par}
+\vspace{1em}
+
+\begin{tabular}{@{}p{0.5\textwidth}p{0.45\textwidth}@{}}
+\field{Problem (\#\_ID)} \fillin{e.g. 4\_COLOUR}      & \field{Submission} \fillin{e.g. team\_3 / model\_2} \\
+\end{tabular}
+
+\vspace{0.4em}
+\hrule
+\vspace{0.8em}
+
+% ----------------------------------------------------------------------
+%  Reminder of the scoring scale
+% ----------------------------------------------------------------------
+\textbf{Scoring scale (0/1/6/7) — two binary decisions:}
+\begin{enumerate}[label=\textbf{Step \arabic*.}, leftmargin=*, nosep]
+    \item \textbf{Is the solution essentially complete?}
+    \begin{itemize}[leftmargin=1.4em, nosep]
+        \item If \textbf{no}: award \textbf{1} for significant partial progress, otherwise \textbf{0}.
+        \item If \textbf{yes}: award \textbf{7}, or \textbf{6} if there is a minor error or omission.
+    \end{itemize}
+\end{enumerate}
+Grade against the \textbf{markscheme} (\texttt{docs/markschemes.pdf}).
+
+\vspace{0.8em}
+
+% ----------------------------------------------------------------------
+%  Final mark
+% ----------------------------------------------------------------------
+\section*{1. Final mark}
+
+\textbf{Final mark} (choose one): \qquad \fbox{0} \qquad \fbox{1} \qquad \fbox{6} \qquad \fbox{7}
+
+% ----------------------------------------------------------------------
+%  Reasoning
+% ----------------------------------------------------------------------
+\section*{2. Reasoning}
+
+Justify the mark with explicit reference to the markscheme points (e.g. \texttt{ME1}) where possible.
+
+\bigskip
+\fillin{Final reasoning here.}
+\bigskip
+
+\end{document}

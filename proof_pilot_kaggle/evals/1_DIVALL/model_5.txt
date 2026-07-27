@@ -1,0 +1,170 @@
+[
+\boxed{998285}
+]
+
+Let (G) denote the gcd of the integers
+[
+\frac P{a_i}+1\qquad(1\le i\le k).
+]
+
+### Upper bound
+
+For every (i),
+[
+\frac P{a_i}\equiv -1\pmod G.
+]
+Multiplying by (a_i) gives
+[
+P\equiv-a_i\pmod G,
+]
+so all the (a_i) are congruent modulo (G).
+
+Suppose (G>998285). In particular (G>1). No (a_i) is divisible by a prime divisor of (G): for (j\ne i), the number (a_i) divides (P/a_j), while
+[
+\gcd\left(\frac P{a_j},G\right)=1.
+]
+Thus their common residue is nonzero modulo (G). Write it as (c), where
+[
+1\le c<G.
+]
+
+After ordering the (a_i), they have the form
+[
+a_i=c+n_iG
+]
+for distinct nonnegative integers (n_i). Hence (n_i\ge i-1), and therefore
+[
+\sum_{i=1}^k a_i
+\ge kc+\frac{k(k-1)}2G.
+]
+
+If (k\ge4), then
+[
+\sum_{i=1}^k a_i\ge6G>6\cdot998285>3\cdot10^6,
+]
+which is impossible. Thus any value exceeding (998285) would have to occur when (k=3).
+
+For (k=3), the preceding bound gives
+[
+3c+3G<3\cdot10^6,
+]
+so
+[
+c+G\le999999. \tag{1}
+]
+
+Since the three (a_i) are all congruent to (c\pmod G),
+[
+\frac P{a_i}\equiv c^2\pmod G.
+]
+But (P/a_i\equiv-1\pmod G), so
+[
+c^2\equiv-1\pmod G.
+]
+Consequently,
+[
+c^2+1=mG \tag{2}
+]
+for some positive integer (m).
+
+Our assumption (G>998285), together with (1), gives
+[
+G\ge998286,\qquad c\le1713.
+]
+Thus
+[
+c^2+1\le1713^2+1=2934370<3\cdot998286\le3G.
+]
+Equation (2) therefore forces (m=1) or (m=2).
+
+If (m=1), then (G=c^2+1). From (1),
+[
+c^2+c+1\le999999.
+]
+Since (1000^2+1000+1>999999), we have (c\le999), and hence
+[
+G\le999^2+1=998002,
+]
+contradicting (G>998285).
+
+If (m=2), then
+[
+G=\frac{c^2+1}{2}.
+]
+Using (1),
+[
+\frac{c^2+1}{2}+c\le999999,
+]
+or equivalently
+[
+(c+1)^2\le1999998.
+]
+Because
+[
+1415^2=2002225>1999998,
+]
+we obtain (c\le1413). Therefore
+[
+G\le\frac{1413^2+1}{2}
+=\frac{1996570}{2}
+=998285,
+]
+again contradicting (G>998285).
+
+Hence in every admissible configuration,
+[
+G\le998285.
+]
+
+### Construction attaining the bound
+
+Set
+[
+c=1413,\qquad G=998285.
+]
+Then
+[
+c^2+1=1413^2+1=1996570=2G.
+]
+Take
+[
+a_1=c=1413,\qquad
+a_2=c+G=999698,\qquad
+a_3=c+2G=1997983.
+]
+These are distinct positive integers, and
+[
+a_1+a_2+a_3=2999094<3000000.
+]
+
+All three numbers are congruent to (c\pmod G), and (c^2\equiv-1\pmod G). Therefore each pairwise product plus (1), and hence each (P/a_i+1), is divisible by (G).
+
+It remains to check that their common gcd is not larger. We have
+[
+a_1a_2+1
+=c(c+G)+1
+=G(c+2)
+=1415G,
+]
+and
+[
+a_1a_3+1
+=c(c+2G)+1
+=G(2c+2)
+=2828G.
+]
+But
+[
+\gcd(1415,2828)=1,
+]
+since (2828-2\cdot1415=-2) and (1415) is odd. Thus
+[
+\gcd(a_1a_2+1,a_1a_3+1)=G.
+]
+As all three required numbers are divisible by (G), their gcd is exactly (G).
+
+Therefore the maximum possible value is
+
+[
+\boxed{998285}.
+]

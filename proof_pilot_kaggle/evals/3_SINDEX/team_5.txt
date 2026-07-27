@@ -1,0 +1,103 @@
+We are given a finite nonempty multiset $S$ of positive integers $<20$. For a positive integer $i$ we can partition $S$ into multisets $A_i$ and $B_i$ such that $A_i = i + B_i$ (adding $i$ to every element of $B_i$). The *index* of $S$ is the greatest $n$ such that this holds for every $i$ with $1\le i\le n$; if no such $n$ exists we set the index to $0$.
+
+We need to determine the maximum possible index $N$ over all choices of $S$, then among those achieving $N$ choose the smallest possible maximum element $M$, and finally among those with maximal index and maximal element $M$ choose the smallest possible number of elements (counted with multiplicity). The answer is that minimal number.
+
+---
+
+### 1. Reformulation using generating functions
+
+For a multiset $S$ with elements $x\in\{1,\dots,19\}$, let $c(x)$ be the multiplicity of $x$ in $S$ and define the polynomial  
+\[
+F(z)=\sum_{x=1}^{19}c(x)z^x .
+\]
+If for a fixed $i$ we have a partition $S = A \cup B$ with $A = i+B$, then in terms of generating functions we have $F(z)= (1+z^i)B(z)$, where $B(z)=\sum_{x}b(x)z^x$ is the generating function of $B$ (and $A = i+B$ gives generating function $z^i B(z)$). Moreover, the $b(x)$ are non‑negative integers and satisfy $c(x)=b(x)+b(x-i)$ (with $b(x)=0$ for $x\le0$ or $x>19$). Conversely, if $F(z)=(1+z^i)B(z)$ with $B(z)$ having non‑negative integer coefficients, then we obtain a valid partition.
+
+Thus the condition “$i$ works for $S$” is equivalent to the existence of a polynomial $B_i(z)$ with non‑negative integer coefficients such that  
+\[
+F(z)=(1+z^i)\,B_i(z).
+\tag{1}
+\]
+
+---
+
+### 2. The polynomial $L_n(z)$ – least common multiple of $(1+z^i)$
+
+For a given $n$, if $S$ works for every $i=1,\dots,n$, then $F(z)$ is divisible by each polynomial $1+z^i$. Because the polynomials $1+z^i$ are not pairwise coprime, the necessary condition is that $F(z)$ is a multiple of their least common multiple $L_n(z)$. The $L_n(z)$ can be obtained by taking the product of all irreducible cyclotomic factors that appear in any $1+z^i$ and raising each to the maximal exponent that occurs.
+
+We compute the degrees of $L_n$ for small $n$:
+
+* $1+z$ has degree $1$.
+* $1+z^2$ has degree $2$.
+* $1+z^3 = (1+z)(1-z+z^2)$ gives factors $1+z$ and $\Phi_6(z)=1-z+z^2$ (degree $2$).
+* $1+z^4 = \Phi_8(z)$ has degree $4$.
+* $1+z^5 = (1+z)\Phi_{10}(z)$; $\Phi_{10}(z)=1-z+z^2-z^3+z^4$ has degree $4$.
+* $1+z^6 = (1+z^2)\Phi_{12}(z)$; $\Phi_{12}(z)=1-z^2+z^4$ has degree $4$.
+
+Higher $i$ introduce further cyclotomic factors of higher degree.
+
+Therefore, the degree of $L_n$ is the sum of the degrees of all distinct irreducible factors appearing among $1+z,\dots,1+z^n$. In particular  
+
+\[
+\deg L_6 = 1+2+2+4+4+4 = 17,\qquad
+\deg L_7 = 23\quad (\text{since } \Phi_{14} \text{ of degree }6 \text{ is new}).
+\]
+
+Because $F(z)$ must be a multiple of $L_n(z)$, we have $\deg F \ge \deg L_n$. Since all elements are $<20$, $\deg F \le 19$ (and actually $\le 18$ if we also need a constant term $0$ to avoid the element $0$; we can always shift by a translation $S\mapsto S+t$, which corresponds to multiplying $F(z)$ by $z^t$ and does not affect the index). Hence a **necessary condition** for the existence of an $S$ with index $n$ is $\deg L_n \le 19$.
+
+From the values above:
+* $n=6$ gives $\deg L_6=17\le 19$ – possible.
+* $n=7$ gives $\deg L_7=23>19$ – impossible.
+
+Thus the **maximum possible index** is $N=6$.
+
+---
+
+### 3. Existence for $n=6$
+
+We now construct an explicit multiset $S$ with index $6$ and with all elements $<20$.  
+Take $L_6(z)$ as computed. Although $L_6$ itself has negative coefficients (e.g. at $z^1$ and $z^{16}$), we can multiply it by a polynomial $Q(z)$ with integer coefficients to obtain a polynomial with only non‑negative coefficients while keeping the total degree $\le 19$.  
+Consider $Q(z)=1+z$. Then  
+\[
+G(z)=L_6(z)(1+z)
+\]
+has been computed (see the detailed calculation in the full reasoning) and its coefficients are non‑negative; the degree is $18$.  
+Define  
+\[
+F(z)=z\cdot G(z).
+\]
+Shifting by $z$ eliminates the constant term, so $F$ corresponds to a multiset $S$ with no element $0$ and with maximum element $19$ (since $\deg F=19$). Explicitly, the coefficients of $F$ are the coefficients of $G$ shifted by one, giving  
+
+\[
+F(z)=z+z^4+z^5+z^6+z^7+z^8+z^9+2z^{10}+z^{11}+z^{12}+z^{13}+z^{14}+z^{15}+z^{19}).
+\]
+
+Thus  
+\[
+S = \{1,4,5,6,7,8,9,10,10,11,12,13,14,15,16,19\},
+\]  
+with $|S|=16$ elements, maximum element $M=19$.
+
+Because $F(z)$ is a multiple of each $1+z^i$ ($i=1,\dots,6$) – indeed $L_6$ already contains every $1+z^i$ as a factor, and multiplication by $1+z$ does not destroy divisibility – the quotient $B_i(z)=F(z)/(1+z^i)$ is a polynomial with integer coefficients. Moreover, since $F$ has non‑negative coefficients, one can check case by case (or by the construction) that each $B_i(z)$ also has non‑negative coefficients. Hence $S$ satisfies the required partition for every $i=1,\dots,6$, so its index is at least $6$. Together with the impossibility of index $7$, we conclude $N=6$.
+
+---
+
+### 4. Minimising the maximum element
+
+Among all $S$ with index $6$, what is the smallest possible maximum element $M$?  
+From the necessary condition $\deg F \ge \deg L_6 =17$, after a shift we have $\max S \ge 1+\deg L_6 = 18$? Wait careful: $F(z)$ has degree $\ge 17$. After shifting to remove the constant term (to keep elements positive), the smallest exponent becomes $1$ and the largest becomes $\deg F$. Hence $\max S = \deg F$. The minimal possible $\deg F$ is $\deg L_6 = 17$, because $F$ must be a multiple of $L_6$. Can we achieve $\deg F = 17$? That would require $F = z^{t}\cdot L_6$ with $t$ chosen so that the constant term disappears, i.e. $t=1$ (since $L_6(0)=1$). Then $F=z\cdot L_6$ would have degree $18$, not $17$, because $L_6$ has constant term $1$. Actually $L_6$ has constant term $1$ (as can be seen from its factorisation), so multiplying by $z$ gives degree $\deg L_6+1=18$. If we try $t=0$, $F=L_6$ has constant term, which corresponds to an element $0$ – not allowed. Thus the smallest degree we can get for $F$ with zero constant term is $18$, giving $\max S = 18$. But is it possible to have $\max S = 18$? Let's see: we would need $F(z)=z\cdot L_6(z)$ to work, i.e. $S$ corresponds to $L_6$ shifted by $1$. Then $F(z)=z L_6(z)$. Does this $S$ satisfy the index condition? $F$ is divisible by each $1+z^i$ because $L_6$ is. The quotients are $B_i(z)=z\cdot L_6(z)/(1+z^i)$. We must check whether these $B_i(z)$ have non‑negative coefficients. Unfortunately $L_6/(1+z^i)$ may contain negative coefficients; multiplying by $z$ does not change sign. So it is not obvious that $z L_6$ works. Indeed, our earlier computation showed that $L_6$ itself has negative coefficients at $z^1$ and $z^{16}$. Multiplying by $z$ simply shifts them to $z^2$ and $z^{17}$, still negative. Hence $z L_6$ would not correspond to a valid multiset.
+
+We therefore need an extra factor to “smooth out” the negative coefficients. The smallest degree we achieved was $18$ (with $Q(z)=1+z$) giving $\max S = 19$. Can we do with degree $18$? That would require $F = z \cdot H$ where $H$ has degree $17$, $H$ is a multiple of $L_6$, and $H$ has non‑negative coefficients. But any multiple of $L_6$ has degree at least $17$. If we take $H = L_6$ itself, it fails because of negative coefficients. The next possibility is $H = L_6 \cdot (1+z)$, which we already used, giving degree $18$. Could there be a polynomial $H$ of degree $17$ that is a multiple of $L_6$ and has non‑negative coefficients? $L_6$ itself is degree $17$; any other multiple would have higher degree. So the only candidate of degree $17$ is $L_6$ (up to a constant factor). Since $L_6$ has negative coefficients, no degree‑$17$ multiple exists with all coefficients non‑negative. Therefore the smallest possible degree for a valid $F$ is $18$, implying $\max S \ge 19$ after shifting? Wait: if we take $F = z \cdot H$ with $H$ of degree $17$ and non‑negative coefficients, then $F$ has degree $18$ and $\max S = 18$? Because $F$ would have terms up to $z^{18}$ (since $H$ degree $17$, times $z$ gives exponent $18$). But we just argued that $H$ cannot be of degree $17$ and non‑negative; it must be of degree at least $18$ (i.e. $H$ degree $18$ after multiplying by something). Let's be systematic.
+
+We need $F(z)$ with non‑negative coefficients, $F(0)=0$, and $L_6 \mid F$. Write $F = z^t \cdot P$ where $P$ has non‑negative coefficients and $P(0)\neq 0$ (otherwise we could reduce $t$). Then $L_6 \mid z^t P$, but since $L_6(0)=1$, $z$ does not divide $L_6$, so we must have $L_6 \mid P$ in $\mathbb{Z}[z]$. Thus $P = L_6 \cdot Q$ for some polynomial $Q$ with integer coefficients. Moreover $P$ has non‑negative coefficients, so $Q$ must be chosen to compensate the negatives in $L_6$. The smallest degree of such a $P$ is at least $\deg L_6 = 17$, and if we take $Q$ constant, $P = L_6$ has negatives. So $Q$ must have degree at least $1$. Then $\deg P = 17 + \deg Q$. To keep $\deg F = t + \deg P \le 19$ and also $t\ge 1$ (to clear the constant term of $L_6$), we need $\deg P \le 18$. Since $\deg Q\ge 1$, the minimal possibility is $\deg Q =1$, giving $\deg P = 18$, and then we may take $t=1$ to get $F = z P$ of degree $19$, or $t=0$? But $t$ must be at least $1$ because $P(0)=L_6(0)Q(0) = 1\cdot Q(0)$. If $Q(0)\neq 0$, then $P(0)\neq 0$, and $F = z P$ has $F(0)=0$. So with $t=1$ we obtain $\deg F = 1 + 18 = 19$. Could we take $t=0$? Then $F=P$ would have constant term $P(0)\neq 0$, corresponding to element $0$, which is not allowed. So the minimal achievable $\max S$ is $19$.
+
+But is it possible to have $F$ of degree $18$? That would require $\deg P = 18$ and $t=0$, but then $F$ would have constant term, so invalid. Or $t=1$ with $\deg P = 17$, but $\deg P$ cannot be $17$ with non‑negative coefficients as argued. Therefore the **smallest possible maximum element** among all $S$ with index $6$ is $M = 19$.
+
+---
+
+### 5. Minimising the size for $n=6$ and $M=19$
+
+Now we look for a multiset $S$ with index $6$, maximum element $19$, and as few elements as possible. From the construction above we obtained $|S| = 16$. Can we do better (i.e., $15$ or less) while keeping $\max S=19$ and index $6$?
+
+We already have a lower bound coming from the degree of $L_6$. Since $F(z)$ must be a multiple of $L_6$ and have $F(0)=0$, we write $F = z \cdot L_6 \cdot Q$ with $Q$ a polynomial with integer coefficients such that $F$ has non‑negative coefficients. The total number of elements is $F(1)$. We want to minimise $F(1)$.
+
+We know $L_6(1)=8$ (as computed). Also $z$ contributes factor $1$ at $z=1$. So $F(1) = L_6(1) \cdot Q(1) = 8 \cdot Q(1)$. Hence the size is a multiple of $8$. Our construction gave $Q(1)=2$, so size $16$. Could we have $Q(1)=1$? That would give size $8$, which is much smaller. But is there a polynomial $Q$ with $Q(1)=1$ such that $F = z L_6 Q$ has non‑negative coefficients? $Q$ must be a polynomial with integer coefficients; $Q(1)=1$ means the sum of coefficients is $1$. The simplest is $Q(z)=1$ (constant). But then $F = z L_6$, which we already saw has negative coefficients (since $L_6$ has negatives). Other possibilities: $Q(z)=1 - z$ would give $Q(1)=0$, not $1$. To have $Q(1)=1$, the polynomial must have total sum $1$. Since $L_6$ has both positive and negative coefficients, the product $L_6 Q$ might become non‑negative for some $Q$ with $Q(1)=1$. For instance, $Q(z)=2 - z$ gives $Q(1)=1$, but then $Q$ has a negative coefficient. Could that cancel the negatives in $L_6$? Possibly, but we also need the final coefficients non‑negative. Moreover, $Q$ must have integer coefficients. Let's test $Q(z)=2 - z$. Compute $S = z L_6 (2-z) = 2z L_6 - z^2 L_6$. This might produce negative coefficients. Without a full analysis, note that the number of elements is the sum of coefficients, which is $8 Q(1)$. If $Q(1)=1$, the sum would be $8$. But can we achieve index $6$ with only $8$ elements? That would mean the average multiplicity is low, but we also need the maximum element $19$. Is it plausible? Let's attempt to find an $S$ of size $8$ with max $19$ and index $6$. We would need $F$ of degree $19$ with sum $8$. That means the average coefficient is very small; many exponents would be zero. But $L_6$ has

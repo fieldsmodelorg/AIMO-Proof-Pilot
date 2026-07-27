@@ -1,0 +1,101 @@
+Let
+\[
+N=2025^2
+\]
+be the total number of cells.
+
+### a) The game always terminates
+
+The number of grey cells never increases. Moreover, on every one of Sue’s turns, her chosen (2\times2) block contains at least one grey cell, and all four cells are painted scarlet. Hence the number of grey cells decreases by at least (1) on every Sue turn.
+
+Consequently, Sue can make at most (N) moves. Since the players alternate, the entire game has at most (2N) moves and therefore always ends after finitely many moves.
+
+### b) The optimal number of lime cells
+
+Set
+[
+m=\frac{2025+1}{2}=1013.
+]
+We will prove that the value of the game is
+[
+m^2-1=1013^2-1=1,026,168.
+]
+
+#### Linda can guarantee at least (m^2-1) lime cells
+
+Let
+[
+P={(r,c): r\text{ and }c\text{ are both odd}}.
+]
+There are (1013) odd-numbered rows and (1013) odd-numbered columns, so
+[
+|P|=1013^2=m^2.
+]
+
+Every axis-aligned (2\times2) block contains exactly one cell of (P), since two consecutive rows contain exactly one odd row and two consecutive columns contain exactly one odd column.
+
+Linda uses the following strategy:
+
+1. On her first turn, she paints any cell of (P) lime.
+2. After each nonterminal move by Sue, let (p) be the unique cell of (P) in the (2\times2) block just painted by Sue. Linda repaints (p) lime.
+
+After Linda’s first turn, all her moves repaint a cell that Sue has just painted scarlet, so these moves do not remove any grey cells. Thus the eventual terminal move is made by Sue.
+
+Consider the final (2\times2) block painted by Sue, and let (p_{\mathrm{last}}) be its unique cell in (P). This cell is scarlet at the end. We claim that every other cell of (P) is lime.
+
+Indeed, take (p\in P\setminus{p_{\mathrm{last}}}).
+
+* If Sue never painted (p), then (p) must be the cell Linda painted on her first turn; otherwise it would still be grey when the game ended. Hence it is lime.
+* If Sue painted (p), consider the last Sue move whose block contained (p). This was not the terminal move, because (p\ne p_{\mathrm{last}}). Linda therefore immediately repainted (p) lime, and no later Sue move affected it.
+
+Thus all (m^2-1) cells of (P\setminus{p_{\mathrm{last}}}) are lime. Therefore Linda can guarantee at least
+[
+m^2-1
+]
+lime cells.
+
+#### Sue can guarantee at most (m^2-1) lime cells
+
+Construct the following family of row-pairs:
+[
+{1,2},{3,4},\ldots,{2023,2024},{2024,2025}.
+]
+There are (1013=m) such pairs, and together they cover every row. Construct the analogous (m) column-pairs.
+
+Taking every Cartesian product of one row-pair and one column-pair gives a family (\mathcal B) of
+[
+m^2
+]
+axis-aligned (2\times2) blocks whose union covers the entire board.
+
+Sue plays as follows.
+
+* After Linda’s first move, Sue chooses a block of (\mathcal B) containing Linda’s chosen cell and paints it scarlet. This is legal because the other three cells of the block are still grey.
+* Thereafter, whenever grey cells remain, Sue chooses any grey cell and paints an unused block of (\mathcal B) containing it.
+
+Such an unused block always exists. Indeed, every cell belongs to at least one block of (\mathcal B). A grey cell cannot belong to a block that Sue has already used, because when that block was used the cell became scarlet, and cells never become grey again.
+
+Thus Sue uses each block of (\mathcal B) at most once, so she makes at most (m^2) moves. Furthermore, Linda’s very first lime mark is immediately overwritten.
+
+Let (T) be the total number of Linda moves. Every cell that is lime at the end has a distinct last Linda move on which it was painted. None of these last moves can be Linda’s first move, since that mark was overwritten immediately. Hence
+[
+#{\text{final lime cells}}\le T-1.
+]
+
+There are two possible ways the game ends.
+
+* If it ends after Sue’s (s)-th move, then Linda has made (T=s) moves and (s\le m^2). Hence
+  [
+  #{\text{lime cells}}\le s-1\le m^2-1.
+  ]
+* If it ends after Linda’s move following Sue’s (s)-th move, then (T=s+1). In this case (s\le m^2-1), because if Sue had already used all (m^2) blocks, their union would cover the board and the game would have ended on Sue’s preceding move. Therefore
+  [
+  #{\text{lime cells}}\le T-1=s\le m^2-1.
+  ]
+
+So Sue can ensure that there are at most (m^2-1) lime cells.
+
+The two bounds coincide. Therefore, under optimal play, the final number of lime cells is
+[
+\boxed{1013^2-1=\boxed{1,026,168}}.
+]
