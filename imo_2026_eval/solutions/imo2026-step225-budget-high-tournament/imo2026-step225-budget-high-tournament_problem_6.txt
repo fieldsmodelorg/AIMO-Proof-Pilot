@@ -1,0 +1,114 @@
+Let \(a_1,a_2,\dots\) be the given infinite sequence of integers \(>1\) satisfying
+\[
+a_{n+1}=\min\{x>a_n:\gcd(x,a_i)>1\text{ for all }i=1,\dots,n\}.
+\]
+
+For each \(n\) denote by \(P_n\) the set of prime divisors of \(a_n\).
+
+---
+### 1.  A finite hitting set
+
+Let \(p\) be the smallest prime divisor of \(a_1\).  
+**Lemma 1.** \(a_2=a_1+p\).
+
+*Proof.* Any integer \(x\) with \(a_1<x<a_1+p\) is not a multiple of any prime divisor of \(a_1\) (the smallest such prime is \(p\), and any multiple of a divisor \(\ge p\) would be at least \(a_1+p\)). Hence \(\gcd(x,a_1)=1\) for all such \(x\). Therefore the smallest integer \(>a_1\) that shares a factor with \(a_1\) is \(a_1+p\); thus \(a_2=a_1+p\). ∎
+
+Write \(P_2=\{p\}\cup R\), where \(R\) is the set of prime divisors of \(a_2\) different from \(p\).  
+Since \(a_1\) and \(a_2\) differ by \(p\), every common prime divisor of \(a_1\) and \(a_2\) divides \(p\); hence \(\gcd(a_1,a_2)=p\) and \(P_1\cap P_2=\{p\}\).
+
+For any \(n\ge1\) the term \(a_n\) must share a factor with \(a_2\). Therefore \(a_n\) is divisible by \(p\) or by some prime from \(R\). Consequently the finite set \(S_0=\{p\}\cup R\) is a hitting set for \(\{P_1,P_2,\dots,P_n\}\) for every \(n\); i.e. \(S_0\cap P_i\neq\varnothing\) for all \(i\).
+
+---
+### 2.  Stabilisation of the minimal hitting set size
+
+For a positive integer \(n\) let  
+
+\[
+k_n=\min\{\,|T|: T\text{ is a set of primes with }T\cap P_i\neq\varnothing\text{ for all }i\le n\,\}.
+\]
+
+\(k_n\) is the smallest size of a hitting set for \(\{P_1,\dots,P_n\}\).  
+Because \(S_0\) is a hitting set, \(k_n\le |S_0|\) for all \(n\).  
+Adding a set cannot decrease the minimal size, so \(k_n\le k_{n+1}\). Thus the non‑decreasing sequence \((k_n)\) is bounded above, hence it stabilises: there exists an integer \(N\) such that  
+
+\[
+k_n=m\qquad\text{for all }n\ge N.
+\]
+
+For \(n\ge N\) let \(\mathcal{H}_n\) be the collection of all minimal hitting sets for \(\{P_1,\dots,P_n\}\).  
+If \(T\in\mathcal{H}_{n+1}\) then \(|T|=m\) and \(T\) is a hitting set for the first \(n\) sets. Since the minimal hitting size for the first \(n\) sets is also \(m\), \(T\) is a minimal hitting set for them; thus \(\mathcal{H}_{n+1}\subseteq\mathcal{H}_n\).  
+The family \(\mathcal{H}_N\) is finite (it is a subset of the power set of the finite set \(\bigcup_{i=1}^N P_i\)). Hence the decreasing chain \(\mathcal{H}_n\) stabilises: there exists \(M\ge N\) such that  
+
+\[
+\mathcal{H}_n=\mathcal{H}\qquad\text{for all }n\ge M,
+\]  
+
+where \(\mathcal{H}\) is a non‑empty family of minimal hitting sets (for the first \(M\) sets).
+
+---
+### 3.  Description of the set of numbers that share a factor with all terms
+
+Define  
+
+\[
+X=\{\,x\in\mathbb{N}\mid \gcd(x,a_i)>1\text{ for every }i\,\}.
+\]
+
+Let \(S=\bigcup_{T\in\mathcal{H}}T\) (the set of all primes that appear in some minimal hitting set) and set  
+
+\[
+L=\prod_{p\in S}p.
+\]
+
+For a set \(T\in\mathcal{H}\) let \(L_T=\prod_{p\in T}p\).  
+If \(x\) is a multiple of \(L_T\) then \(x\) is divisible by every prime of \(T\); because \(T\) is a hitting set for all \(\{P_i\}\) (the stabilisation ensures that every \(T\in\mathcal{H}\) hits every \(P_i\)), the number \(x\) shares a factor with every \(a_i\). Thus \(x\in X\).
+
+Conversely, take \(x\in X\). The set of prime divisors of \(x\) is a hitting set for \(\{P_i\}\). Choose a minimal subset \(T\subseteq P(x)\) that still hits all \(P_i\). Then \(|T|=m\) (the minimal hitting size) and \(T\) is a minimal hitting set for the first \(M\) sets, so \(T\in\mathcal{H}\). Consequently \(x\) is a multiple of \(L_T\).
+
+Therefore  
+
+\[
+X=\bigcup_{T\in\mathcal{H}}\{\,\text{multiples of }L_T\,\}.
+\]
+
+Every \(L_T\) divides \(L\), so each set of multiples is a union of residue classes modulo \(L\). Hence \(X\) is a union of residue classes modulo \(L\). Write the distinct residues of \(X\) modulo \(L\) in increasing order as  
+
+\[
+r_1<r_2<\dots<r_T.
+\]  
+
+Then  
+
+\[
+X=\{r_i+kL\mid 1\le i\le T,\;k\ge0\}.
+\]
+
+---
+### 4.  The sequence is the increasing enumeration of \(X\)
+
+First note that every term \(a_n\) belongs to \(X\): for any \(i<j\) we have \(\gcd(a_j,a_i)>1\) by definition, so \(a_i\) shares a factor with all later terms; for \(i\le j\) the same holds by symmetry. Hence all \(a_n\in X\).
+
+We prove by induction that for every \(n\ge1\) the term \(a_{n+1}\) is the smallest element of \(X\) that exceeds \(a_n\).
+
+*Base \(n=1\).* Since \(a_1\in X\) and \(a_2\in X\), the smallest element of \(X\) greater than \(a_1\) exists and is at most \(a_2\). Call it \(b\). Because \(b\in X\), it shares a factor with \(a_1\); hence \(b\) is a candidate for \(a_2\). By the definition of \(a_2\) as the smallest integer \(>a_1\) that shares a factor with \(a_1\), we have \(a_2\le b\). Together with \(a_2\ge b\) we obtain \(a_2=b\). So the claim holds for \(n=1\).
+
+*Induction step.* Assume the claim holds for all indices up to \(n\). Then the sequence \(a_1,a_2,\dots,a_{n+1}\) is exactly the increasing list of elements of \(X\) starting from \(a_1\). Let \(b\) be the smallest element of \(X\) greater than \(a_{n+1}\). Since \(a_{n+2}\in X\) and \(a_{n+2}>a_{n+1}\), we have \(a_{n+2}\ge b\). On the other hand, \(b\in X\) implies that \(b\) shares a factor with all \(a_i\) (\(i\le n+1\)); thus \(b\) is a candidate for \(a_{n+2}\). By the definition of \(a_{n+2}\) as the smallest integer \(>a_{n+1}\) that shares a factor with the first \(n+1\) terms, we have \(a_{n+2}\le b\). Hence \(a_{n+2}=b\). Thus the claim holds for \(n+1\).
+
+By induction the whole sequence \((a_n)\) is the increasing enumeration of the elements of \(X\) that are \(\ge a_1\). Consequently, if we list all elements of \(X\) in increasing order as \(b_1<b_2<b_3<\dots\), then there exists an index \(r\) with \(b_r=a_1\) and for all \(n\ge1\) we have \(a_n=b_{r+n-1}\).
+
+---
+### 5.  Periodicity
+
+From the description of \(X\) as a union of residue classes modulo \(L\) with \(T\) distinct residues, the increasing list \((b_k)\) satisfies  
+
+\[
+b_{k+T}=b_k+L\qquad\text{for every }k\ge1.
+\]  
+
+Therefore for all \(n\ge1\),  
+
+\[
+a_{n+T}=b_{r+n+T-1}=b_{r+n-1}+L=a_n+L.
+\]  
+
+The positive integers \(T\) and \(L\) are therefore the required numbers. ∎

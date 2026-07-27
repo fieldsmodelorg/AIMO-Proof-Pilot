@@ -1,0 +1,91 @@
+We determine all functions \(f:\mathbb{R}_{>0}\to\mathbb{R}_{>0}\) satisfying
+\[
+\sqrt{\frac{x^2+f(y)^2}{2}}\ge\frac{f(x)+y}{2}\ge\sqrt{x f(y)}\qquad(\forall x,y>0).
+\]
+
+**1.  A functional equation.**  
+Put \(x=f(y)\) in the given inequalities.  
+Left inequality: \(\sqrt{\frac{f(y)^2+f(y)^2}{2}}=f(y)\ge\frac{f(f(y))+y}{2}\)  
+\(\Longrightarrow\; f(f(y))\le 2f(y)-y\).  
+Right inequality: \(\frac{f(f(y))+y}{2}\ge\sqrt{f(y)f(y)}=f(y)\)  
+\(\Longrightarrow\; f(f(y))\ge 2f(y)-y\).  
+Hence  
+\[
+\boxed{f(f(y))=2f(y)-y}\qquad(\forall y>0).\tag{1}
+\]
+
+**2.  \(f(x)\ge x\).**  
+Assume for contradiction that some \(a>0\) satisfies \(f(a)<a\).  Set \(d=a-f(a)>0\).  
+From (1) we have \(f(f(a))=2f(a)-a=a-2d>0\), so \(a>2d\).  
+Define \(a_0=a\), \(a_1=f(a)\), and for \(n\ge1\) \(a_{n+1}=f(a_n)\).  
+By (1) we obtain \(a_{n+2}=2a_{n+1}-a_n\) for all \(n\ge0\).  Induction gives  
+\(a_n=a+n(f(a)-a)=a-nd\).  For \(n>a/d\) we have \(a_n<0\), contradicting \(a_n>0\).  
+Therefore \(f(x)\ge x\) for all \(x>0\).
+
+**3.  Introducing \(g(x)=f(x)-x\).**  
+Then \(g(x)\ge0\) and from (1) we obtain  
+\[
+g(x+g(x))=g(x)\qquad(\forall x>0).\tag{2}
+\]
+
+**4.  Deriving inequalities for \(g\).**  
+The second original inequality squared gives  
+\[
+(f(x)+y)^2\ge4x f(y)\qquad(\forall x,y>0).\tag{3}
+\]  
+Set \(x=f(y_1)=y_1+g(y_1)\) and \(y=y_2\) in (3).  Using (1) we have \(f(f(y_1))=2f(y_1)-y_1=y_1+2g(y_1)\).  Hence  
+\[
+(y_1+2g(y_1)+y_2)^2\ge4(y_1+g(y_1))(y_2+g(y_2)).
+\]  
+Expanding and simplifying yields  
+\[
+(y_1-y_2)^2+4\bigl(g(y_1)-g(y_2)\bigr)(y_1+g(y_1))\ge0.\tag{4}
+\]  
+Swapping the roles of \(y_1\) and \(y_2\) gives  
+\[
+(y_1-y_2)^2+4\bigl(g(y_2)-g(y_1)\bigr)(y_2+g(y_2))\ge0.\tag{5}
+\]
+
+**5.  A bound for \(|g(y_1)-g(y_2)|\).**  
+From (4) and (5) we obtain for all \(y_1,y_2>0\):
+\[
+|g(y_1)-g(y_2)|\le\frac{(y_1-y_2)^2}{4\min\bigl(y_1+g(y_1),\,y_2+g(y_2)\bigr)}.\tag{6}
+\]  
+Indeed, if \(g(y_1)\ge g(y_2)\) then (5) gives \((y_1-y_2)^2\ge4(g(y_1)-g(y_2))(y_2+g(y_2))\), so  
+\(|g(y_1)-g(y_2)|\le\frac{(y_1-y_2)^2}{4(y_2+g(y_2))}\le\frac{(y_1-y_2)^2}{4\min(\dots)}\).  
+The case \(g(y_1)\le g(y_2)\) is analogous.
+
+**6.  \(g\) is constant.**  
+Fix an arbitrary \(y_0>0\).  Because \(g(y_0)\ge0\), we have \(y_0+g(y_0)>0\).  Choose \(\delta=y_0/2>0\).  For any \(y\) with \(|y-y_0|<\delta\) we have \(y>y_0/2\); hence \(y+g(y)\ge y>y_0/2\).  Therefore  
+\[
+\min\bigl(y_0+g(y_0),\,y+g(y)\bigr)\ge\min\bigl(y_0+g(y_0),\,y_0/2\bigr)>0.
+\]  
+Set \(M=4\min\bigl(y_0+g(y_0),\,y_0/2\bigr)\).  Then (6) with \(y_1=y_0\), \(y_2=y\) yields  
+\[
+|g(y)-g(y_0)|\le\frac{(y-y_0)^2}{M}.
+\]  
+Consequently, for \(y\neq y_0\),
+\[
+\frac{|g(y)-g(y_0)|}{|y-y_0|}\le\frac{|y-y_0|}{M}\to0\quad\text{as }y\to y_0.
+\]  
+Thus \(g\) is differentiable at \(y_0\) with derivative \(0\).  Since \(y_0\) is arbitrary, \(g\) is constant on \((0,\infty)\).  Write \(g(x)=c\) for all \(x>0\).  Because \(f(x)=x+c>0\) for every \(x>0\), we must have \(c\ge0\).  Hence  
+\[
+\boxed{f(x)=x+c\qquad(c\ge0)}.\tag{7}
+\]
+
+**7.  Verification.**  
+For any \(c\ge0\) and all \(x,y>0\) we have  
+\[
+\begin{aligned}
+\sqrt{\frac{x^2+(y+c)^2}{2}}\ge\frac{x+y+c}{2}
+&\iff (x-y-c)^2\ge0,\\[4pt]
+\frac{x+y+c}{2}\ge\sqrt{x(y+c)}
+&\iff (x-y-c)^2\ge0.
+\end{aligned}
+\]  
+Both inequalities hold, so every function \(f(x)=x+c\) with \(c\ge0\) satisfies the original conditions.
+
+Therefore all solutions are precisely  
+\[
+\boxed{f(x)=x+c\quad\text{for some constant }c\ge0}.
+\]

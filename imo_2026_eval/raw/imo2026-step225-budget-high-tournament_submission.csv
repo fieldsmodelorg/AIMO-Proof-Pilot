@@ -1,0 +1,538 @@
+id,proof
+1,"We denote the numbers on the blackboard as \(a_1,a_2,\dots ,a_{2026}\) (a multiset). All are \(>1\). A move replaces two numbers \(m>1,n>1\) by \(\gcd(m,n)\) and \(\frac{\operatorname{lcm}(m,n)}{\gcd(m,n)}\).
+
+**Part (a).**  
+Let \(P\) be the product of all numbers on the board and \(k\) the number of numbers \(>1\). Initially \(P>1\) and \(k=2026\).
+
+Consider any move with \(m,n>1\). Let \(d=\gcd(m,n)\). The new product is  
+\[
+P' = P\cdot\frac{\gcd\cdot(\operatorname{lcm}/d)}{mn}=P\cdot\frac{\operatorname{lcm}}{mn}=P\cdot\frac{mn/d}{mn}=P/d.
+\]  
+Thus \(P'\le P\) with strict inequality when \(d>1\).  
+
+The two new numbers are \(\gcd(m,n)=d\) and \(\frac{\operatorname{lcm}(m,n)}{d}\).  
+- If \(d=1\) then \(\gcd=1\) and \(\frac{\operatorname{lcm}}{d}=\operatorname{lcm}>1\); hence one new number is \(1\) and the other \(>1\), so \(k\) decreases by \(1\).  
+- If \(d>1\) and \(m=n\) then \(\gcd=m>1\) and \(\frac{\operatorname{lcm}}{d}=1\); again one new number is \(1\) and the other \(>1\), so \(k\) decreases by \(1\).  
+- If \(d>1\) and \(m\neq n\) then write \(m=d a,\ n=d b\) with \(\gcd(a,b)=1\) and \(a,b\ge1\). Because \(m\neq n\) we have \((a,b)\neq(1,1)\); consequently \(\frac{\operatorname{lcm}}{d}=ab>1\). Both new numbers are \(>1\), so \(k\) stays the same.  
+
+Thus each move strictly decreases the ordered pair \((P,k)\) in the lexicographic order: when \(d=1\) the product is unchanged and \(k\) decreases; when \(d>1\) and \(m\neq n\) the product decreases and \(k\) is unchanged; when \(d>1\) and \(m=n\) both decrease. Since \(P\) is a positive integer and \(k\le2026\), only finitely many moves can occur. Hence the process terminates after finitely many moves.
+
+When the process stops, no two numbers \(>1\) exist, so \(k=0\) or \(k=1\). We show that \(k\) cannot be \(0\).  
+
+For each prime \(p\) let \(v_p(x)\) be the exponent of \(p\) in \(x\) (with \(v_p(1)=0\)). Define  
+\[
+G_p=\gcd_{i=1}^{2026}v_p(a_i).
+\]  
+We claim that \(G_p\) is invariant. Consider a move on two numbers whose exponents for \(p\) are \(a,b\). Their new exponents are \(\min(a,b)\) and \(|a-b|\). Because \(\gcd(\min(a,b),|a-b|)=\gcd(a,b)\) (a standard property), the gcd of the two exponents is unchanged. All other exponents are unchanged, so the overall gcd of all exponents remains the same. Hence \(G_p\) is invariant.
+
+Initially all numbers are \(>1\); therefore there exists at least one prime \(p\) for which some \(v_p(a_i)\ge1\). Then \(G_p\ge1\) (the gcd of a set containing a positive integer and zeros is that positive integer or a divisor thereof, but still positive).  
+
+If the process stopped with \(k=0\), every number would be \(1\) and all exponents would be \(0\); then \(G_p=0\) for every prime \(p\), contradicting the fact that some \(G_p>0\) initially. Consequently \(k=1\), i.e. exactly one number greater than \(1\) remains. This proves part (a).
+
+**Part (b).**  
+Let \(M\) be the unique number \(>1\) at the end. For any prime \(p\) we have \(v_p(M)\) as the exponent of \(M\) and all other numbers are \(1\) (exponent \(0\)). Hence the gcd of all exponents is \(\gcd(v_p(M),0,\dots,0)=v_p(M)\). By the invariance of \(G_p\) we obtain \(v_p(M)=G_p\). Therefore  
+\[
+M=\prod_{p}p^{G_p},
+\]  
+which depends only on the initial numbers. Thus the value of \(M\) does not depend on the choices made during the process. This proves part (b)."
+2,"We place the triangle in the complex plane with \(A=0\), \(B=2\), \(C=2c\) where \(\operatorname{Im}c>0\).  
+Then the midpoints are \(M=1\) and \(N=c\).  Let \(K=k\), \(L=l\).
+
+Because \(K\) lies strictly inside \(\triangle BMC\) and \(L\) strictly inside \(\triangle BNC\), the rays \(BK\) and \(CL\) lie inside the interior angles at \(B\) and \(C\) respectively.  The additional conditions \(K\in\triangle ABL\) and \(L\in\triangle AKC\) force the orientation of the undirected angles so that the directed angles satisfy  
+
+\[
+\angle(KB,BA)=-\angle(CL,CA),\quad
+\angle(BL,BK)=\angle(NL,NC),\quad
+\angle(CL,CK)=\angle(MB,MK)\pmod{\pi}.
+\]
+
+(Justification: at \(B\) the ray \(BK\) is between \(BA\) and \(BC\); the directed angle from \(BK\) to \(BA\) is positive.  At \(C\) the ray \(CL\) is between \(CA\) and \(CB\); the directed angle from \(CL\) to \(CA\) is negative.  The undirected equalities then give the opposite signs, leading to the relations above.  The other two equalities are handled similarly.)
+
+Translating the directed angle equalities into complex numbers gives  
+
+\[
+\frac{(k-2)(l-2c)}{c}\in\mathbb R,\qquad
+\frac{(k-2)(l-c)}{c(l-2)}\in\mathbb R,\qquad
+\frac{k-2c}{(l-2c)(k-1)}\in\mathbb R. \tag{*}
+\]
+
+Thus there exist real numbers \(\lambda,\mu,\nu\) such that  
+
+\[
+(k-2)(l-2c)=\lambda c,\quad
+(k-2)(l-c)=\mu c(l-2),\quad
+k-2c=\nu(l-2c)(k-1). \tag{1}
+\]
+
+From the first and third equations we eliminate \(l-2c\):
+
+\[
+(k-2c)(k-2)=\lambda\nu\,c(k-1)\;\Longrightarrow\;
+\frac{(k-2)(k-2c)}{c(k-1)}\in\mathbb R. \tag{2}
+\]
+
+From the first and second equations we eliminate \(k-2\):
+
+\[
+(l-2c)(l-2)=\frac{\lambda}{\mu}\,(l-c)\;\Longrightarrow\;
+\frac{(l-2c)(l-2)}{l-c}\in\mathbb R. \tag{3}
+\]
+
+Now we prove that (2) implies \(|2k-1-c|=|1+c|\).  Write \(k=x+iy\), \(c=a+ib\) with \(b>0\).  
+The condition (2) means that the imaginary part of \(\displaystyle\frac{(k-2)(k-2c)}{c(k-1)}\) vanishes, i.e.
+
+\[
+\operatorname{Im}\bigl((k-2)(k-2c)\,\overline{c(k-1)}\bigr)=0.
+\]
+
+Compute the numerator:
+
+\[
+\begin{aligned}
+(k-2)(k-2c) &= (x-2+iy)\bigl((x-2a)+i(y-2b)\bigr) \\
+&= \bigl((x-2)(x-2a)-y(y-2b)\bigr) + i\bigl((x-2)(y-2b)+y(x-2a)\bigr) \\
+&= A+iB,
+\end{aligned}
+\]
+
+where  
+
+\[
+A = x^2-2x(a+1)+4a-y^2+2by,\qquad
+B = 2xy-2y(1+a)-2bx+4b.
+\]
+
+Also  
+
+\[
+\overline{c(k-1)} = (a-ib)\bigl((x-1)-iy\bigr) = (a(x-1)-by) + i(ay+b(x-1)).
+\]
+
+Denote \(C = a(x-1)-by\) and \(D = ay+b(x-1)\).  Then  
+
+\[
+\operatorname{Im}\bigl((A+iB)(C-iD)\bigr)= B C - A D =0.
+\]
+
+Substituting the expressions and simplifying (a routine algebraic expansion) gives  
+
+\[
+x^2+y^2-(1+a)x-by =0.
+\]
+
+This is exactly \(|2k-1-c|^2=|1+c|^2\), so \(|2k-1-c|=|1+c|\).
+
+A completely analogous computation using (3) yields  
+
+\[
+u^2+v^2-(1+a)u-bv=0,
+\]
+
+where \(l=u+iv\); hence \(|2l-1-c|=|1+c|\).
+
+Therefore both \(K\) and \(L\) lie on the circle with centre \(\frac{1+c}{2}\) and radius \(\frac{|1+c|}{2}\).  Since \(A=0\) also satisfies this equation, this circle is the circumcircle of \(\triangle AKL\).  Consequently its circumcenter is  
+
+\[
+O = \frac{1+c}{2}.
+\]
+
+Finally,
+
+\[
+OM = \Bigl|\frac{1+c}{2}-1\Bigr| = \frac{|c-1|}{2},\qquad
+ON = \Bigl|\frac{1+c}{2}-c\Bigr| = \frac{|1-c|}{2} = \frac{|c-1|}{2},
+\]
+
+so \(OM=ON\).  ∎"
+3,"We first note that after the stick is cut at all marked points, the pieces are positive lengths summing to \(1\).  The players then take turns choosing a piece; each wants to maximise his own total.  A standard greedy argument shows that the optimal strategy for both players is always to take the largest remaining piece.  Consequently, if the pieces are sorted in non‑increasing order  
+\[
+a_1\ge a_2\ge\cdots\ge a_k,\qquad\sum_{i=1}^k a_i=1,
+\]  
+the first player (Liu) obtains the sum of the odd‑indexed pieces  
+\[
+V=a_1+a_3+a_5+\cdots .
+\]  
+Thus the problem reduces to: Liu chooses a set \(L\) of at most \(n\) points on the stick, then Xia chooses a set \(X\) of at most \(n\) points disjoint from \(L\).  The stick is cut at all points of \(L\cup X\); let the pieces be sorted as above.  Liu’s total is \(V(L\cup X)\).  He wants to maximise the minimum of \(V\) over all admissible \(X\); denote this value by \(c(n)\).
+
+---
+
+### 1.  Lower bounds
+
+**For all \(n\).**  If Liu marks no points, then after Xia’s marks the pieces are determined by \(X\).  Sort them as \(a_1\ge a_2\ge\cdots\ge a_k\).  From \(a_{2i-1}\ge a_{2i}\) we obtain  
+\[
+a_1+a_3+\cdots\ge a_2+a_4+\cdots .
+\]  
+Adding the two inequalities gives \(2(a_1+a_3+\cdots)\ge 1\), so the odd‑sum is at least \(\frac12\).  Hence \(c(n)\ge\frac12\) for every positive integer \(n\).
+
+**For \(n=1\).**  Liu marks the point \(\frac13\).  The stick is cut into two pieces of lengths \(\frac13\) and \(\frac23\).  
+If Xia marks no point, Liu receives the whole stick, i.e. \(\frac23\).  
+If Xia marks a point, he must split either piece.  Splitting the smaller piece \(\frac13\) gives three pieces \(\frac23,\,y,\frac13-y\); the odd‑sum is \(\frac23+\min(y,\frac13-y)\ge\frac23\).  Splitting the larger piece \(\frac23\) into \(x\) and \(\frac23-x\) yields pieces \(x,\frac23-x,\frac13\).  The sum of the odd‑indexed pieces is \(1-\text{median}\).  The median is at most \(\frac13\) (achieved when the two pieces from the larger piece are equal), so the odd‑sum is at least \(\frac23\).  Thus in every case Liu obtains at least \(\frac23\), so \(c(1)\ge\frac23\).
+
+---
+
+### 2.  Upper bounds
+
+#### 2.1  The case \(n=1\)
+
+Let \(x\) be the point Liu marks (if he marks no point, Xia can mark \(\frac12\) and the odd‑sum becomes \(\frac12<\frac23\), so the bound is already satisfied).  We show that for every \(x\in(0,1)\) there exists a point \(y\) that Xia can mark so that the resulting odd‑sum is at most \(\frac23\).  Then Liu cannot guarantee more than \(\frac23\); hence \(c(1)\le\frac23\).
+
+Because the stick is symmetric under reflection, we may assume \(x\ge\frac12\).  The two pieces after Liu’s mark are \(x\) (larger) and \(1-x\) (smaller).  Xia can mark a point inside the larger piece; let \(y\) be that point with \(0<y<x\).  The three pieces are \(y,\;x-y,\;1-x\).  The odd‑sum is \(1-\text{median}\).  We want to choose \(y\) so that the median is at least \(\frac13\).
+
+- **If \(x\ge\frac23\):**  Take \(y=\frac{x}{2}\).  Then the pieces are \(\frac{x}{2},\frac{x}{2},1-x\).  Since \(\frac{x}{2}\ge\frac13\) for \(x\ge\frac23\), the median is \(\frac{x}{2}\) and the odd‑sum is \(1-\frac{x}{2}\le\frac23\) (equality at \(x=\frac23\)).
+
+- **If \(\frac12\le x<\frac23\):**  Take \(y=\frac23-x\).  Then \(y>0\) and \(y<x\) (because \(x\ge\frac12\) gives \(\frac23-x\le\frac16\le x\)).  The pieces are \(x-y=2x-\frac23,\; \frac23-x,\;1-x\).  Since \(x<\frac23\), we have \(2x-\frac23<\frac23-x\) and \(1-x>\frac23-x\)? Actually we need to sort:  
+  * For \(x\in[\frac12,\frac23]\), we have \(2x-\frac23\le\frac13\le1-x\)? Let’s verify: \(2x-\frac23\le\frac13\) when \(x\le\frac12\)? Wait, for \(x=\frac12\), \(2x-\frac23=\frac13\); for \(x=\frac23\), \(2x-\frac23=\frac13\). So \(2x-\frac23\) is between \(\frac13\) and \(\frac13\)? Actually it is exactly \(\frac13\) at both endpoints, and it is increasing? Actually \(2x-\frac23\) is linear, so for \(x\) between \(\frac12\) and \(\frac23\), it ranges from \(\frac13\) to \(\frac13\)? That can't be. Let's compute: at \(x=\frac12\), \(2x-\frac23=1-\frac23=\frac13\); at \(x=\frac23\), \(2x-\frac23=\frac43-\frac23=\frac13\). So it's constant? Wait, \(2x-\frac23\) at \(x=\frac12\) gives \(1-\frac23=\frac13\); at \(x=\frac23\) gives \(\frac43-\frac23=\frac13\). So it's exactly \(\frac13\) for all \(x\)? No, \(2x-\frac23\) is linear with slope 2, so at \(x=0.6\), \(2*0.6-0.6667=1.2-0.6667=0.5333\). That is >0.3333. So my earlier statement is wrong. Let's recalc: For \(x=0.6\), \(2x-\frac23=1.2-0.6667=0.5333\). So it's not constant. So we need to sort correctly.
+
+Better to sort explicitly. The three numbers are:
+\[
+A = x-y = x-(\frac23-x)=2x-\frac23,\qquad B = y = \frac23-x,\qquad C = 1-x.
+\]
+We have \(A\ge B\)? Since \(A-B = 2x-\frac23 - (\frac23-x) = 3x-\frac43\). For \(x\ge\frac12\), \(3x-\frac43 \ge \frac32-\frac43 = -\frac16\), so it can be negative. Actually at \(x=\frac12\), \(A-B = 3/2-4/3 = 1/6 >0\); at \(x=\frac23\), \(A-B = 2-4/3 = 2/3 >0\). So \(A\ge B\) for \(x\ge\frac12\). Also compare \(A\) and \(C\): \(A-C = 2x-\frac23 - (1-x) = 3x-\frac53\). This is negative for \(x<\frac53\), so for \(x\le\frac23\), \(A-C \le 3/2-5/3 = -1/6 <0\). So \(A \le C\) for \(x\le\frac23\). Thus the sorted order is: largest is \(C=1-x\), then \(A=2x-\frac23\), then \(B=\frac23-x\). So the median is \(A = 2x-\frac23\). The odd‑sum is \(1 - (2x-\frac23) = \frac53 - 2x\). But we want to check if this is ≤ 2/3? Actually we want the odd-sum ≤ 2/3. For \(x=\frac12\), odd-sum = 5/3 - 1 = 2/3; for \(x=\frac23\), odd-sum = 5/3 - 4/3 = 1/3? That would be less than 2/3. But we must ensure that the median is at least 1/3? Let's compute median: for \(x=\frac23\), \(A=2*(2/3)-2/3=4/3-2/3=2/3\), median=2/3, odd-sum=1/3, which is even smaller. But is that correct? If \(x=2/3\), then \(y=2/3-x=0\), not allowed. So we need a different choice for \(x=2/3\): we can take \(y=x/2=1/3\), which gives median=1/3 and odd-sum=2/3. So our construction for \(x<2/3\) should use a different \(y\)? Let's re-evaluate.
+
+We want to guarantee odd-sum ≤ 2/3. For \(x\) in [1/2, 2/3), we can try to make the median as large as possible. The median is the middle piece. The three pieces are \(y, x-y, 1-x\). The median is maximised when the three pieces are as balanced as possible, but the fixed piece \(1-x\) is already >1/3. So we want to make the two pieces from the larger piece as close to each other and to \(1-x\) as possible. The maximum possible median is achieved when we make the two pieces from the larger piece equal to each other? But then the median is the larger of those two? Actually if we set \(y = x/2\), then pieces are \(x/2, x/2, 1-x\). Since \(1-x > x/2\) for \(x<2/3\)? For x=0.6, 1-x=0.4, x/2=0.3, so sorted: 0.4,0.3,0.3, median=0.3. That gives odd-sum = 0.4+0.3 = 0.7? Wait odd-sum is sum of largest and smallest: 0.4+0.3=0.7. That's >2/3. So not good.
+
+Better to choose \(y\) such that the median is as large as possible. The median is the second largest. To make the median large, we want the two larger pieces to be as close as possible. The larger piece is \(1-x\) (since \(1-x > x/2\) for \(x<2/3\)? Actually for x=0.6, 1-x=0.4, x/2=0.3, so 1-x is larger. So the largest piece is \(1-x\). The second largest will be the larger of the two pieces from the larger piece, i.e., \(\max(y, x-y)\). To make the median large, we want \(\max(y, x-y)\) as large as possible, but it cannot exceed \(1-x\) because it's the second largest. Actually we want the median to be at least 1/3, and we want odd-sum = 1 - median ≤ 2/3. So we need median ≥ 1/3. Since the median is the second largest, we can try to make the two pieces from the larger piece as large as possible, but they must sum to \(x\). The maximum possible value for the second largest piece is achieved when we split \(x\) into two pieces as unequal as possible? Actually if we split \(x\) into \(y\) and \(x-y\), the larger of the two is at most \(x\) (if one piece is 0, but not allowed). To make the second largest piece large, we want one of the pieces from the larger piece to be as large as possible, close to \(x\). But then the other piece becomes very small, so the median becomes the larger of the two from the larger piece, which could be almost \(x\). However, the largest piece is \(1-x\). So if we make one piece from the larger piece very large, say \(y\) close to \(x\), then the pieces are \(x-y\) (very small), \(y\) (close to \(x\)), and \(1-x\). Then the sorted order: \(y\) (largest), \(1-x\) (second), \(x-y\) (smallest). Then median = \(1-x\). So odd-sum = \(y + (x-y) = x\). So we can achieve odd-sum = \(x\). Since \(x<2/3\), this is ≤2/3. So we can choose \(y\) close to \(x\) (e.g., \(y = x - \varepsilon\), with \(\varepsilon\) small enough so that \(x-y = \varepsilon\) is positive and the median is \(1-x\), which is >1/3? For \(x=0.6\), \(1-x=0.4\), median=0.4, odd-sum=0.6, which is ≤2/3. So we can achieve odd-sum = x. To get exactly ≤2/3, we can take \(y\) such that \(y\) is close to \(x\) but also \(x-y\) is small. But we need to ensure that the median is indeed \(1-x\) and not \(y\). For \(y\) close to \(x\), we have \(y > 1-x\) for \(x>1/2\)? For x=0.6, 1-x=0.4, y close to 0.6, so y>0.4, so y is the largest, and 1-x is second, so median=1-x. So odd-sum = x. So we can achieve any value x by choosing y appropriately. Since x<2/3, we get odd-sum ≤2/3. For x=2/3, we can use y=x/2=1/3 giving odd-sum=2/3. So for all x≥1/2, we can achieve odd-sum ≤2/3.
+
+Thus the upper bound for n=1 is proven.
+
+Now, to give a clean argument, we can do:
+
+For x ≥ 1/2, choose y = x - ε, where ε > 0 is small enough so that x - ε > 1 - x (since x > 1/2, we can choose ε such that x-ε > 1-x). Then the pieces are: x-ε, ε, 1-x. Sorted: x-ε (largest), 1-x (second), ε (smallest). Median = 1-x. Odd-sum = (x-ε)+ε = x. Since x ≤ 1 (and we want odd-sum ≤ 2/3), we need x ≤ 2/3. For x > 2/3, we use a different construction: split the larger piece into two equal halves. So we can unify:
+
+- If x ≥ 2/3, set y = x/2. Then odd-sum = 1 - x/2 ≤ 2/3.
+- If 1/2 ≤ x < 2/3, set y = x - δ where δ is small and positive such that x-δ > 1-x. Then odd-sum = x ≤ 2/3.
+
+(For x = 1/2, we can take y = 1/2 - δ, but then x-δ = 1/2-δ, and 1-x = 1/2, so x-δ < 1-x, so the order changes. For x=1/2, we can instead use the equal split: y = x/2 = 1/4 gives pieces 1/4,1/4,1/2, median=1/4, odd-sum=1/2+1/4=3/4? That's >2/3. So we need a different construction for x=1/2. We can use y = 1/6 as earlier. So we need to handle the boundary carefully.
+
+Better to do a unified approach: For any x, the minimal possible odd-sum is at most 2/3. We can prove by considering two cases:
+
+- If x ≥ 2/3, take y = x/2, odd-sum = 1 - x/2 ≤ 2/3.
+- If 0 < x < 2/3, take y = 2/3 - x (if x ≤ 2/3, then 2/3-x > 0). Then pieces: x - (2/3-x) = 2x-2/3, 2/3-x, 1-x. We need to sort. For x ≤ 2/3, 2x-2/3 ≤ 2/3-2/3=0? Actually 2x-2/3 can be negative if x<1/3. But we are assuming x≥1/2? Actually if x<1/2, we can reflect. So we can restrict to x≥1/2. For x∈[1/2,2/3), we have 2x-2/3 ≥ 1/3? At x=1/2, 2x-2/3=1-2/3=1/3; at x=2/3, 2x-2/3=4/3-2/3=2/3. So it's increasing. Also 1-x is decreasing. We need to sort the three numbers: A=2x-2/3, B=2/3-x, C=1-x. Compare A and C: A-C = 2x-2/3 - (1-x) = 3x-5/3. For x≤5/9? Actually at x=1/2, 3/2-5/3=9/6-10/6=-1/6; at x=2/3, 2-5/3=1/3>0. So there is a crossover. So we need to handle subcases. This is messy.
+
+Given the earlier candidate solutions, the simplest is to do the case analysis as in candidate r03-p0026, which used the median approach. That candidate gave a construction for each interval. We can adopt a clean version:
+
+For any x, we can find y such that the median is at least 1/3. Then odd-sum ≤ 2/3.
+
+We can present the proof as follows:
+
+**Upper bound for n=1:**
+
+Assume w.l.o.g. that x ≥ 1/2 (otherwise reflect). The two pieces after Liu’s mark are x and 1-x.
+
+- If x ≥ 2/3, choose y = x/2. Then pieces are x/2, x/2, 1-x. Since x/2 ≥ 1-x (because x ≥ 2/3), the sorted order is x/2, x/2, 1-x, median = x/2, odd-sum = 1 - x/2 ≤ 2/3.
+- If 1/2 ≤ x < 2/3, choose y = 1-x - ε, where ε > 0 is small enough that y > 0 and y < x. Then pieces are x, y, 1-x-y. Since y < x and 1-x-y < 1-x, the largest piece is x. The second largest is max(y, 1-x-y). We can choose ε so that 1-x-y = ε, and y = 1-x-ε. Then the three pieces are x, 1-x-ε, ε. Since x > 1-x-ε (because x > 1-x for x>1/2), the sorted order is x, 1-x-ε, ε. Median = 1-x-ε. Then odd-sum = x + ε. To make this ≤ 2/3, we need ε ≤ 2/3 - x. Since x < 2/3, 2/3 - x > 0. We can choose ε = 2/3 - x (which is positive). Then y = 1-x - (2/3-x) = 1/3. So we set y = 1/3. But then y = 1/3, and we need y < x? For x ≥ 1/2, 1/3 < x, so fine. And also we need y not equal to x. So we can choose y = 1/3. Then pieces are x, 1-x-1/3 = 2/3-x, 1/3. For x in [1/2,2/3), 2/3-x ≤ 1/3? Actually for x=0.6, 2/3-x=0.0667; for x=0.5, 2/3-0.5=0.1667. So pieces: x, 2/3-x, 1/3. Sorted: x (largest), 1/3 (second), 2/3-x (smallest). Median = 1/3, odd-sum = x + (2/3-x) = 2/3. So we achieve exactly 2/3. For x = 1/2, pieces: 1/2, 2/3-1/2=1/6, 1/3, sorted: 1/2, 1/3, 1/6, median=1/3, odd-sum=2/3. For x = 2/3, we are in the previous case. So this works.
+
+Thus we can give a unified construction: for x ≥ 1/2, choose y = 1/3 if x < 2/3, and y = x/2 if x ≥ 2/3. But we need to check that y is distinct from x and 0<y<1. For x=1/2, y=1/3 is fine. For x=0.7, y=0.35, fine. For x=2/3, y=1/3, but then y=1/3 is not equal to x=2/3, fine. However, for x=2/3, the construction with y=1/3 gives pieces: 2/3, 1/3, 1/3, sorted: 2/3, 1/3, 1/3, median=1/3, odd-sum=2/3, which is also ≤2/3. So we can simply use y=1/3 for all x ≥ 1/2? Let's test: for x=0.6, y=1/3 gives pieces: 0.6, 0.4-1/3=0.0667? Actually 1-x=0.4, 1-x-y=0.4-0.3333=0.0667. So pieces: 0.6, 0.3333, 0.0667. Sorted: 0.6, 0.3333, 0.0667, median=0.3333, odd-sum=0.6+0.0667=0.6667 = 2/3. Good. For x=0.9, y=1/3 gives pieces: 0.9, 0.1-0.3333? Actually 1-x=0.1, 1-x-y=0.1-0.3333 negative, not allowed. So we cannot use y=1/3 when x > 2/3 because then 1-x-y becomes negative. So we need to split the larger piece, not the smaller piece. For x > 2/3, we use y = x/2, which gives pieces x/2, x/2, 1-x, median = x/2, odd-sum = 1 - x/2 ≤ 2/3. For x = 2/3, both constructions give the same result. So the case analysis is fine.
+
+Thus the upper bound for n=1 is rigorous.
+
+Now, for n≥2, we need to show that Liu cannot guarantee more than 1/2. The symmetric construction works:
+
+- If 1/2 ∉ L, Xia marks 1/2. Then the stick is cut at 1/2, and the pieces are two halves of length 1/2 each. The odd-sum is 1/2.
+- If 1/2 ∈ L, let L = {1/2} ∪ L' with L' ⊆ (0,1)\{1/2} and |L'| ≤ n-1. For every x ∈ L' such that 1-x ∉ L, Xia marks 1-x. (Note: if 1-x ∈ L already, we don't need to mark it.) The set of points marked by Xia has size at most |L'| ≤ n-1, so at most n. The resulting set of cuts L ∪ X is symmetric about 1/2: for every point p in the set, its mirror 1-p is also in the set. Therefore the intervals between consecutive cuts come in symmetric pairs of equal length. The total number of pieces is even (since the set of cuts is symmetric and includes 1/2, so the number of intervals is odd? Actually if we have a symmetric set of cuts including 1/2, the number of intervals is 2k+1? Let's think: endpoints 0 and 1, plus cuts at symmetric points. If the cuts are symmetric, the intervals on the left of 1/2 and right of 1/2 are paired. The number of intervals is even? For example, cuts at 1/2 only: intervals (0,1/2) and (1/2,1), so 2 intervals. If cuts at 1/2 and at a and 1-a, then intervals: (0,a), (a,1/2), (1/2,1-a), (1-a,1), so 4 intervals. So the number of intervals is even. When sorted in decreasing order, the odd-indexed positions consist of one interval from each pair, so their total length is half the total length, i.e., 1/2.
+
+Thus in every case, Xia can force the odd-sum to be exactly 1/2. Therefore c(n) ≤ 1/2 for all n ≥ 2.
+
+Combining with the lower bound, we obtain c(n) = 1/2 for n ≥ 2.
+
+---
+
+### 3.  Conclusion
+
+\[
+\boxed{c(n)=\begin{cases}
+\dfrac23, & n=1,\\[6pt]
+\dfrac12, & n\ge 2.
+\end{cases}}
+\]"
+4,"**Answer:** Mulan can guarantee victory if and only if \(\theta = \frac{180^\circ}{n}\) for some integer \(n\ge 2\).
+
+**Proof.**
+
+We first show that if \(\theta\) is of this form then Mulan has a winning strategy.  Then we show that if \(\theta\) is not of this form then Shan‑Yu can prevent a win from some initial triangle.
+
+---
+
+### 1.  Sufficiency: \(\theta = 180^\circ/n\) with \(n\ge 2\)
+
+Assume the current triangle has angles \((\alpha,\beta,\gamma)\) with \(\alpha+\beta+\gamma=180^\circ\).
+
+*If one of the angles equals \(\theta\)*, Mulan wins immediately.
+
+*If one of the angles equals \(k\theta\) with \(k\ge 2\)*, Mulan can win in finitely many steps by repeatedly splitting that angle.  Indeed, if the triangle has an angle \(M\theta\) with \(M\ge 2\), she cuts that angle into \(\theta\) and \((M-1)\theta\).  The two resulting triangles contain \(\theta\) and \((M-1)\theta\).  If Shan‑Yu keeps the triangle containing \(\theta\), Mulan wins; otherwise he keeps the triangle containing \((M-1)\theta\), which again is a multiple of \(\theta\) with a smaller coefficient.  Repeating this process, after at most \(M-1\) steps Mulan obtains a triangle with an angle \(\theta\) and wins.
+
+Thus it suffices to show that from **any** triangle with no angle that is a multiple of \(\theta\), Mulan can force a triangle that contains a multiple of \(\theta\) (with coefficient at least \(2\)).
+
+Let the triangle have angles \(a,b,c\) and assume no angle is a multiple of \(\theta\).  Without loss of generality let \(c\) be the largest angle.  We claim that \(c>\theta\).  Indeed, if \(c\le\theta\) then because \(\theta\le 90^\circ\) (since \(n\ge 2\) implies \(\theta\le 90^\circ\)), we would have \(c\le 90^\circ\).  But the largest angle in any triangle is at least \(60^\circ\).  If \(c<\theta\), then all angles are \(<\theta\); consequently the sum \(a+b+c<3\theta\).  For \(n\ge 3\) we have \(3\theta\le 180^\circ\) (because \(\theta=180/n\)), so the sum would be less than \(180^\circ\), a contradiction.  For \(n=2\) we have \(\theta=90^\circ\) and the claim \(c>\theta\) is not always true, but for \(\theta=90^\circ\) we already have a direct one‑move winning strategy (see below).  Hence for \(n\ge 3\) we have \(c>\theta\).
+
+Now choose an integer \(m\) with \(1\le m\le n-1\) such that \(m\theta\in (a,\,a+c)\).  This is possible because the interval \((a,a+c)\) has length \(c>\theta\) and the multiples of \(\theta\) are spaced by \(\theta\).  Set  
+
+\[
+c_1=m\theta-a,\qquad c_2=(n-m)\theta-b.
+\]
+
+Then  
+
+\[
+c_1+c_2 = (m\theta-a)+((n-m)\theta-b)=n\theta-(a+b)=180^\circ-(a+b)=c.
+\]
+
+Since \(m\theta>a\) and, because \(m\theta<a+c\), we have \((n-m)\theta=180^\circ-m\theta>b\), so both \(c_1\) and \(c_2\) are positive.  Therefore Mulan can cut the angle \(c\) into the two parts \(c_1\) and \(c_2\) by choosing a point \(P\) on the side opposite the vertex of angle \(c\).
+
+The two triangles obtained are  
+
+\[
+T_1:\;(a,\;c_1,\;180^\circ-a-c_1)=(a,\;m\theta-a,\;(n-m)\theta),\qquad
+T_2:\;(b,\;c_2,\;180^\circ-b-c_2)=(b,\;(n-m)\theta-b,\;m\theta).
+\]
+
+Both contain an angle that is a multiple of \(\theta\): \((n-m)\theta\) in \(T_1\) and \(m\theta\) in \(T_2\).  The adversary will discard one of them; the remaining triangle has a multiple of \(\theta\) (if \(m=1\) or \(m=n-1\) then one of the triangles already contains \(\theta\), but the adversary may avoid that triangle and keep the other one, which has a multiple with coefficient \(\ge 2\)).  Thus Mulan has forced a triangle that contains a multiple of \(\theta\) with coefficient at least \(2\).
+
+Now she can apply the reduction described above and win in finitely many steps.
+
+**The case \(\theta=90^\circ\)** (i.e., \(n=2\)) is handled directly: if the current triangle already has a \(90^\circ\) angle, Mulan wins; otherwise let its angles be \(A,B,C\) with no right angle.  Because the triangle is not right, at least two angles are acute; let \(B\) and \(C\) be those acute angles (if the triangle is obtuse, the obtuse angle is \(>90^\circ\) and the other two are acute).  Mulan cuts the vertex with the obtuse angle (if present) or any vertex (if the triangle is acute) and chooses the split so that the two resulting triangles both have a \(90^\circ\) angle.  More concretely, she chooses a vertex with angle \(A\) and splits it into \(x=90^\circ-B\) and \(A-x\).  The two triangles then have angles \((B,90^\circ-B,90^\circ)\) and \((C,90^\circ-C,90^\circ)\).  Both contain a \(90^\circ\) angle, so whatever Shan‑Yu keeps, the new triangle has a right angle and Mulan wins in one move.  (The cut is possible because \(x>0\) and \(A-x>0\); the point \(P\) exists on the opposite side.)  Hence \(\theta=90^\circ\) is winning.
+
+Thus for every \(\theta=180^\circ/n\) (\(n\ge 2\)) Mulan has a winning strategy.
+
+---
+
+### 2.  Necessity: if \(180^\circ/\theta\) is not an integer, Mulan cannot guarantee victory
+
+Assume that \(180^\circ/\theta\) is not an integer.  We exhibit an initial triangle from which Shan‑Yu can avoid ever giving Mulan a triangle with an angle \(\theta\).  Choose a positive real number \(\varepsilon\) such that none of the three numbers \(180^\circ-2\varepsilon,\;\varepsilon,\;\varepsilon\) is a multiple of \(\theta\).  This is possible because the set of multiples of \(\theta\) is countable and we can pick \(\varepsilon\) from the interval \((0,90^\circ)\) that avoids those discrete points.  Let the initial triangle \(T\) have angles \((180^\circ-2\varepsilon,\;\varepsilon,\;\varepsilon)\).  By construction, no angle of \(T\) is a multiple of \(\theta\).
+
+We now prove that from any triangle with no angle that is a multiple of \(\theta\), the adversary can always choose a triangle after Mulan’s move that also has no angle that is a multiple of \(\theta\).  Consequently, by always discarding the triangle that contains a multiple (if any), Shan‑Yu can keep the invariant that the triangle never contains a multiple of \(\theta\).  Since \(\theta\) itself is a multiple, Mulan can never obtain a triangle with an angle \(\theta\) and therefore cannot win.
+
+Let the current triangle have angles \(a,b,c\) with \(a+b+c=180^\circ\), and suppose none of \(a,b,c\) is a multiple of \(\theta\).  Mulan chooses a vertex, say the one with angle \(c\), and splits it into \(x\) and \(c-x\) (\(0<x<c\)).  The two resulting triangles are  
+
+\[
+T_1:\;(a,\;x,\;180^\circ-a-x),\qquad
+T_2:\;(b,\;c-x,\;180^\circ-b-(c-x)).
+\]
+
+We show that it is impossible for both \(T_1\) and \(T_2\) to contain an angle that is a multiple of \(\theta\).
+
+Denote \(A_1=a,\;B_1=x,\;C_1=180^\circ-a-x\) and \(A_2=b,\;B_2=c-x,\;C_2=180^\circ-b-(c-x)\).  Note that \(C_1 = b+c-x\) and \(C_2 = a+x\) (since \(a+b+c=180^\circ\)).
+
+If both triangles have a multiple of \(\theta\), then at least one of the angles in each triangle is a multiple.  The possible combinations are:
+
+* **Case 1:** \(x\) and \(c-x\) are multiples.  Then \(x+(c-x)=c\) is a multiple of \(\theta\), contradicting that \(c\) is not a multiple.
+* **Case 2:** \(x\) and \(a+x\) are multiples.  Then \(a = (a+x)-x\) is a multiple, contradicting that \(a\) is not a multiple.
+* **Case 3:** \(b+c-x\) and \(c-x\) are multiples.  Then \(b = (b+c-x)-(c-x)\) is a multiple, contradicting that \(b\) is not a multiple.
+* **Case 4:** \(b+c-x\) and \(a+x\) are multiples.  Then their sum \((b+c-x)+(a+x)=a+b+c=180^\circ\) is a multiple of \(\theta\).  This would imply that \(180^\circ/\theta\) is an integer, contrary to our assumption.
+
+Thus none of the four cases can occur.  Therefore at least one of the two triangles has no angle that is a multiple of \(\theta\).  The adversary discards the other triangle and keeps the one with no multiple.
+
+By induction, Shan‑Yu can maintain the invariant forever.  Consequently Mulan can never force a triangle with an angle \(\theta\), and she cannot guarantee victory.
+
+---
+
+Since the sufficiency and necessity arguments are complete, the answer is exactly the set of angles \(\theta\) for which \(\frac{180^\circ}{\theta}\) is an integer, i.e.  
+
+\[
+\boxed{\theta = \frac{180^\circ}{n}\ \text{for some integer}\ n\ge 2}.
+\]"
+5,"We determine all functions \(f:\mathbb{R}_{>0}\to\mathbb{R}_{>0}\) satisfying
+\[
+\sqrt{\frac{x^2+f(y)^2}{2}}\ge\frac{f(x)+y}{2}\ge\sqrt{x f(y)}\qquad(\forall x,y>0).
+\]
+
+**1.  A functional equation.**  
+Put \(x=f(y)\) in the given inequalities.  
+Left inequality: \(\sqrt{\frac{f(y)^2+f(y)^2}{2}}=f(y)\ge\frac{f(f(y))+y}{2}\)  
+\(\Longrightarrow\; f(f(y))\le 2f(y)-y\).  
+Right inequality: \(\frac{f(f(y))+y}{2}\ge\sqrt{f(y)f(y)}=f(y)\)  
+\(\Longrightarrow\; f(f(y))\ge 2f(y)-y\).  
+Hence  
+\[
+\boxed{f(f(y))=2f(y)-y}\qquad(\forall y>0).\tag{1}
+\]
+
+**2.  \(f(x)\ge x\).**  
+Assume for contradiction that some \(a>0\) satisfies \(f(a)<a\).  Set \(d=a-f(a)>0\).  
+From (1) we have \(f(f(a))=2f(a)-a=a-2d>0\), so \(a>2d\).  
+Define \(a_0=a\), \(a_1=f(a)\), and for \(n\ge1\) \(a_{n+1}=f(a_n)\).  
+By (1) we obtain \(a_{n+2}=2a_{n+1}-a_n\) for all \(n\ge0\).  Induction gives  
+\(a_n=a+n(f(a)-a)=a-nd\).  For \(n>a/d\) we have \(a_n<0\), contradicting \(a_n>0\).  
+Therefore \(f(x)\ge x\) for all \(x>0\).
+
+**3.  Introducing \(g(x)=f(x)-x\).**  
+Then \(g(x)\ge0\) and from (1) we obtain  
+\[
+g(x+g(x))=g(x)\qquad(\forall x>0).\tag{2}
+\]
+
+**4.  Deriving inequalities for \(g\).**  
+The second original inequality squared gives  
+\[
+(f(x)+y)^2\ge4x f(y)\qquad(\forall x,y>0).\tag{3}
+\]  
+Set \(x=f(y_1)=y_1+g(y_1)\) and \(y=y_2\) in (3).  Using (1) we have \(f(f(y_1))=2f(y_1)-y_1=y_1+2g(y_1)\).  Hence  
+\[
+(y_1+2g(y_1)+y_2)^2\ge4(y_1+g(y_1))(y_2+g(y_2)).
+\]  
+Expanding and simplifying yields  
+\[
+(y_1-y_2)^2+4\bigl(g(y_1)-g(y_2)\bigr)(y_1+g(y_1))\ge0.\tag{4}
+\]  
+Swapping the roles of \(y_1\) and \(y_2\) gives  
+\[
+(y_1-y_2)^2+4\bigl(g(y_2)-g(y_1)\bigr)(y_2+g(y_2))\ge0.\tag{5}
+\]
+
+**5.  A bound for \(|g(y_1)-g(y_2)|\).**  
+From (4) and (5) we obtain for all \(y_1,y_2>0\):
+\[
+|g(y_1)-g(y_2)|\le\frac{(y_1-y_2)^2}{4\min\bigl(y_1+g(y_1),\,y_2+g(y_2)\bigr)}.\tag{6}
+\]  
+Indeed, if \(g(y_1)\ge g(y_2)\) then (5) gives \((y_1-y_2)^2\ge4(g(y_1)-g(y_2))(y_2+g(y_2))\), so  
+\(|g(y_1)-g(y_2)|\le\frac{(y_1-y_2)^2}{4(y_2+g(y_2))}\le\frac{(y_1-y_2)^2}{4\min(\dots)}\).  
+The case \(g(y_1)\le g(y_2)\) is analogous.
+
+**6.  \(g\) is constant.**  
+Fix an arbitrary \(y_0>0\).  Because \(g(y_0)\ge0\), we have \(y_0+g(y_0)>0\).  Choose \(\delta=y_0/2>0\).  For any \(y\) with \(|y-y_0|<\delta\) we have \(y>y_0/2\); hence \(y+g(y)\ge y>y_0/2\).  Therefore  
+\[
+\min\bigl(y_0+g(y_0),\,y+g(y)\bigr)\ge\min\bigl(y_0+g(y_0),\,y_0/2\bigr)>0.
+\]  
+Set \(M=4\min\bigl(y_0+g(y_0),\,y_0/2\bigr)\).  Then (6) with \(y_1=y_0\), \(y_2=y\) yields  
+\[
+|g(y)-g(y_0)|\le\frac{(y-y_0)^2}{M}.
+\]  
+Consequently, for \(y\neq y_0\),
+\[
+\frac{|g(y)-g(y_0)|}{|y-y_0|}\le\frac{|y-y_0|}{M}\to0\quad\text{as }y\to y_0.
+\]  
+Thus \(g\) is differentiable at \(y_0\) with derivative \(0\).  Since \(y_0\) is arbitrary, \(g\) is constant on \((0,\infty)\).  Write \(g(x)=c\) for all \(x>0\).  Because \(f(x)=x+c>0\) for every \(x>0\), we must have \(c\ge0\).  Hence  
+\[
+\boxed{f(x)=x+c\qquad(c\ge0)}.\tag{7}
+\]
+
+**7.  Verification.**  
+For any \(c\ge0\) and all \(x,y>0\) we have  
+\[
+\begin{aligned}
+\sqrt{\frac{x^2+(y+c)^2}{2}}\ge\frac{x+y+c}{2}
+&\iff (x-y-c)^2\ge0,\\[4pt]
+\frac{x+y+c}{2}\ge\sqrt{x(y+c)}
+&\iff (x-y-c)^2\ge0.
+\end{aligned}
+\]  
+Both inequalities hold, so every function \(f(x)=x+c\) with \(c\ge0\) satisfies the original conditions.
+
+Therefore all solutions are precisely  
+\[
+\boxed{f(x)=x+c\quad\text{for some constant }c\ge0}.
+\]"
+6,"Let \(a_1,a_2,\dots\) be the given infinite sequence of integers \(>1\) satisfying
+\[
+a_{n+1}=\min\{x>a_n:\gcd(x,a_i)>1\text{ for all }i=1,\dots,n\}.
+\]
+
+For each \(n\) denote by \(P_n\) the set of prime divisors of \(a_n\).
+
+---
+### 1.  A finite hitting set
+
+Let \(p\) be the smallest prime divisor of \(a_1\).  
+**Lemma 1.** \(a_2=a_1+p\).
+
+*Proof.* Any integer \(x\) with \(a_1<x<a_1+p\) is not a multiple of any prime divisor of \(a_1\) (the smallest such prime is \(p\), and any multiple of a divisor \(\ge p\) would be at least \(a_1+p\)). Hence \(\gcd(x,a_1)=1\) for all such \(x\). Therefore the smallest integer \(>a_1\) that shares a factor with \(a_1\) is \(a_1+p\); thus \(a_2=a_1+p\). ∎
+
+Write \(P_2=\{p\}\cup R\), where \(R\) is the set of prime divisors of \(a_2\) different from \(p\).  
+Since \(a_1\) and \(a_2\) differ by \(p\), every common prime divisor of \(a_1\) and \(a_2\) divides \(p\); hence \(\gcd(a_1,a_2)=p\) and \(P_1\cap P_2=\{p\}\).
+
+For any \(n\ge1\) the term \(a_n\) must share a factor with \(a_2\). Therefore \(a_n\) is divisible by \(p\) or by some prime from \(R\). Consequently the finite set \(S_0=\{p\}\cup R\) is a hitting set for \(\{P_1,P_2,\dots,P_n\}\) for every \(n\); i.e. \(S_0\cap P_i\neq\varnothing\) for all \(i\).
+
+---
+### 2.  Stabilisation of the minimal hitting set size
+
+For a positive integer \(n\) let  
+
+\[
+k_n=\min\{\,|T|: T\text{ is a set of primes with }T\cap P_i\neq\varnothing\text{ for all }i\le n\,\}.
+\]
+
+\(k_n\) is the smallest size of a hitting set for \(\{P_1,\dots,P_n\}\).  
+Because \(S_0\) is a hitting set, \(k_n\le |S_0|\) for all \(n\).  
+Adding a set cannot decrease the minimal size, so \(k_n\le k_{n+1}\). Thus the non‑decreasing sequence \((k_n)\) is bounded above, hence it stabilises: there exists an integer \(N\) such that  
+
+\[
+k_n=m\qquad\text{for all }n\ge N.
+\]
+
+For \(n\ge N\) let \(\mathcal{H}_n\) be the collection of all minimal hitting sets for \(\{P_1,\dots,P_n\}\).  
+If \(T\in\mathcal{H}_{n+1}\) then \(|T|=m\) and \(T\) is a hitting set for the first \(n\) sets. Since the minimal hitting size for the first \(n\) sets is also \(m\), \(T\) is a minimal hitting set for them; thus \(\mathcal{H}_{n+1}\subseteq\mathcal{H}_n\).  
+The family \(\mathcal{H}_N\) is finite (it is a subset of the power set of the finite set \(\bigcup_{i=1}^N P_i\)). Hence the decreasing chain \(\mathcal{H}_n\) stabilises: there exists \(M\ge N\) such that  
+
+\[
+\mathcal{H}_n=\mathcal{H}\qquad\text{for all }n\ge M,
+\]  
+
+where \(\mathcal{H}\) is a non‑empty family of minimal hitting sets (for the first \(M\) sets).
+
+---
+### 3.  Description of the set of numbers that share a factor with all terms
+
+Define  
+
+\[
+X=\{\,x\in\mathbb{N}\mid \gcd(x,a_i)>1\text{ for every }i\,\}.
+\]
+
+Let \(S=\bigcup_{T\in\mathcal{H}}T\) (the set of all primes that appear in some minimal hitting set) and set  
+
+\[
+L=\prod_{p\in S}p.
+\]
+
+For a set \(T\in\mathcal{H}\) let \(L_T=\prod_{p\in T}p\).  
+If \(x\) is a multiple of \(L_T\) then \(x\) is divisible by every prime of \(T\); because \(T\) is a hitting set for all \(\{P_i\}\) (the stabilisation ensures that every \(T\in\mathcal{H}\) hits every \(P_i\)), the number \(x\) shares a factor with every \(a_i\). Thus \(x\in X\).
+
+Conversely, take \(x\in X\). The set of prime divisors of \(x\) is a hitting set for \(\{P_i\}\). Choose a minimal subset \(T\subseteq P(x)\) that still hits all \(P_i\). Then \(|T|=m\) (the minimal hitting size) and \(T\) is a minimal hitting set for the first \(M\) sets, so \(T\in\mathcal{H}\). Consequently \(x\) is a multiple of \(L_T\).
+
+Therefore  
+
+\[
+X=\bigcup_{T\in\mathcal{H}}\{\,\text{multiples of }L_T\,\}.
+\]
+
+Every \(L_T\) divides \(L\), so each set of multiples is a union of residue classes modulo \(L\). Hence \(X\) is a union of residue classes modulo \(L\). Write the distinct residues of \(X\) modulo \(L\) in increasing order as  
+
+\[
+r_1<r_2<\dots<r_T.
+\]  
+
+Then  
+
+\[
+X=\{r_i+kL\mid 1\le i\le T,\;k\ge0\}.
+\]
+
+---
+### 4.  The sequence is the increasing enumeration of \(X\)
+
+First note that every term \(a_n\) belongs to \(X\): for any \(i<j\) we have \(\gcd(a_j,a_i)>1\) by definition, so \(a_i\) shares a factor with all later terms; for \(i\le j\) the same holds by symmetry. Hence all \(a_n\in X\).
+
+We prove by induction that for every \(n\ge1\) the term \(a_{n+1}\) is the smallest element of \(X\) that exceeds \(a_n\).
+
+*Base \(n=1\).* Since \(a_1\in X\) and \(a_2\in X\), the smallest element of \(X\) greater than \(a_1\) exists and is at most \(a_2\). Call it \(b\). Because \(b\in X\), it shares a factor with \(a_1\); hence \(b\) is a candidate for \(a_2\). By the definition of \(a_2\) as the smallest integer \(>a_1\) that shares a factor with \(a_1\), we have \(a_2\le b\). Together with \(a_2\ge b\) we obtain \(a_2=b\). So the claim holds for \(n=1\).
+
+*Induction step.* Assume the claim holds for all indices up to \(n\). Then the sequence \(a_1,a_2,\dots,a_{n+1}\) is exactly the increasing list of elements of \(X\) starting from \(a_1\). Let \(b\) be the smallest element of \(X\) greater than \(a_{n+1}\). Since \(a_{n+2}\in X\) and \(a_{n+2}>a_{n+1}\), we have \(a_{n+2}\ge b\). On the other hand, \(b\in X\) implies that \(b\) shares a factor with all \(a_i\) (\(i\le n+1\)); thus \(b\) is a candidate for \(a_{n+2}\). By the definition of \(a_{n+2}\) as the smallest integer \(>a_{n+1}\) that shares a factor with the first \(n+1\) terms, we have \(a_{n+2}\le b\). Hence \(a_{n+2}=b\). Thus the claim holds for \(n+1\).
+
+By induction the whole sequence \((a_n)\) is the increasing enumeration of the elements of \(X\) that are \(\ge a_1\). Consequently, if we list all elements of \(X\) in increasing order as \(b_1<b_2<b_3<\dots\), then there exists an index \(r\) with \(b_r=a_1\) and for all \(n\ge1\) we have \(a_n=b_{r+n-1}\).
+
+---
+### 5.  Periodicity
+
+From the description of \(X\) as a union of residue classes modulo \(L\) with \(T\) distinct residues, the increasing list \((b_k)\) satisfies  
+
+\[
+b_{k+T}=b_k+L\qquad\text{for every }k\ge1.
+\]  
+
+Therefore for all \(n\ge1\),  
+
+\[
+a_{n+T}=b_{r+n+T-1}=b_{r+n-1}+L=a_n+L.
+\]  
+
+The positive integers \(T\) and \(L\) are therefore the required numbers. ∎"

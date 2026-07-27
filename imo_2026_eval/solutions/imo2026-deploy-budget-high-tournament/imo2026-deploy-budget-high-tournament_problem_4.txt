@@ -1,0 +1,90 @@
+We work in degrees.  Let \(\theta\) be given with \(0^\circ<\theta<180^\circ\).
+
+---
+### 1.  A useful reduction
+
+**Lemma 1.**  
+If at any moment Mulan obtains a triangle that contains an angle equal to \(k\theta\) with \(k\ge 1\), then she can guarantee victory in finitely many steps.
+
+*Proof.*  
+Suppose the triangle has an angle \(k\theta\).  Mulan cuts that vertex so that the angle is split into \(\theta\) and \((k-1)\theta\).  The two resulting triangles each contain a multiple of \(\theta\) (one contains \(\theta\), the other contains \((k-1)\theta\)).  The opponent discards one of them.  
+If the discarded triangle contained \(\theta\), then the remaining triangle contains \((k-1)\theta\) and Mulan continues.  If the discarded triangle contained \((k-1)\theta\), then the remaining triangle contains \(\theta\) and Mulan wins immediately.  
+Thus, by repeating this process, after at most \(k-1\) moves Mulan forces a triangle with an angle \(\theta\) and wins. ∎
+
+Consequently, Mulan can win iff she can force a triangle that contains an angle which is an integer multiple of \(\theta\).
+
+---
+### 2.  Sufficiency:  \(\dfrac{180^\circ}{\theta}\) is an integer
+
+Assume \(180^\circ = n\theta\) with \(n\in\mathbb{N}\) (so \(n\ge 2\)).  We show that from any initial triangle Mulan can eventually obtain a triangle containing a multiple of \(\theta\).
+
+*Case \(\theta=90^\circ\).*  
+If the triangle already contains a right angle, Mulan wins.  Otherwise, let the angles be \(A\ge B\ge C\).  Since no angle is \(90^\circ\), we have \(B<90^\circ\) and \(C<90^\circ\).  Mulan cuts the side opposite the vertex of angle \(A\) and splits the angle \(A\) into \(x=90^\circ-B\) and \(A-x\).  The two resulting triangles are  
+\[
+(90^\circ-B,\;B,\;90^\circ)\quad\text{and}\quad(A-90^\circ+B,\;C,\;90^\circ),
+\]  
+both containing a right angle.  Whichever triangle Shan‑Yu keeps, Mulan wins immediately.  Hence Mulan can guarantee victory for \(\theta=90^\circ\).
+
+*Case \(\theta\le 60^\circ\) (so \(n\ge 3\)).*  
+Let the angles of the current triangle be \(A\ge B\ge C\) with \(A+B+C=180^\circ\).  If any angle is a multiple of \(\theta\) we are already done (Lemma 1).  Otherwise \(A>\theta\) (because if \(A=\theta\) it would be a multiple), and therefore \(A\ge 60^\circ\) (if \(A<60^\circ\) then all angles \(<60^\circ\) and the sum would be \(<180^\circ\)).  
+
+Because the sum is \(180^\circ\), we have \(A = 180^\circ-B-C\).  Consider the interval  
+\[
+\bigl(B/\theta,\;(180^\circ-C)/\theta\bigr).
+\]  
+Its length is  
+\[
+\frac{180^\circ-C}{θ} - \frac{B}{θ} = \frac{180^\circ-B-C}{θ} = \frac{A}{θ} > 1
+\]  
+(since \(A>\theta\)).  Hence it contains an integer \(q\) with  
+\[
+B < qθ < 180^\circ-C.
+\]  
+Now Mulan cuts the side opposite the vertex of angle \(A\) and splits \(A\) into \(x = qθ-B\) and \(A-x\).  The two resulting triangles are  
+\[
+T_1=(x,\;B,\;A-x+C),\qquad T_2=(A-x,\;C,\;x+B).
+\]  
+Because \(x+B = qθ\) and \(A-x+C = 180^\circ - qθ = (n-q)θ\), both triangles contain an angle that is a multiple of \(\theta\).  The opponent discards one of them; the remaining triangle contains a multiple of \(\theta\) (either \(qθ\) or \((n-q)θ\), both positive).  By Lemma 1, Mulan can then force a win.
+
+Thus for every \(\theta\) with \(\dfrac{180^\circ}{\theta}\in\mathbb{N}\) Mulan has a winning strategy.
+
+---
+### 3.  Necessity:  \(\dfrac{180^\circ}{\theta}\) is not an integer
+
+Suppose \(180^\circ/\theta\) is not an integer.  We construct a triangle that contains no multiple of \(\theta\) and show that Shan‑Yu can always keep the game in such triangles.
+
+Take the triangle \(T_0\) with angles  
+\[
+\fracθ2,\quad\fracθ2,\quad180^\circ-θ.
+\]  
+None of these angles is an integer multiple of \(\theta\): \(\theta/2\) is not a multiple because that would require \(k=1/2\); \(180^\circ-θ\) is not a multiple because \(180^\circ\) would then be a multiple of \(\theta\), contradicting the assumption.  Hence \(T_0\) has no angle that is a multiple of \(\theta\).
+
+Now suppose at some moment the current triangle has no angle that is a multiple of \(\theta\).  Mulan cuts a vertex, say with angle \(A\), splitting it into \(x\) and \(A-x\).  The two resulting triangles are  
+\[
+T_1=(x,\;B,\;A-x+C),\qquad T_2=(A-x,\;C,\;x+B),
+\]  
+where \(B,C\) are the other two angles.  We claim that at least one of \(T_1,T_2\) also has no angle that is a multiple of \(\theta\).  Assume the contrary, that both contain a multiple of \(\theta\).  Since \(B\) and \(C\) are not multiples (by the hypothesis), the multiples must come from the new angles \(x,\;A-x,\;A-x+C,\;x+B\).  Consider the possibilities:
+
+* If \(x\) is a multiple, say \(x=kθ\), then in \(T_2\) the only possible multiple is \(x+B\) (because \(A-x\) would force \(A\) to be a multiple, and \(C\) is not a multiple).  Then \(x+B = mθ\) gives \(B = (m-k)θ\), contradicting that \(B\) is not a multiple.
+* If \(A-x\) is a multiple, a symmetric argument gives a contradiction.
+* If \(A-x+C\) is a multiple, say \(pθ\), then in \(T_2\) the only possible multiple is \(x+B\) (because \(A-x\) would give a contradiction as above, and \(C\) is not a multiple).  Then we have  
+  \[
+  \begin{cases}
+  A-x+C = pθ,\\
+  x+B = qθ.
+  \end{cases}
+  \]  
+  Adding yields \(A+B+C = (p+q)θ\), i.e. \(180^\circ = (p+q)θ\), which contradicts that \(180^\circ/\theta\) is not an integer.
+* If \(x+B\) is a multiple, then by symmetry we obtain the same contradiction.
+
+Hence it is impossible for both children to contain a multiple of \(\theta\).  Therefore at least one of them has no multiple of \(\theta\).  Shan‑Yu discards the other and keeps the triangle with no multiple.
+
+Starting from \(T_0\), Shan‑Yu can always answer in this way.  Consequently the game never reaches a triangle with an angle that is a multiple of \(\theta\), and Mulan can never win.  Thus for such \(\theta\) Mulan cannot guarantee victory.
+
+---
+### 4.  Conclusion
+
+Mulan can guarantee victory in finitely many steps from any initial triangle if and only if \(\dfrac{180^\circ}{\theta}\) is an integer.  Equivalently,
+\[
+\boxed{\theta = \dfrac{180^\circ}{n}\quad\text{for some integer } n\ge 2.}
+\]

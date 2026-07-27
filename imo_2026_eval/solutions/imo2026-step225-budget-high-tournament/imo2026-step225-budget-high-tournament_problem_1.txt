@@ -1,0 +1,36 @@
+We denote the numbers on the blackboard as \(a_1,a_2,\dots ,a_{2026}\) (a multiset). All are \(>1\). A move replaces two numbers \(m>1,n>1\) by \(\gcd(m,n)\) and \(\frac{\operatorname{lcm}(m,n)}{\gcd(m,n)}\).
+
+**Part (a).**  
+Let \(P\) be the product of all numbers on the board and \(k\) the number of numbers \(>1\). Initially \(P>1\) and \(k=2026\).
+
+Consider any move with \(m,n>1\). Let \(d=\gcd(m,n)\). The new product is  
+\[
+P' = P\cdot\frac{\gcd\cdot(\operatorname{lcm}/d)}{mn}=P\cdot\frac{\operatorname{lcm}}{mn}=P\cdot\frac{mn/d}{mn}=P/d.
+\]  
+Thus \(P'\le P\) with strict inequality when \(d>1\).  
+
+The two new numbers are \(\gcd(m,n)=d\) and \(\frac{\operatorname{lcm}(m,n)}{d}\).  
+- If \(d=1\) then \(\gcd=1\) and \(\frac{\operatorname{lcm}}{d}=\operatorname{lcm}>1\); hence one new number is \(1\) and the other \(>1\), so \(k\) decreases by \(1\).  
+- If \(d>1\) and \(m=n\) then \(\gcd=m>1\) and \(\frac{\operatorname{lcm}}{d}=1\); again one new number is \(1\) and the other \(>1\), so \(k\) decreases by \(1\).  
+- If \(d>1\) and \(m\neq n\) then write \(m=d a,\ n=d b\) with \(\gcd(a,b)=1\) and \(a,b\ge1\). Because \(m\neq n\) we have \((a,b)\neq(1,1)\); consequently \(\frac{\operatorname{lcm}}{d}=ab>1\). Both new numbers are \(>1\), so \(k\) stays the same.  
+
+Thus each move strictly decreases the ordered pair \((P,k)\) in the lexicographic order: when \(d=1\) the product is unchanged and \(k\) decreases; when \(d>1\) and \(m\neq n\) the product decreases and \(k\) is unchanged; when \(d>1\) and \(m=n\) both decrease. Since \(P\) is a positive integer and \(k\le2026\), only finitely many moves can occur. Hence the process terminates after finitely many moves.
+
+When the process stops, no two numbers \(>1\) exist, so \(k=0\) or \(k=1\). We show that \(k\) cannot be \(0\).  
+
+For each prime \(p\) let \(v_p(x)\) be the exponent of \(p\) in \(x\) (with \(v_p(1)=0\)). Define  
+\[
+G_p=\gcd_{i=1}^{2026}v_p(a_i).
+\]  
+We claim that \(G_p\) is invariant. Consider a move on two numbers whose exponents for \(p\) are \(a,b\). Their new exponents are \(\min(a,b)\) and \(|a-b|\). Because \(\gcd(\min(a,b),|a-b|)=\gcd(a,b)\) (a standard property), the gcd of the two exponents is unchanged. All other exponents are unchanged, so the overall gcd of all exponents remains the same. Hence \(G_p\) is invariant.
+
+Initially all numbers are \(>1\); therefore there exists at least one prime \(p\) for which some \(v_p(a_i)\ge1\). Then \(G_p\ge1\) (the gcd of a set containing a positive integer and zeros is that positive integer or a divisor thereof, but still positive).  
+
+If the process stopped with \(k=0\), every number would be \(1\) and all exponents would be \(0\); then \(G_p=0\) for every prime \(p\), contradicting the fact that some \(G_p>0\) initially. Consequently \(k=1\), i.e. exactly one number greater than \(1\) remains. This proves part (a).
+
+**Part (b).**  
+Let \(M\) be the unique number \(>1\) at the end. For any prime \(p\) we have \(v_p(M)\) as the exponent of \(M\) and all other numbers are \(1\) (exponent \(0\)). Hence the gcd of all exponents is \(\gcd(v_p(M),0,\dots,0)=v_p(M)\). By the invariance of \(G_p\) we obtain \(v_p(M)=G_p\). Therefore  
+\[
+M=\prod_{p}p^{G_p},
+\]  
+which depends only on the initial numbers. Thus the value of \(M\) does not depend on the choices made during the process. This proves part (b).

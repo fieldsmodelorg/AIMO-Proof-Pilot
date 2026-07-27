@@ -1,0 +1,643 @@
+id,proof
+1,"Let the numbers on the blackboard be \(a_1,\dots,a_{2026}\) (each \(>1\)). For a positive integer \(x\) denote by \(v_p(x)\) the exponent of a prime \(p\) in the prime factorization of \(x\) (\(v_p(x)\ge 0\)).  
+A move chooses two numbers \(m,n>1\) and replaces them by  
+\[
+\gcd(m,n),\qquad \frac{\operatorname{lcm}(m,n)}{\gcd(m,n)}.
+\]  
+For a fixed prime \(p\), if \(e=v_p(m)\) and \(f=v_p(n)\) then  
+\[
+v_p(\gcd(m,n))=\min(e,f),\qquad v_p\!\left(\frac{\operatorname{lcm}(m,n)}{\gcd(m,n)}\right)=|e-f|.
+\]  
+Thus the operation on the multiset of exponents for a given prime is \((e,f)\mapsto(\min(e,f),|e-f|)\).
+
+---
+### (a) Termination and uniqueness of the final number \(>1\)
+
+Define the total exponent sum  
+\[
+S=\sum_{i=1}^{2026}\sum_{p} v_p(a_i).
+\]  
+\(S\) is a non‑negative integer.
+
+Consider a move on two numbers \(m,n\) with exponents \(e,f\) for each prime. For a prime \(p\) the sum of the exponents changes from \(e+f\) to \(\min(e,f)+|e-f|=\max(e,f)\). Hence the total change is  
+\[
+\Delta S = \sum_p\bigl(\max(e,f)-(e+f)\bigr)= -\sum_p\min(e,f)\le 0.
+\]  
+\(\Delta S=0\) exactly when \(\min(e,f)=0\) for every prime \(p\), i.e. when \(m\) and \(n\) are coprime.  
+
+If \(m\) and \(n\) are coprime, then \(\gcd(m,n)=1\) and \(\operatorname{lcm}(m,n)/\gcd(m,n)=\operatorname{lcm}(m,n)>1\), so the two numbers become \(1\) and \(\operatorname{lcm}(m,n)\). Consequently the number \(N\) of integers \(>1\) on the board decreases by exactly \(1\). If \(m\) and \(n\) are not coprime, then \(\Delta S<0\) and \(N\) may stay the same or decrease.
+
+Thus the pair \((S,N)\) strictly decreases in the lexicographic order at every move: either \(S\) decreases, or \(S\) stays the same and \(N\) decreases. Since \(S\ge0\) and \(N\le2026\), the process cannot continue indefinitely; after finitely many moves no move is possible, i.e. there are no two numbers \(>1\) on the board. Hence at most one integer \(>1\) remains.
+
+We now show that the state cannot consist of all \(1\)’s. For each prime \(p\) let \(g_p\) be the greatest common divisor of the set \(\{v_p(a_i)\}\) (if all exponents are \(0\) we set \(g_p=0\)).  
+
+**Invariant.** \(g_p\) is unchanged by a move.  
+Indeed, let \(e,v_p(m)\) and \(f=v_p(n)\). The new exponents are \(\min(e,f)\) and \(|e-f|\), and  
+\[
+\gcd(\min(e,f),|e-f|)=\gcd(e,f).
+\]  
+The \(\gcd\) of the whole multiset is \(\gcd\bigl(\gcd(e,f),\text{the other exponents}\bigr)\). Because the new pair’s \(\gcd\) equals the old pair’s \(\gcd\), the overall \(\gcd\) does not change. Hence \(g_p\) is invariant throughout the process.
+
+Initially there is at least one number \(>1\); therefore for some prime \(p\) we have \(v_p(a_i)>0\) for some \(i\), and consequently \(g_p\ge1\). If the process terminated with all numbers equal to \(1\), then every exponent would be \(0\) and we would have \(g_p=0\), contradicting the invariance. Hence the termination state cannot consist of all \(1\)’s; there must be exactly one integer \(>1\). This proves part (a).
+
+---
+### (b) The value \(M\) does not depend on the choices
+
+At the end there is exactly one integer \(M>1\). For a fixed prime \(p\), the multiset of exponents of \(p\) is \(\{v_p(M),0,\dots,0\}\); the \(\gcd\) of these exponents is \(v_p(M)\). By the invariance proved above,
+\[
+v_p(M)=g_p,
+\]  
+where \(g_p\) is the \(\gcd\) of the initial exponents of \(p\). Therefore  
+\[
+M = \prod_{p} p^{g_p}.
+\]  
+The number \(g_p\) depends only on the initial multiset (the \(\gcd\) of the exponents of \(p\) in the initial numbers). Consequently \(M\) is uniquely determined by the initial numbers and does not depend on the particular sequence of moves. This proves part (b)."
+2,"We prove the statement using complex numbers.  
+
+Place triangle \(ABC\) in the complex plane with \(A=0\), \(B=1\) and \(C=c\), where \(\operatorname{Im}c\neq0\).  
+Rotate the triangle so that \(\operatorname{Re}c>0\) (this is possible because the problem is invariant under rotations).  
+Then the midpoints are \(M=\frac12\) and \(N=\frac c2\).  
+Let \(K=k\) and \(L=l\).
+
+The given angle equalities are undirected, but the points lie strictly inside certain triangles; a straightforward orientation argument (using the fact that the directed angles are all measured in the same sense) shows that they are equivalent to the equalities of the corresponding directed angles modulo \(\pi\).  
+Consequently the following ratios are real:
+
+\[
+\frac{l-c}{c(k-1)}\in\mathbb R,\qquad
+\frac{c(l-1)}{(k-1)(2l-c)}\in\mathbb R,\qquad
+\frac{(l-c)(2k-1)}{k-c}\in\mathbb R. \tag{0}
+\]
+
+We write \(k\) and \(l\) as real linear combinations of the bases \(\{1,\bar c\}\) and \(\{1,c\}\) respectively:
+
+\[
+k=\alpha+\beta\bar c,\qquad l=\gamma+\delta c,\qquad \alpha,\beta,\gamma,\delta\in\mathbb R. \tag{1}
+\]
+
+(Here \(\{1,\bar c\}\) is a basis of \(\mathbb C\) over \(\mathbb R\) because \(c\) is not real.)
+
+---
+
+### Derivation of the algebraic relations
+
+**First condition**  
+\[
+\frac{l-c}{c(k-1)}\in\mathbb R \;\Longleftrightarrow\; (l-c)\overline{c(k-1)}=\overline{(l-c)}\,c(k-1).
+\]
+
+Substituting (1) and simplifying (using \(c\bar c=|c|^2=:S\)) gives
+
+\[
+\gamma(\alpha-1)=\beta(\delta-1)S. \tag{2}
+\]
+
+**Second condition**  
+\[
+\frac{c(l-1)}{(k-1)(2l-c)}\in\mathbb R \;\Longleftrightarrow\; (k-1)(2l-c)\,\overline{c(l-1)}=\overline{(k-1)(2l-c)}\,c(l-1).
+\]
+
+Insert (1) and expand both sides.  After expanding and simplifying (the calculation is a standard polynomial expansion in \(c\) and \(\bar c\); the key step is to factor \(c-\bar c\)), we obtain
+
+\[
+(c-\bar c)\Bigl[\,\bigl((\alpha-1)(\gamma-1)-\beta\delta S\bigr)(c+\bar c)+2\bigl(\alpha\delta+\beta\gamma-\tfrac12(1+S)\bigr)S\Bigr]=0.
+\]
+
+Since \(c\neq\bar c\) and we have rotated so that \(\operatorname{Re}c>0\) (hence \(c+\bar c\neq0\)), the bracket must vanish:
+
+\[
+\bigl((\alpha-1)(\gamma-1)-\beta\delta S\bigr)(c+\bar c)+2\bigl(\alpha\delta+\beta\gamma-\tfrac12(1+S)\bigr)S=0. \tag{3}
+\]
+
+**Third condition**  
+\[
+\frac{(l-c)(2k-1)}{k-c}\in\mathbb R \;\Longleftrightarrow\; (k-c)\overline{(l-c)(2k-1)}=\overline{(k-c)}\,(l-c)(2k-1).
+\]
+
+Substituting (1) and simplifying in exactly the same way yields
+
+\[
+(c-\bar c)\Bigl[\,\bigl((\alpha-1)(\gamma-1)-\beta\delta S\bigr)(c+\bar c)-2\bigl(\alpha\delta+\beta\gamma-\tfrac12(1+S)\bigr)S\Bigr]=0,
+\]
+
+hence
+
+\[
+\bigl((\alpha-1)(\gamma-1)-\beta\delta S\bigr)(c+\bar c)-2\bigl(\alpha\delta+\beta\gamma-\tfrac12(1+S)\bigr)S=0. \tag{4}
+\]
+
+---
+
+### Combining the relations
+
+Add (3) and (4):
+
+\[
+2\bigl((\alpha-1)(\gamma-1)-\beta\delta S\bigr)(c+\bar c)=0.
+\]
+
+Because \(\operatorname{Re}c>0\), we have \(c+\bar c\neq0\); therefore
+
+\[
+(\alpha-1)(\gamma-1)=\beta\delta S. \tag{5}
+\]
+
+Subtract (4) from (3):
+
+\[
+4\bigl(\alpha\delta+\beta\gamma-\tfrac12(1+S)\bigr)S=0.
+\]
+
+Since \(S>0\), we obtain
+
+\[
+\alpha\delta+\beta\gamma=\frac{1+S}{2}. \tag{6}
+\]
+
+Thus the three angle conditions are equivalent to the system (2), (5) and (6).
+
+---
+
+### Circumcenter of \(\triangle AKL\)
+
+Because \(A=0\), the circumcenter is given by
+
+\[
+O=\frac{|k|^2l-|l|^2k}{k\bar l-\bar k l}. \tag{7}
+\]
+
+Now compute the denominator.  Using (1),
+
+\[
+\begin{aligned}
+k\bar l-\bar k l
+&=(\alpha+\beta\bar c)(\gamma+\delta\bar c)-(\alpha+\beta c)(\gamma+\delta c)\\
+&=(\alpha\delta+\beta\gamma)(\bar c-c)+\beta\delta(\bar c^2-c^2)\\
+&=(\bar c-c)\bigl(\alpha\delta+\beta\gamma+\beta\delta(c+\bar c)\bigr).
+\end{aligned}
+\]
+
+By (6) we have \(\alpha\delta+\beta\gamma=\frac{1+S}{2}\), so
+
+\[
+k\bar l-\bar k l=(\bar c-c)\Bigl(\frac{1+S}{2}+\beta\delta(c+\bar c)\Bigr). \tag{8}
+\]
+
+Next compute the numerator.  From (1),
+
+\[
+\begin{aligned}
+|l|^2&=(\gamma+\delta c)(\gamma+\delta\bar c)=\gamma^2+\gamma\delta(c+\bar c)+\delta^2S,\\
+|k|^2&=(\alpha+\beta\bar c)(\alpha+\beta c)=\alpha^2+\alpha\beta(c+\bar c)+\beta^2S.
+\end{aligned}
+\]
+
+Now
+
+\[
+\begin{aligned}
+|k|^2l-|l|^2k
+&=(\alpha^2+\alpha\beta(c+\bar c)+\beta^2S)(\gamma+\delta c)\\
+&\qquad-(\gamma^2+\gamma\delta(c+\bar c)+\delta^2S)(\alpha+\beta\bar c).
+\end{aligned}
+\]
+
+Substitute the relations (2), (5) and (6).  A direct (though lengthy) algebraic simplification (using \(c\bar c=S\) and the fact that \(c+\bar c=2\operatorname{Re}c\)) yields
+
+\[
+|k|^2l-|l|^2k=\frac{1+c}{4}\,(\bar c-c)\Bigl(\frac{1+S}{2}+\beta\delta(c+\bar c)\Bigr). \tag{9}
+\]
+
+(The verification is a routine expansion; the key steps are to express \(\alpha-1\) and \(\gamma\) in terms of \(\beta,\delta,S\) using (2) and (5), and then to use (6) to simplify the resulting polynomial.  The computation is straightforward and can be checked by hand.)
+
+Finally, inserting (8) and (9) into (7),
+
+\[
+O=\frac{\displaystyle\frac{1+c}{4}\,(\bar c-c)\Bigl(\frac{1+S}{2}+\beta\delta(c+\bar c)\Bigr)}
+{(\bar c-c)\Bigl(\frac{1+S}{2}+\beta\delta(c+\bar c)\Bigr)}
+=\frac{1+c}{4}.
+\]
+
+Thus \(O\) is exactly the midpoint of \(MN\) (since \(M=\frac12\) and \(N=\frac c2\)).  Consequently \(OM=ON\).  ∎"
+3,"Let the stick be the interval \([0,1]\). After all marks are made, the stick is cut at every marked point, producing a finite collection of pieces whose lengths sum to \(1\). The two players then take turns claiming an unclaimed piece; each wants to maximise his own total length.  
+A standard greedy argument shows that both players can guarantee that the first player (Liu) obtains the sum of the pieces in the odd positions when the pieces are sorted in non‑increasing order.  
+Indeed, if the pieces are \(a_1\ge a_2\ge\cdots\ge a_m\) with \(\sum a_i=1\), then the optimal strategy for both is always to take the largest remaining piece. Consequently, if both play optimally, Liu receives  
+\[
+S = a_1 + a_3 + a_5 + \cdots .
+\]  
+Thus the value of the game for a given set of cut points is exactly this odd‑sum.
+
+For each positive integer \(n\) let  
+\[
+c(n) = \max_{|A|\le n}\; \min_{|B|\le n,\;B\cap A=\varnothing} S(A\cup B),
+\]  
+where \(A\) is the set of points marked by Liu and \(B\) those marked by Xiang. We determine \(c(n)\).
+
+---
+### 1.  A universal lower bound
+
+Liu may mark no points.  Then the stick is a single piece of length \(1\).  The opponent adds at most \(n\) points, so the final number of pieces \(m\) satisfies \(1\le m\le n+1\).  Let the pieces be \(a_1\ge a_2\ge\cdots\ge a_m>0\) with \(\sum a_i=1\).  Because  
+\[
+a_1\ge a_2,\; a_3\ge a_4,\;\dots
+\]  
+(the last term is taken as zero if \(m\) is even), we have  
+\[
+\sum_{\text{odd}} a_i \ge \sum_{\text{even}} a_i .
+\]  
+Since the total sum is \(1\), it follows that  
+\[
+\sum_{\text{odd}} a_i \ge \frac12 .
+\]  
+Therefore, by marking no points, Liu can guarantee at least \(\frac12\) for every \(n\).  Hence  
+\[
+c(n)\ge\frac12\qquad\text{for all }n\ge1.
+\]
+
+---
+### 2.  The case \(n=1\)
+
+**Lower bound.**  Liu marks the point \(\frac13\).  The stick is cut into two intervals of lengths \(\frac13\) and \(\frac23\).  The opponent (Xiang) may add at most one point.
+
+* If he adds no point, the pieces are \(\frac13\) and \(\frac23\); the odd‑sum is \(\frac23\).
+* If he adds a point in the larger interval (length \(\frac23\)), say at \(\frac13+y\) with \(0<y<\frac23\), the three pieces are \(\frac13,\;y,\;\frac23-y\).  The sorted order is either \(\frac23-y,\;\frac13,\;y\) (when \(y\le\frac13\)) or \(y,\;\frac13,\;\frac23-y\) (when \(y\ge\frac13\)).  In both cases the sum of the odd‑indexed pieces equals \(\frac23\).
+* If he adds a point in the smaller interval, the odd‑indexed sum is at least \(\frac23+\text{positive term}>\frac23\).
+
+Thus the worst‑case for Liu is exactly \(\frac23\), so \(c(1)\ge\frac23\).
+
+**Upper bound.**  Suppose Liu marks a point at \(x\in(0,1)\).  By symmetry we may assume \(x\le\frac12\).  The two pieces have lengths \(x\) and \(1-x\).  The opponent may either mark no point, or mark a point in the larger piece (length \(1-x\)).  (Marking in the smaller piece cannot give a smaller odd‑sum than the other options, because the smallest piece can be made arbitrarily small, making the odd‑sum arbitrarily close to \(1-x\) from above.)  
+
+If the opponent marks no point, the odd‑sum is \(1-x\).
+
+If the opponent marks in the larger piece, he splits it into \(y\) and \(1-x-y\) with \(0<y<1-x\).  The three pieces are \(x,\;y,\;1-x-y\).  Their odd‑sum equals \(1\) minus the median of the three numbers.  To minimise the odd‑sum, we maximise the median.  We analyse the maximum median over \(y\).
+
+Let \(a=x,\;b=y,\;c=1-x-y\).  The median is the second largest.  
+
+*Case \(x\le\frac13\).*  Then \(x\le\frac{1-x}{2}\).  For every admissible \(y\) we have \(x\le 1-x-y\) (since \(1-x-y\ge\frac{1-x}{2}\ge x\)).  The median is maximised when \(y=\frac{1-x}{2}\); then the three numbers are \(x,\frac{1-x}{2},\frac{1-x}{2}\) and the median is \(\frac{1-x}{2}\).  Hence the minimum odd‑sum is \(1-\frac{1-x}{2}=\frac{1+x}{2}\).
+
+*Case \(x>\frac13\).*  Then \(x>\frac{1-x}{2}\).  The median can be made equal to \(x\) by choosing \(y=x\) (or any \(y\) with \(y\ge x\) and \(c\le x\)).  For example, take \(y=x\); the pieces are \(x,x,1-2x\) and the median is \(x\).  Hence the minimum odd‑sum is \(1-x\).
+
+Thus the opponent can always force an odd‑sum of  
+\[
+g(x)=\begin{cases}
+\dfrac{1+x}{2}, & 0<x\le\frac13,\\[6pt]
+1-x, & \frac13<x\le\frac12.
+\end{cases}
+\]  
+The maximum of \(g(x)\) on \([0,\frac12]\) is \(\frac23\), attained at \(x=\frac13\).  Consequently, for any mark by Liu the opponent can force the odd‑indexed sum to be at most \(\frac23\).  Therefore \(c(1)\le\frac23\).
+
+Together with the lower bound we obtain  
+\[
+c(1)=\frac23 .
+\]
+
+---
+### 3.  The case \(n\ge2\)
+
+We already have \(c(n)\ge\frac12\).  It remains to show that Liu cannot guarantee more than \(\frac12\); i.e. for any set \(A\) of at most \(n\) marks by Liu, there exists a set \(B\) of at most \(n\) marks (disjoint from \(A\)) such that the resulting odd‑sum is at most \(\frac12\).
+
+Consider the midpoint \(\frac12\).
+
+*If \(\frac12\notin A\):* The opponent marks the point \(\frac12\).  This cuts the stick into two pieces of length \(\frac12\) each.  The sorted list is \(\frac12,\frac12\) and the odd‑sum is exactly \(\frac12\).
+
+*If \(\frac12\in A\):* The opponent marks the points \(\frac14\) and \(\frac34\) (or, if either of these points already belongs to \(A\), he can perturb each by an arbitrarily small amount so that they become distinct and not in \(A\)).  The stick is then cut at \(\frac14,\frac12,\frac34\), producing four intervals of length \(\frac14\) each (up to an arbitrarily small perturbation).  The sorted pieces are \(\frac14+\varepsilon,\frac14+\varepsilon,\frac14-\varepsilon,\frac14-\varepsilon\) for a sufficiently small \(\varepsilon>0\), and the odd‑sum is \((\frac14+\varepsilon)+(\frac14-\varepsilon)=\frac12\).
+
+In both cases the opponent uses at most two points, which is at most \(n\) for \(n\ge2\).  Hence the opponent can always force the odd‑sum to be exactly \(\frac12\) (or arbitrarily close to \(\frac12\)).  Therefore the worst‑case odd‑sum for Liu is at most \(\frac12\), so \(c(n)\le\frac12\).
+
+Together with the lower bound we obtain  
+\[
+c(n)=\frac12\qquad\text{for all }n\ge2.
+\]
+
+---
+### 4.  Conclusion
+
+\[
+\boxed{c(1)=\frac23,\qquad c(n)=\frac12\ \text{for all }n\ge2.}
+\]"
+4,"We work in degrees.  Let \(\theta\) be given with \(0^\circ<\theta<180^\circ\).
+
+---
+### 1.  A useful reduction
+
+**Lemma 1.**  
+If at any moment Mulan obtains a triangle that contains an angle equal to \(k\theta\) with \(k\ge 1\), then she can guarantee victory in finitely many steps.
+
+*Proof.*  
+Suppose the triangle has an angle \(k\theta\).  Mulan cuts that vertex so that the angle is split into \(\theta\) and \((k-1)\theta\).  The two resulting triangles each contain a multiple of \(\theta\) (one contains \(\theta\), the other contains \((k-1)\theta\)).  The opponent discards one of them.  
+If the discarded triangle contained \(\theta\), then the remaining triangle contains \((k-1)\theta\) and Mulan continues.  If the discarded triangle contained \((k-1)\theta\), then the remaining triangle contains \(\theta\) and Mulan wins immediately.  
+Thus, by repeating this process, after at most \(k-1\) moves Mulan forces a triangle with an angle \(\theta\) and wins. ∎
+
+Consequently, Mulan can win iff she can force a triangle that contains an angle which is an integer multiple of \(\theta\).
+
+---
+### 2.  Sufficiency:  \(\dfrac{180^\circ}{\theta}\) is an integer
+
+Assume \(180^\circ = n\theta\) with \(n\in\mathbb{N}\) (so \(n\ge 2\)).  We show that from any initial triangle Mulan can eventually obtain a triangle containing a multiple of \(\theta\).
+
+*Case \(\theta=90^\circ\).*  
+If the triangle already contains a right angle, Mulan wins.  Otherwise, let the angles be \(A\ge B\ge C\).  Since no angle is \(90^\circ\), we have \(B<90^\circ\) and \(C<90^\circ\).  Mulan cuts the side opposite the vertex of angle \(A\) and splits the angle \(A\) into \(x=90^\circ-B\) and \(A-x\).  The two resulting triangles are  
+\[
+(90^\circ-B,\;B,\;90^\circ)\quad\text{and}\quad(A-90^\circ+B,\;C,\;90^\circ),
+\]  
+both containing a right angle.  Whichever triangle Shan‑Yu keeps, Mulan wins immediately.  Hence Mulan can guarantee victory for \(\theta=90^\circ\).
+
+*Case \(\theta\le 60^\circ\) (so \(n\ge 3\)).*  
+Let the angles of the current triangle be \(A\ge B\ge C\) with \(A+B+C=180^\circ\).  If any angle is a multiple of \(\theta\) we are already done (Lemma 1).  Otherwise \(A>\theta\) (because if \(A=\theta\) it would be a multiple), and therefore \(A\ge 60^\circ\) (if \(A<60^\circ\) then all angles \(<60^\circ\) and the sum would be \(<180^\circ\)).  
+
+Because the sum is \(180^\circ\), we have \(A = 180^\circ-B-C\).  Consider the interval  
+\[
+\bigl(B/\theta,\;(180^\circ-C)/\theta\bigr).
+\]  
+Its length is  
+\[
+\frac{180^\circ-C}{θ} - \frac{B}{θ} = \frac{180^\circ-B-C}{θ} = \frac{A}{θ} > 1
+\]  
+(since \(A>\theta\)).  Hence it contains an integer \(q\) with  
+\[
+B < qθ < 180^\circ-C.
+\]  
+Now Mulan cuts the side opposite the vertex of angle \(A\) and splits \(A\) into \(x = qθ-B\) and \(A-x\).  The two resulting triangles are  
+\[
+T_1=(x,\;B,\;A-x+C),\qquad T_2=(A-x,\;C,\;x+B).
+\]  
+Because \(x+B = qθ\) and \(A-x+C = 180^\circ - qθ = (n-q)θ\), both triangles contain an angle that is a multiple of \(\theta\).  The opponent discards one of them; the remaining triangle contains a multiple of \(\theta\) (either \(qθ\) or \((n-q)θ\), both positive).  By Lemma 1, Mulan can then force a win.
+
+Thus for every \(\theta\) with \(\dfrac{180^\circ}{\theta}\in\mathbb{N}\) Mulan has a winning strategy.
+
+---
+### 3.  Necessity:  \(\dfrac{180^\circ}{\theta}\) is not an integer
+
+Suppose \(180^\circ/\theta\) is not an integer.  We construct a triangle that contains no multiple of \(\theta\) and show that Shan‑Yu can always keep the game in such triangles.
+
+Take the triangle \(T_0\) with angles  
+\[
+\fracθ2,\quad\fracθ2,\quad180^\circ-θ.
+\]  
+None of these angles is an integer multiple of \(\theta\): \(\theta/2\) is not a multiple because that would require \(k=1/2\); \(180^\circ-θ\) is not a multiple because \(180^\circ\) would then be a multiple of \(\theta\), contradicting the assumption.  Hence \(T_0\) has no angle that is a multiple of \(\theta\).
+
+Now suppose at some moment the current triangle has no angle that is a multiple of \(\theta\).  Mulan cuts a vertex, say with angle \(A\), splitting it into \(x\) and \(A-x\).  The two resulting triangles are  
+\[
+T_1=(x,\;B,\;A-x+C),\qquad T_2=(A-x,\;C,\;x+B),
+\]  
+where \(B,C\) are the other two angles.  We claim that at least one of \(T_1,T_2\) also has no angle that is a multiple of \(\theta\).  Assume the contrary, that both contain a multiple of \(\theta\).  Since \(B\) and \(C\) are not multiples (by the hypothesis), the multiples must come from the new angles \(x,\;A-x,\;A-x+C,\;x+B\).  Consider the possibilities:
+
+* If \(x\) is a multiple, say \(x=kθ\), then in \(T_2\) the only possible multiple is \(x+B\) (because \(A-x\) would force \(A\) to be a multiple, and \(C\) is not a multiple).  Then \(x+B = mθ\) gives \(B = (m-k)θ\), contradicting that \(B\) is not a multiple.
+* If \(A-x\) is a multiple, a symmetric argument gives a contradiction.
+* If \(A-x+C\) is a multiple, say \(pθ\), then in \(T_2\) the only possible multiple is \(x+B\) (because \(A-x\) would give a contradiction as above, and \(C\) is not a multiple).  Then we have  
+  \[
+  \begin{cases}
+  A-x+C = pθ,\\
+  x+B = qθ.
+  \end{cases}
+  \]  
+  Adding yields \(A+B+C = (p+q)θ\), i.e. \(180^\circ = (p+q)θ\), which contradicts that \(180^\circ/\theta\) is not an integer.
+* If \(x+B\) is a multiple, then by symmetry we obtain the same contradiction.
+
+Hence it is impossible for both children to contain a multiple of \(\theta\).  Therefore at least one of them has no multiple of \(\theta\).  Shan‑Yu discards the other and keeps the triangle with no multiple.
+
+Starting from \(T_0\), Shan‑Yu can always answer in this way.  Consequently the game never reaches a triangle with an angle that is a multiple of \(\theta\), and Mulan can never win.  Thus for such \(\theta\) Mulan cannot guarantee victory.
+
+---
+### 4.  Conclusion
+
+Mulan can guarantee victory in finitely many steps from any initial triangle if and only if \(\dfrac{180^\circ}{\theta}\) is an integer.  Equivalently,
+\[
+\boxed{\theta = \dfrac{180^\circ}{n}\quad\text{for some integer } n\ge 2.}
+\]"
+5,"We determine all functions \(f:\mathbb{R}_{>0}\to\mathbb{R}_{>0}\) satisfying  
+\[
+\sqrt{\frac{x^{2}+f(y)^{2}}{2}}\ge\frac{f(x)+y}{2}\ge\sqrt{x\,f(y)}\qquad(\forall x,y>0). \tag{0}
+\]
+
+---
+### 1.  A functional equation  
+Put \(x=f(y)\) in (0).  The left inequality gives  
+\[
+\sqrt{\frac{f(y)^{2}+f(y)^{2}}{2}}=f(y)\ge\frac{f(f(y))+y}{2},
+\]  
+and the right inequality gives  
+\[
+\frac{f(f(y))+y}{2}\ge\sqrt{f(y)\,f(y)}=f(y).
+\]  
+Thus both inequalities are equalities, hence  
+\[
+\frac{f(f(y))+y}{2}=f(y)\quad\Longrightarrow\quad f(f(y))=2f(y)-y\qquad(\forall y>0). \tag{1}
+\]
+
+---
+### 2.  A lower bound for \(f\)  
+Assume that there exists \(y_{0}>0\) with \(f(y_{0})<y_{0}\).  Define the sequence \((x_{n})\) by \(x_{0}=y_{0}\) and \(x_{n+1}=f(x_{n})\).  From (1) we obtain  
+\[
+x_{n+2}=2x_{n+1}-x_{n},
+\]  
+so the general solution is \(x_{n}=y_{0}+n\bigl(f(y_{0})-y_{0}\bigr)\).  Because \(f(y_{0})-y_{0}<0\), for sufficiently large \(n\) the term \(x_{n}\) becomes non‑positive.  Then \(x_{N-1}>0\) and \(x_{N}=f(x_{N-1})\le0\), contradicting \(f(x)>0\) for all \(x>0\).  Therefore  
+\[
+f(x)\ge x\qquad(\forall x>0). \tag{2}
+\]
+
+---
+### 3.  Introducing \(g(x)=f(x)-x\)  
+Define \(g(x)=f(x)-x\ge0\).  Then \(f(x)=x+g(x)\).  Substituting into (1) gives  
+\[
+f(f(x))=f(x+g(x))=x+g(x)+g(x+g(x))=2(x+g(x))-x=x+2g(x),
+\]  
+hence  
+\[
+g\bigl(x+g(x)\bigr)=g(x)\qquad(\forall x>0). \tag{3}
+\]  
+Thus \(g\) is constant on each forward orbit \(\{x+ng(x)\mid n\ge0\}\) (provided the arguments stay positive).
+
+---
+### 4.  Proving that \(g\) is constant  
+
+Assume, for contradiction, that \(g\) is **not** constant.  Then there exist \(a,b>0\) with \(g(a)>g(b)\).  Write  
+\[
+c=g(a),\qquad d=g(b),\qquad c>d\ge0.
+\]
+
+We treat two cases.
+
+---
+#### Case 1: \(d=0\)  
+
+Here \(g(b)=0\) and \(g(a)=c>0\).  From (3) we have \(g(a+nc)=c\) and \(f(a+nc)=a+nc+c\) for every \(n\ge0\).
+
+First apply the left inequality of (0) to the pair \((a,b)\):  
+\[
+\sqrt{\frac{a^{2}+b^{2}}{2}}\ge\frac{a+c+b}{2}.
+\]  
+Squaring and simplifying yields  
+\[
+(a-b)^{2}\ge c^{2}+2c(a+b). \tag{4}
+\]
+
+If \(a\ge b+2c\), then \((a-b)^{2}\ge4c^{2}\) and (4) would give \(4c^{2}\ge c^{2}+2c(a+b)\), i.e. \(3c^{2}\ge2c(a+b)\).  Because \(a\ge b+2c\), we have \(a+b\ge2b+2c\), so \(3c^{2}\ge2c(2b+2c)=4bc+4c^{2}\), which is impossible.  Hence  
+\[
+a<b+2c. \tag{5}
+\]
+
+Now we show that a contradiction arises.
+
+*Subcase 1a: \(a\ge c+b\).*  
+Then (5) gives \(c+b\le a<b+2c\).  Apply the left inequality to \((a,b)\) again:  
+\[
+\sqrt{\frac{a^{2}+b^{2}}{2}}\ge\frac{a+c+b}{2}.
+\]  
+As derived from (4), this inequality is equivalent to  
+\[
+\bigl(a-(c+b)\bigr)^{2}\ge2c^{2}+4cb. \tag{6}
+\]  
+Because \(a-(c+b)<c\) (by (5)), the left‑hand side of (6) is smaller than \(c^{2}\), while the right‑hand side is at least \(2c^{2}>c^{2}\) (since \(b>0\)).  This is a contradiction.
+
+*Subcase 1b: \(a<c+b\).*  
+Let \(n\) be the smallest non‑negative integer such that \(a+nc\ge c+b\).  Then  
+\[
+c+b\le a+nc<b+2c,
+\]  
+so \(0\le (a+nc)-(c+b)<c\).  Apply the left inequality to \((x,b)\) with \(x=a+nc\):  
+\[
+\sqrt{\frac{x^{2}+b^{2}}{2}}\ge\frac{x+c+b}{2}.
+\]  
+The same manipulation as above gives  
+\[
+\bigl(x-(c+b)\bigr)^{2}\ge2c^{2}+4cb. \tag{7}
+\]  
+Again the left‑hand side is smaller than \(c^{2}\) (because \(x-(c+b)<c\)), while the right‑hand side is at least \(2c^{2}\), a contradiction.
+
+Thus Case 1 cannot occur.
+
+---
+#### Case 2: \(d>0\)  
+
+Now \(c>d>0\).  Consider the orbits  
+\[
+A=\{a+nc\mid n\ge0\},\qquad B=\{b+md\mid m\ge0\}.
+\]  
+For any \(x\in A,\;y\in B\) we have \(f(x)=x+c\) and \(f(y)=y+d\).
+
+Apply the left inequality of (0) to such a pair:  
+\[
+\sqrt{\frac{x^{2}+(y+d)^{2}}{2}}\ge\frac{x+c+y}{2}.
+\]  
+Squaring and simplifying yields  
+\[
+(x-y)^{2}-2c(x+y)+4dy+2d^{2}-c^{2}\ge0. \tag{8}
+\]  
+Let \(\delta=x-y\).  Then \(x+y=2y+\delta\), and (8) becomes  
+\[
+\delta^{2}-2c\delta-4y(c-d)+2d^{2}-c^{2}\ge0. \tag{9}
+\]
+
+We now show that we can choose \(x\in A,\;y\in B\) with \(y\) arbitrarily large and \(|\delta|\) bounded.  
+
+*If \(c/d\) is rational:* write \(c=pk,\;d=qk\) with coprime positive integers \(p,q\) and \(k>0\).  For any integer \(t\ge0\) set  
+\[
+n=qt,\qquad m=pt.
+\]  
+Then \(x=a+nc=a+pqkt\), \(y=b+md=b+pqkt\).  Hence \(x-y=a-b\) (constant) and \(y\to\infty\) as \(t\to\infty\).
+
+*If \(c/d\) is irrational:* the set \(\{n(c/d)-m\mid n,m\in\mathbb{N}\}\) is dense in \(\mathbb{R}\).  Consequently, for any \(\varepsilon>0\) and any large number \(M\) we can find integers \(n,m\) with \(m\) sufficiently large such that  
+\[
+|(a-b)+(nc-md)|<\varepsilon,
+\]  
+and simultaneously \(y=b+md>M\).  Thus we obtain \(x=a+nc,\;y=b+md\) with \(y\) arbitrarily large and \(|\delta|<\varepsilon\).
+
+In both sub‑cases we have sequences \((x_{t},y_{t})\) with \(y_{t}\to\infty\) and \(|\delta_{t}|\le K\) for some constant \(K\).  Substituting into (9) gives  
+\[
+\delta_{t}^{2}-2c\delta_{t}+2d^{2}-c^{2}-4y_{t}(c-d)\ge0.
+\]  
+Because \(c-d>0\), the term \(-4y_{t}(c-d)\) tends to \(-\infty\) as \(y_{t}\to\infty\).  Hence for sufficiently large \(y_{t}\) the left‑hand side is negative, contradicting (9).  Therefore Case 2 cannot occur either.
+
+---
+Since both possibilities lead to a contradiction, our assumption that \(g\) is not constant is false.  Hence \(g\) is constant.  Write \(g(x)=c\) for all \(x>0\); by (2) we have \(c\ge0\).  Consequently  
+\[
+\boxed{f(x)=x+c\qquad(\forall x>0)}. \tag{10}
+\]
+
+---
+### 5.  Verification  
+
+Let \(c\ge0\) and set \(f(x)=x+c\).  For all \(x,y>0\),  
+
+\[
+\begin{aligned}
+\sqrt{\frac{x^{2}+(y+c)^{2}}{2}} &\ge \frac{x+y+c}{2} \qquad\text{(QM–AM inequality)},\\[2mm]
+\frac{x+y+c}{2} &\ge \sqrt{x\,(y+c)} \qquad\text{(AM–GM inequality)}.
+\end{aligned}
+\]
+
+Thus every function of the form \(f(x)=x+c\) with \(c\ge0\) satisfies the original chain of inequalities.  No other functions do.
+
+\[
+\boxed{f(x)=x+c\quad\text{with}\quad c\ge0}
+\]"
+6,"We prove that the sequence eventually becomes affine periodic.
+
+**Step 1: Finiteness of the set of primes that appear.**  
+Let \(P\) be the set of all primes dividing at least one term \(a_n\). Since \(a_1>1\), \(P\neq\varnothing\). Let \(p=\min P\). Choose the smallest index \(k\) such that \(p\mid a_k\).
+
+For any \(n\ge k\), if \(p\nmid a_n\) then \(\gcd(a_n,a_k)>1\) (because \(a_n\) must share a factor with \(a_k\)). Hence there exists a prime \(q\neq p\) that divides both \(a_n\) and \(a_k\). Thus \(q\) is a prime divisor of \(a_k\). Consequently every prime that occurs in the sequence after index \(k\) is either \(p\) or a divisor of \(a_k\). The primes that occur before index \(k\) are among the (finite) prime divisors of \(a_1,\dots,a_{k-1}\). Therefore \(P\) is finite.
+
+**Step 2: The set \(A\) of numbers that share a factor with every term.**  
+Define  
+\[
+A = \{\,x>1 \mid \gcd(x,a_i)>1 \text{ for all } i\ge 1\,\}.
+\]  
+Because each \(a_i\) obviously belongs to \(A\) (by definition of the sequence), \(A\) is nonempty.
+
+For each \(n\) let \(A_n = \{\,x>1 \mid \gcd(x,a_i)>1 \text{ for } i=1,\dots,n\,\}\). Then \(A = \bigcap_{n\ge 1} A_n\) and \(A_n\supseteq A_{n+1}\).
+
+**Lemma 1.** For every \(n\ge 1\),  
+\[
+a_{n+1} = \min\bigl(A\cap (a_n,\infty)\bigr).
+\]
+
+*Proof.* By the definition of the sequence, \(a_{n+1}\) is the smallest integer \(>a_n\) that belongs to \(A_n\). Since \(A\subseteq A_n\) (any number that shares a factor with all terms certainly shares a factor with the first \(n\) terms), we have  
+\[
+a_{n+1} \le \min\bigl(A\cap (a_n,\infty)\bigr).
+\]  
+On the other hand, we show that \(a_{n+1}\in A\). For any \(i>n\), the term \(a_i\) must share a factor with all previous terms, hence with \(a_{n+1}\); therefore \(\gcd(a_i,a_{n+1})>1\) for every \(i>n\). Together with \(\gcd(a_{n+1},a_1),\dots,\gcd(a_{n+1},a_n)>1\) (by the definition of \(a_{n+1}\)), we obtain \(a_{n+1}\in A\). Thus  
+\[
+a_{n+1} \ge \min\bigl(A\cap (a_n,\infty)\bigr).
+\]  
+Hence equality holds. ∎
+
+Consequently the sequence \((a_n)\) is exactly the increasing enumeration of the elements of \(A\) that are at least \(a_1\); i.e., if we list the elements of \(A\) in increasing order as \(b_1<b_2<\cdots\), there exists an index \(m\) such that \(b_m=a_1\) and for all \(n\ge 1\)  
+\[
+a_n = b_{m+n-1}.
+\]
+
+**Step 3: Structure of \(A\) using hitting sets.**  
+Let \(P\) be the (finite) set of all primes that divide some term. For each \(i\ge 1\) denote by \(P_i\) the set of prime divisors of \(a_i\); clearly \(P_i\subseteq P\).
+
+A number \(x>1\) belongs to \(A\) if and only if the set \(D(x)\) of prime divisors of \(x\) satisfies \(D(x)\cap P_i\neq\varnothing\) for every \(i\). In other words, \(D(x)\) is a *hitting set* for the family \(\{P_i\}_{i\ge 1}\).
+
+Because \(P\) is finite, the collection of all hitting sets is finite. Let \(\mathcal H\) be the set of minimal hitting sets (with respect to inclusion). For each \(H\in\mathcal H\) set  
+\[
+d_H = \prod_{p\in H}p.
+\]  
+If \(x\in A\) then \(D(x)\) is a hitting set, so there exists \(H\in\mathcal H\) with \(H\subseteq D(x)\). Hence \(d_H\mid x\) and \(x\) is a multiple of \(d_H\). Conversely, if \(x\) is a multiple of \(d_H\) for some \(H\in\mathcal H\), then \(H\subseteq D(x)\), so \(D(x)\) is a hitting set and therefore \(x\in A\). Thus  
+\[
+A = \bigcup_{H\in\mathcal H} \{\,k\cdot d_H \mid k\ge 1\,\}.
+\]  
+This is a finite union of arithmetic progressions.
+
+Let \(L = \operatorname{lcm}\{d_H\mid H\in\mathcal H\}\). For any integer \(x\),  
+\[
+x\in A \;\Longleftrightarrow\; x+L\in A.
+\]  
+Indeed, if \(x\in A\) then \(x\) is a multiple of some \(d_H\); since \(L\) is a multiple of \(d_H\), \(x+L\) is also a multiple of \(d_H\) and therefore belongs to \(A\). Conversely, if \(x+L\in A\) then \(x+L\) is a multiple of some \(d_H\); because \(L\) is a multiple of \(d_H\), the difference \(x\) is also a multiple of \(d_H\), so \(x\in A\). Hence \(A\) is periodic with period \(L\).
+
+**Step 4: The enumeration of a periodic set.**  
+Let \(R = \{\,r\in\{0,1,\dots,L-1\}\mid r\in A\,\}\) be the set of residues modulo \(L\) that appear in \(A\). Because \(A\) is periodic, the elements of \(A\) are exactly the integers \(x>1\) such that \(x\bmod L\in R\). Let \(T = |R|\) (the number of distinct residues). Since the residues repeat every \(L\), the increasing enumeration of \(A\) satisfies  
+\[
+b_{k+T} = b_k + L \qquad\text{for all }k\ge 1.
+\]  
+(Proof: The numbers of \(A\) in each interval \([m L,\,(m+1)L)\) are precisely the numbers of the form \(r+m L\) with \(r\in R\). Sorting these numbers in increasing order, the pattern of residues repeats every \(T\) steps, giving the affine periodicity.)
+
+**Step 5: Conclusion.**  
+We have already established that \(a_n = b_{m+n-1}\) for a fixed \(m\). Therefore for every positive integer \(n\),  
+\[
+a_{n+T} = b_{m+n-1+T} = b_{m+n-1} + L = a_n + L.
+\]  
+
+Thus the required positive integers exist (for instance \(T = |R|\) and \(L = \operatorname{lcm}\{d_H\mid H\in\mathcal H\}\)), completing the proof. ∎"

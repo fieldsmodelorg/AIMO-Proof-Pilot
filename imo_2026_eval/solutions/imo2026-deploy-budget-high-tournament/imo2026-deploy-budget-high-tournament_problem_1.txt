@@ -1,0 +1,53 @@
+Let the numbers on the blackboard be \(a_1,\dots,a_{2026}\) (each \(>1\)). For a positive integer \(x\) denote by \(v_p(x)\) the exponent of a prime \(p\) in the prime factorization of \(x\) (\(v_p(x)\ge 0\)).  
+A move chooses two numbers \(m,n>1\) and replaces them by  
+\[
+\gcd(m,n),\qquad \frac{\operatorname{lcm}(m,n)}{\gcd(m,n)}.
+\]  
+For a fixed prime \(p\), if \(e=v_p(m)\) and \(f=v_p(n)\) then  
+\[
+v_p(\gcd(m,n))=\min(e,f),\qquad v_p\!\left(\frac{\operatorname{lcm}(m,n)}{\gcd(m,n)}\right)=|e-f|.
+\]  
+Thus the operation on the multiset of exponents for a given prime is \((e,f)\mapsto(\min(e,f),|e-f|)\).
+
+---
+### (a) Termination and uniqueness of the final number \(>1\)
+
+Define the total exponent sum  
+\[
+S=\sum_{i=1}^{2026}\sum_{p} v_p(a_i).
+\]  
+\(S\) is a non‑negative integer.
+
+Consider a move on two numbers \(m,n\) with exponents \(e,f\) for each prime. For a prime \(p\) the sum of the exponents changes from \(e+f\) to \(\min(e,f)+|e-f|=\max(e,f)\). Hence the total change is  
+\[
+\Delta S = \sum_p\bigl(\max(e,f)-(e+f)\bigr)= -\sum_p\min(e,f)\le 0.
+\]  
+\(\Delta S=0\) exactly when \(\min(e,f)=0\) for every prime \(p\), i.e. when \(m\) and \(n\) are coprime.  
+
+If \(m\) and \(n\) are coprime, then \(\gcd(m,n)=1\) and \(\operatorname{lcm}(m,n)/\gcd(m,n)=\operatorname{lcm}(m,n)>1\), so the two numbers become \(1\) and \(\operatorname{lcm}(m,n)\). Consequently the number \(N\) of integers \(>1\) on the board decreases by exactly \(1\). If \(m\) and \(n\) are not coprime, then \(\Delta S<0\) and \(N\) may stay the same or decrease.
+
+Thus the pair \((S,N)\) strictly decreases in the lexicographic order at every move: either \(S\) decreases, or \(S\) stays the same and \(N\) decreases. Since \(S\ge0\) and \(N\le2026\), the process cannot continue indefinitely; after finitely many moves no move is possible, i.e. there are no two numbers \(>1\) on the board. Hence at most one integer \(>1\) remains.
+
+We now show that the state cannot consist of all \(1\)’s. For each prime \(p\) let \(g_p\) be the greatest common divisor of the set \(\{v_p(a_i)\}\) (if all exponents are \(0\) we set \(g_p=0\)).  
+
+**Invariant.** \(g_p\) is unchanged by a move.  
+Indeed, let \(e,v_p(m)\) and \(f=v_p(n)\). The new exponents are \(\min(e,f)\) and \(|e-f|\), and  
+\[
+\gcd(\min(e,f),|e-f|)=\gcd(e,f).
+\]  
+The \(\gcd\) of the whole multiset is \(\gcd\bigl(\gcd(e,f),\text{the other exponents}\bigr)\). Because the new pair’s \(\gcd\) equals the old pair’s \(\gcd\), the overall \(\gcd\) does not change. Hence \(g_p\) is invariant throughout the process.
+
+Initially there is at least one number \(>1\); therefore for some prime \(p\) we have \(v_p(a_i)>0\) for some \(i\), and consequently \(g_p\ge1\). If the process terminated with all numbers equal to \(1\), then every exponent would be \(0\) and we would have \(g_p=0\), contradicting the invariance. Hence the termination state cannot consist of all \(1\)’s; there must be exactly one integer \(>1\). This proves part (a).
+
+---
+### (b) The value \(M\) does not depend on the choices
+
+At the end there is exactly one integer \(M>1\). For a fixed prime \(p\), the multiset of exponents of \(p\) is \(\{v_p(M),0,\dots,0\}\); the \(\gcd\) of these exponents is \(v_p(M)\). By the invariance proved above,
+\[
+v_p(M)=g_p,
+\]  
+where \(g_p\) is the \(\gcd\) of the initial exponents of \(p\). Therefore  
+\[
+M = \prod_{p} p^{g_p}.
+\]  
+The number \(g_p\) depends only on the initial multiset (the \(\gcd\) of the exponents of \(p\) in the initial numbers). Consequently \(M\) is uniquely determined by the initial numbers and does not depend on the particular sequence of moves. This proves part (b).

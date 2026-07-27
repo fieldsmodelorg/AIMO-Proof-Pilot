@@ -1,0 +1,186 @@
+id,proof
+5,"Let \(\mathbb{R}_{>0}\) denote the positive real numbers.  
+We determine all functions \(f:\mathbb{R}_{>0}\to\mathbb{R}_{>0}\) satisfying  
+
+\[
+\sqrt{\frac{x^{2}+f(y)^{2}}{2}}\ge\frac{f(x)+y}{2}\ge\sqrt{xf(y)}\qquad(\forall x,y>0). \tag{∗}
+\]
+
+---
+
+### 1.  A functional equation
+
+Put \(x=f(y)\) in \((∗)\).  
+From the left inequality we obtain  
+
+\[
+\sqrt{\frac{f(y)^{2}+f(y)^{2}}{2}}=f(y)\ge\frac{f(f(y))+y}{2}
+\;\Longrightarrow\; f(f(y))\le 2f(y)-y .
+\]
+
+From the right inequality we obtain  
+
+\[
+\frac{f(f(y))+y}{2}\ge\sqrt{f(y)f(y)}=f(y)
+\;\Longrightarrow\; f(f(y))\ge 2f(y)-y .
+\]
+
+Hence equality holds for every \(y>0\):
+
+\[
+\boxed{f(f(y))=2f(y)-y}\qquad(\forall y>0). \tag{1}
+\]
+
+---
+
+### 2.  Differentiability of \(f\)
+
+Fix an arbitrary \(y_{0}>0\) and set  
+
+\[
+x = f(y_{0}) > 0 .
+\]
+
+For any \(t\) with \(y_{0}+t>0\) and \(|t|\) sufficiently small (so that \(x+t/2>0\)), apply the two inequalities of \((∗)\) with \((x,y)=(x,\,y_{0}+t)\).
+
+**Left inequality:**
+
+\[
+\sqrt{\frac{x^{2}+f(y_{0}+t)^{2}}{2}}
+\ge\frac{f(x)+y_{0}+t}{2}.
+\]
+
+Because \(f(x)=f(f(y_{0}))\), by (1) we have \(f(x)=2f(y_{0})-y_{0}=2x-y_{0}\).  
+Thus  
+
+\[
+\frac{f(x)+y_{0}+t}{2}=x+\frac{t}{2}.
+\]
+
+Squaring (both sides are positive) gives  
+
+\[
+\frac{x^{2}+f(y_{0}+t)^{2}}{2}\ge\left(x+\frac{t}{2}\right)^{2}
+\;\Longrightarrow\; f(y_{0}+t)^{2}\ge x^{2}+2xt+\frac{t^{2}}{2}.
+\]
+
+Since \(f(y_{0}+t)>0\),
+
+\[
+f(y_{0}+t)\ge\sqrt{x^{2}+2xt+\frac{t^{2}}{2}}. \tag{2}
+\]
+
+**Right inequality:**
+
+\[
+\frac{f(x)+y_{0}+t}{2}\ge\sqrt{x\,f(y_{0}+t)}
+\;\Longrightarrow\; x+\frac{t}{2}\ge\sqrt{x\,f(y_{0}+t)} .
+\]
+
+Squaring again yields  
+
+\[
+\left(x+\frac{t}{2}\right)^{2}\ge x\,f(y_{0}+t)
+\;\Longrightarrow\; f(y_{0}+t)\le x+t+\frac{t^{2}}{4x}. \tag{3}
+\]
+
+Now consider the difference quotient  
+
+\[
+\frac{f(y_{0}+t)-x}{t}.
+\]
+
+For \(t>0\) we have from (2) and (3)
+
+\[
+\frac{\sqrt{x^{2}+2xt+\frac{t^{2}}{2}}-x}{t}
+\le \frac{f(y_{0}+t)-x}{t}
+\le 1+\frac{t}{4x}. \tag{4}
+\]
+
+The function \(h(t)=\sqrt{x^{2}+2xt+\frac{t^{2}}{2}}\) is differentiable at \(0\) with  
+
+\[
+h'(0)=\frac{2x}{2\sqrt{x^{2}}}=1,
+\]
+
+hence \(\displaystyle\lim_{t\to0^{+}}\frac{h(t)-x}{t}=1\).  By the squeeze theorem,  
+
+\[
+\lim_{t\to0^{+}}\frac{f(y_{0}+t)-x}{t}=1.
+\]
+
+For \(t<0\) we reverse the inequalities in (2) and (3) because division by a negative number flips the sign:
+
+\[
+1+\frac{t}{4x}
+\le \frac{f(y_{0}+t)-x}{t}
+\le \frac{\sqrt{x^{2}+2xt+\frac{t^{2}}{2}}-x}{t}. \tag{5}
+\]
+
+Again \(\displaystyle\lim_{t\to0^{-}}\frac{h(t)-x}{t}=1\), so the squeeze theorem gives  
+
+\[
+\lim_{t\to0^{-}}\frac{f(y_{0}+t)-x}{t}=1.
+\]
+
+Consequently \(f\) is differentiable at \(y_{0}\) and \(f'(y_{0})=1\).  Since \(y_{0}\) was arbitrary,
+
+\[
+f'(y)=1\qquad(\forall y>0).
+\]
+
+Integrating, we obtain  
+
+\[
+f(y)=y+c \qquad(\text{for some constant }c). \tag{6}
+\]
+
+---
+
+### 3.  Determining the constant \(c\)
+
+Because \(f(y)>0\) for every \(y>0\), (6) implies \(y+c>0\) for all \(y>0\).  If \(c<0\) then for sufficiently small \(y\) we would have \(y+c\le0\), contradicting positivity.  Hence  
+
+\[
+c\ge 0.
+\]
+
+---
+
+### 4.  Verification
+
+Let \(c\ge0\) and set \(f(x)=x+c\).  For all \(x,y>0\) we check the original inequalities.
+
+*Left inequality:*
+
+\[
+\sqrt{\frac{x^{2}+(y+c)^{2}}{2}}
+\ge\frac{x+y+c}{2}
+\iff 2x^{2}+2(y+c)^{2}\ge (x+y+c)^{2}
+\iff (x-y-c)^{2}\ge0,
+\]
+
+which is true.
+
+*Right inequality:*
+
+\[
+\frac{x+y+c}{2}\ge\sqrt{x(y+c)}
+\iff (x+y+c)^{2}\ge 4x(y+c)
+\iff (x-y-c)^{2}\ge0,
+\]
+
+again true.
+
+Thus every function of the form \(f(x)=x+c\) with \(c\ge0\) satisfies \((∗)\).
+
+---
+
+### 5.  Conclusion
+
+All functions \(f:\mathbb{R}_{>0}\to\mathbb{R}_{>0}\) satisfying the given conditions are exactly  
+
+\[
+\boxed{f(x)=x+c\quad\text{with }c\ge0}.
+\]"

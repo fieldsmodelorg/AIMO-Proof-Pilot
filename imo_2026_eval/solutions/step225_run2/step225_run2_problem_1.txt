@@ -1,0 +1,41 @@
+Let the numbers on the board be \(x_1,\dots,x_{2026}\). In a move we choose two indices \(i\neq j\) with \(x_i>1,\;x_j>1\) and replace them by \(\gcd(x_i,x_j)\) and \(\frac{\operatorname{lcm}(x_i,x_j)}{\gcd(x_i,x_j)}\).
+
+(a) We prove that after finitely many moves exactly one integer greater than \(1\) remains.
+
+Define
+\[
+L = \bigl(\text{product of all numbers on the board}\bigr) \;+\; \bigl(\text{number of integers }>1\bigr).
+\]
+The product is a positive integer and the number of integers \(>1\) is an integer between \(0\) and \(2026\); hence \(L\) is a positive integer.
+
+We show that in every move \(L\) strictly decreases. Let the two chosen numbers be \(m,n>1\) and let \(g=\gcd(m,n)\). After the move they become \(g\) and \(\frac{\operatorname{lcm}(m,n)}{g}\). The product of the two numbers changes from \(mn\) to \(g\cdot\frac{\operatorname{lcm}(m,n)}{g}=\operatorname{lcm}(m,n)=\frac{mn}{g}\). Hence the total product is multiplied by \(\frac1g\).
+
+Consider three cases.
+
+* If \(g=1\): the product stays the same, the two numbers become \(1\) and \(mn\). Thus the number of integers \(>1\) decreases by exactly \(1\); \(L\) decreases by \(1\).
+
+* If \(g>1\) and \(m\neq n\): the product is divided by \(g\ge2\), so it decreases by at least \(1\) (in fact by at least half of its original value). The two new numbers are both \(>1\) (because \(g>1\) and \(\frac{\operatorname{lcm}(m,n)}{g}>1\) when \(m\neq n\)). Hence the number of integers \(>1\) does not change; \(L\) strictly decreases.
+
+* If \(g>1\) and \(m=n\): the two numbers become \(m\) and \(1\). The product decreases from \(m^2\) to \(m\) and the number of integers \(>1\) decreases by \(1\); \(L\) strictly decreases.
+
+In every move \(L\) decreases by at least \(1\). Since \(L\) is a positive integer, the process cannot continue indefinitely; it must stop after finitely many moves.
+
+When the process stops no further move is possible, so there are at most one integer greater than \(1\) (otherwise a move could be performed). We now show that there cannot be zero integers greater than \(1\).
+
+For each prime \(p\) consider the exponents of \(p\) in the prime factorizations of the numbers on the board. Let \(G_p\) be the greatest common divisor of all these exponents (if a number is \(1\) its exponent is \(0\); the gcd of a set containing zeros is the gcd of the non‑zero ones, and we set \(\gcd(0,\dots,0)=0\)). We claim that \(G_p\) is invariant under a move.
+
+Take two numbers whose exponents for \(p\) are \(a\) and \(b\). After the move they are replaced by numbers whose exponents for \(p\) are \(\min(a,b)\) and \(|a-b|\). Since \(\gcd(\min(a,b),|a-b|)=\gcd(a,b)\), the gcd of the two numbers’ exponents is unchanged. The gcd of the whole multiset of exponents is the gcd of the gcd of the two numbers and the exponents of the remaining numbers; therefore \(G_p\) does not change.
+
+Initially all numbers are \(>1\), so for at least one prime \(p\) we have \(G_p\ge1\). If at the moment the process stopped all numbers were \(1\), then every exponent would be \(0\) and consequently \(G_p=0\) for every prime \(p\), contradicting the invariance. Hence when the process stops there is at least one integer greater than \(1\). Together with the earlier observation that there are at most one such integer, we conclude that after finitely many moves exactly one integer \(M>1\) remains on the board.
+
+(b) Let \(M\) be the unique integer greater than \(1\) that appears when the process stops. For each prime \(p\) let \(e_p\) be the exponent of \(p\) in \(M\). All other numbers are \(1\), so their exponents for \(p\) are \(0\). The multiset of exponents for \(p\) consists of \(e_p\) and \(2025\) zeros; the gcd of this multiset is \(e_p\) (since \(\gcd(e_p,0)=e_p\)). Because \(G_p\) is invariant, we have
+\[
+e_p = G_p.
+\]
+Thus
+\[
+M = \prod_{p} p^{G_p},
+\]
+where the product runs over all primes \(p\). The right‑hand side depends only on the initial multiset of numbers (the initial exponents determine each \(G_p\)), not on the particular sequence of moves. Therefore the value of \(M\) is independent of the choices made during the process.
+
+This completes the proof of both parts.
