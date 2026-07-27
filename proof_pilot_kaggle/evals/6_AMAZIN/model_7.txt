@@ -1,0 +1,405 @@
+================================================================================
+                         SOLUTION AND COMPLETE PROOF
+================================================================================
+
+FINAL ANSWER:  p + q + r = 31070
+   (with x + 2016 z = 19699 + 11368*sqrt(3), i.e. p=19699, q=11368, r=3.)
+
+The solution has four parts.
+
+   PART I.   Reduce the geometry to two scalar identities:
+                 CP/CH  and  H_C Q / A Q.
+   PART II.  Translate "n is amazing" into a number-theoretic condition.
+   PART III. Solve the resulting Pell equation; describe the list (n_i).
+   PART IV.  Carry out the asymptotic analysis and compute p+q+r.
+
+Throughout, B = angle CBA = 75 degrees.  We write the triangle's angles as
+A = angle BAC, B = 75, C = angle BCA, with A + B + C = 180, so A = 105 - C.
+Acuteness (all angles < 90, with B = 75 < 90) is equivalent to
+
+        15 < C < 90        (since A = 105 - C < 90  <=>  C > 15).            (1)
+
+
+================================================================================
+PART I.  THE TWO GEOMETRIC IDENTITIES
+================================================================================
+
+-------------------------------------------------------------------------------
+I.1  Four points on one circle centred at B.
+-------------------------------------------------------------------------------
+Recall the classical fact: the reflection of the orthocentre H in a side of the
+triangle lies on the circumcircle, and lies on the altitude through the opposite
+vertex.  Hence:
+
+  * The reflection of H in line BC lies on Omega and on the altitude AH; this is
+    exactly the second intersection H_A of line AH with Omega.
+  * The reflection of H in line AB lies on Omega and on the altitude CH; this is
+    exactly the second intersection H_C of line CH with Omega.
+
+Reflection in a line through B preserves distance to B, so
+
+        B H_A = B H = B H_C .
+
+By definition BX = BH as well.  Therefore the four points
+
+        H ,  H_A ,  H_C ,  X
+
+all lie on the circle  omega  centred at B with radius rho := BH.  Moreover
+
+  * line AH is the chord  H H_A  of omega  (A, H, H_A are collinear),
+  * line CH is the chord  H H_C  of omega  (C, H, H_C are collinear).
+
+Thus P = (line X H_A) ∩ (line H H_C) and Q = (line X H_C) ∩ (line H H_A) are
+intersections of chords/secants of the single circle omega.
+
+-------------------------------------------------------------------------------
+I.2  Coordinates.
+-------------------------------------------------------------------------------
+Place B = (0,0) with line BC along the positive x-axis, C on the positive
+x-axis, and A in the upper half plane.  With AB = c, BC = a:
+
+        C_vertex = (a, 0),     A_vertex = (c cos B, c sin B).
+
+Altitude from A is the vertical line x = c cos B; altitude from C is
+perpendicular to AB through C_vertex.  Solving, the orthocentre is
+
+        H = ( c cos B ,  (a - c cos B) (cos B / sin B) ).
+
+Using the Law of Sines a = 2R sin A, c = 2R sin C and
+sin A - sin C cos B = sin(B+C) - sin C cos B = sin B cos C, one gets the clean form
+
+        H = 2R cos B * ( sin C , cos C ).
+
+In particular BH = 2R cos B =: rho.  Since all quantities CP/CH, H_C Q / AQ that we
+need are scale-invariant ratios, we normalise rho = 1 (equivalently 2R cos B = 1);
+absolute lengths are restored by an overall scaling at the very end.  With rho = 1:
+
+        H    = ( sin C ,  cos C ),
+        H_A  = ( sin C , -cos C )        (reflection of H in the x-axis = BC),
+        X    = ( -1 , 0 )                (BX = 1, opposite side of B from C),
+        A_vertex = ( sin C ,  sin C tan B ),
+        C_vertex = ( sin A / cos B , 0 ),     A = 105 - C.
+
+For H_C: reflection in line AB (the ray at angle B from the x-axis) sends the point
+at angle (90 - C) [the angle of H] to angle 2B - (90 - C) = 2B - 90 + C.  With
+B = 75 this is 60 + C, so
+
+        H_C = ( cos(60 + C) ,  sin(60 + C) ).
+
+Introduce the half-angle
+        u = C/2,        u in (7.5 deg, 45 deg),   u != 30 deg,
+the exclusion u = 30 (i.e. C = 60) being the degenerate case where X H_A || CH.
+
+-------------------------------------------------------------------------------
+I.3  The ratio CP/CH.
+-------------------------------------------------------------------------------
+A direct computation of P = (line X H_A) ∩ (line C_vertex H) gives, after
+simplification,
+
+        CP/CH = | sin(B + C) + cos B | / | sin(B - C) - cos B |.
+
+Write cos B = sin(90 - B) and apply sum-to-product to numerator and denominator:
+
+  sin(B+C) + sin(90 - B) = 2 sin(45 + C/2) cos(B + C/2 - 45),
+  sin(B-C) - sin(90 - B) = 2 cos(45 - C/2) sin(B - C/2 - 45).
+
+Since sin(45 + C/2) = cos(45 - C/2), these factors cancel and (with B = 75):
+
+        CP/CH = cos(30 + u) / | sin(30 - u) | .                              (2)
+
+Setting w := tan u and dividing top and bottom by cos u,
+
+        cos(30+u) = (sqrt3 cos u - sin u)/2,
+        sin(30-u) = (cos u - sqrt3 sin u)/2,
+
+we obtain the convenient form
+
+        sqrt(n) = CP/CH = | (sqrt3 - w) / (1 - sqrt3 w) | = | phi(w) |,       (3)
+
+where phi(t) := (sqrt3 - t)/(1 - sqrt3 t).  Note phi is an involution: phi(phi(t)) = t.
+
+Sign of phi(w):  for C < 60 (u < 30, w < tan30 = 1/sqrt3) both sqrt3 - w and
+1 - sqrt3 w are positive, so phi(w) > 0; for C > 60 (u > 30) we get phi(w) < 0.
+
+-------------------------------------------------------------------------------
+I.4  The ratio H_C Q / A Q.
+-------------------------------------------------------------------------------
+Q lies on the altitude AH, which is the vertical line x = sin(2u); thus
+A_vertex and Q have equal x-coordinate and
+
+        AQ = | (A_vertex)_y - Q_y | .
+
+Parametrise line X H_C by  X + t (H_C - X);  its x-coordinate is
+-1 + t (cos(60+C) + 1), so the value at x = sin C = sin 2u is
+
+        t_Q = (sin 2u + 1) / (cos(60 + 2u) + 1).
+
+Hence, using sin(60+2u)/(1 + cos(60+2u)) = tan(30 + u) (half-angle),
+
+        Q_y = t_Q sin(60 + 2u) = (sin 2u + 1) tan(30 + u),
+        (A_vertex)_y = sin 2u tan 75.
+
+Therefore
+        AQ = | sin 2u tan75 - (sin 2u + 1) tan(30 + u) |.                     (4)
+
+For H_C Q, note H_C is the point t = 1 of the same parametrisation, so
+H_C Q = | t_Q - 1 | * | H_C - X |.  Now
+        | H_C - X | = sqrt( (cos(60+2u)+1)^2 + sin^2(60+2u) )
+                    = sqrt( 2 + 2 cos(60+2u) ) = 2 | cos(30 + u) |,
+        t_Q - 1 = ( sin 2u - cos(60+2u) ) / ( cos(60+2u) + 1 )
+                = ( sin 2u - cos(60+2u) ) / ( 2 cos^2(30 + u) ),
+so
+
+        H_C Q = | sin 2u - cos(60 + 2u) | / | cos(30 + u) |.                  (5)
+
+Multiplying (4) by cos(30+u) (> 0 since 30+u in (37.5, 75)) and forming the ratio
+(the factor cos(30+u) cancels) gives
+
+        H_C Q / A Q
+          = | sin 2u - cos(60+2u) |
+            / | sin 2u tan75 cos(30+u) - (sin2u + 1) sin(30+u) |.
+
+Now pass to w = tan u using sin 2u = 2w/(1+w^2), cos 2u = (1-w^2)/(1+w^2), and
+sin u = w cos u, cos^2 u = 1/(1+w^2).  Elementary algebra (each step is a finite
+rational identity) yields
+
+        sin 2u - cos(60+2u) = ( w^2 + (4 + 2 sqrt3) w - 1 ) / ( 2 (1 + w^2) )
+                            =: P(w) / ( 2 (1 + w^2) ),
+
+and, writing  D(w) := 4(1 + sqrt3) w (1 - w) - (1 + sqrt3 w)(1 + w^2),
+
+        sin2u tan75 cos(30+u) - (sin2u+1) sin(30+u)
+                            = ( 1 / ( 2 (1 + w^2) ) ) * sqrt(1+w^2) * D(w).
+
+Hence
+
+        H_C Q / A Q = | P(w) | * sqrt(1 + w^2) / | D(w) |.                    (6)
+
+-------------------------------------------------------------------------------
+I.5  Simplification of (6) via the involution phi.
+-------------------------------------------------------------------------------
+Let m := phi(w) = (sqrt3 - w)/(1 - sqrt3 w); since phi is an involution we also have
+w = phi(m) = (sqrt3 - m)/(1 - sqrt3 m), and by (3)
+
+        m = +sqrt(n)  on the branch C < 60,     m = -sqrt(n)  on the branch C > 60. (7)
+
+Substituting w = (sqrt3 - m)/(1 - sqrt3 m) into P, D and 1+w^2 gives the
+polynomial identities (verified by direct expansion):
+
+        P(w) * (1 - sqrt3 m)^2 =  4 K ,
+        D(w) * (1 - sqrt3 m)^3 = -8 K ,
+        (1 + w^2) * (1 - sqrt3 m)^2 = 4 ( m^2 - sqrt3 m + 1 ),
+
+        where  K = (1 + sqrt3) m^2 - 2(2 + sqrt3) m + (2 + sqrt3).
+
+The first two give  D(w) (1 - sqrt3 m) = -2 P(w),  i.e.  P(w)/D(w) = -(1 - sqrt3 m)/2.
+Plugging into (6):
+
+        ( H_C Q / A Q )^2 = ( P/D )^2 (1 + w^2)
+                          = ( (1 - sqrt3 m)^2 / 4 ) * ( 4 (m^2 - sqrt3 m + 1) / (1 - sqrt3 m)^2 )
+                          = m^2 - sqrt3 m + 1.
+
+Therefore, using (7),
+
+  ******************************************************************************
+  *                                                                          *
+  *   H_C Q / A Q  =  sqrt( n + 1 - sqrt(3n) )    if  C < 60   (m = +sqrt n)  *
+  *   H_C Q / A Q  =  sqrt( n + 1 + sqrt(3n) )    if  C > 60   (m = -sqrt n)  *
+  *                                                                          *
+  *   and          CP / CH  =  sqrt n .                                       *
+  *                                                                          *
+  ******************************************************************************
+
+(These were confirmed numerically against the raw coordinate construction, e.g.
+n=147 on the branch C>60 gives H_CQ/AQ = 13 exactly; n=33075 on C<60 gives 181.)
+
+-------------------------------------------------------------------------------
+I.6  Which n are attainable by an acute triangle (range of each branch).
+-------------------------------------------------------------------------------
+By (2), n = (CP/CH)^2 = cos^2(30+u)/sin^2(30-u) is a continuous function of
+C in (15, 90).
+
+  * Branch 2 (C in (60, 90), u in (30, 45)):  as C -> 60+, n -> +infinity;
+    as C -> 90-, n -> 1+.  Monotonic, so this branch realises every n in (1, +inf).
+
+  * Branch 1 (C in (15, 60), u in (7.5, 30)):  as C -> 60-, n -> +infinity;
+    as C -> 15+ (the right-triangle limit A -> 90) n -> n_0 := cos^2(37.5)/sin^2(22.5)
+    = 4.2980...; monotonic, so this branch realises every n in (n_0, +inf).
+
+In particular every integer n >= 2 is realised on branch 2, and every integer
+n >= 5 ( > n_0 ) is also realised on branch 1.  All such triangles are acute by (1).
+
+
+================================================================================
+PART II.  TRANSLATING "AMAZING" INTO NUMBER THEORY
+================================================================================
+
+Fix an odd positive integer n.  For a triangle of a given shape, both AQ and
+H_C Q scale linearly with the overall size, while their ratio
+r := H_C Q / A Q is fixed.  Hence:
+
+  * One can always rescale so that AQ is a positive integer; so an n-good
+    triangle (CP/CH = sqrt n and AQ a positive integer) exists whenever the
+    shape with CP/CH = sqrt n exists, i.e. for every n >= 2 by Part I.6.
+
+  * Such a triangle can be rescaled so that BOTH AQ and H_C Q are positive
+    integers  <=>  r = H_C Q / A Q is a positive rational number.
+    (If r = h/a in lowest terms, scale so AQ = a, H_C Q = h; conversely two
+    integers force their ratio rational.)
+
+Therefore:
+
+   n is amazing  <=>  there is a valid (acute) branch giving CP/CH = sqrt n
+                      for which  r = H_C Q / A Q  is rational.
+
+By Part I.5, r^2 = n + 1 -/+ sqrt(3n)  (minus on branch 1, plus on branch 2).
+For r to be rational we need r^2 rational, hence sqrt(3n) rational, hence
+
+        3n is a perfect square   <=>   n = 3 j^2   for some positive integer j.
+
+Then sqrt(3n) = 3 j and
+
+        branch 1:  r^2 = 3 j^2 - 3 j + 1 ,
+        branch 2:  r^2 = 3 j^2 + 3 j + 1 .
+
+Since n must be ODD and n = 3 j^2, we need j ODD.  Also r^2 is then a positive
+integer, and r rational forces r to be a positive integer.  Recalling the branch
+ranges (Part I.6): branch 2 is available for all j >= 1 (n = 3 j^2 >= 3 > 1),
+branch 1 only for n = 3 j^2 > n_0 = 4.298..., i.e. for odd j >= 3.
+
+   ----------------------------------------------------------------------------
+   An odd n is amazing  <=>  n = 3 j^2 with j a positive odd integer, and
+        (a)  3 j^2 + 3 j + 1  is a perfect square           [branch 2, any j],
+              or
+        (b)  3 j^2 - 3 j + 1  is a perfect square AND j >= 3 [branch 1].
+   ----------------------------------------------------------------------------
+
+(The case j = 1, n = 3, has only branch 2 available, and 3+3+1 = 7 is not a
+square, so n = 3 is NOT amazing.)
+
+
+================================================================================
+PART III.  THE PELL EQUATION AND THE LIST OF AMAZING ODD n
+================================================================================
+
+Both conditions reduce to the Pell equation  X^2 - 3 Y^2 = 1:
+
+   3 j^2 + 3 j + 1 = k^2  <=>  3(2j+1)^2 + 1 = (2k)^2  <=>  (2k)^2 - 3(2j+1)^2 = 1,
+   3 j^2 - 3 j + 1 = k^2  <=>  3(2j-1)^2 + 1 = (2k)^2  <=>  (2k)^2 - 3(2j-1)^2 = 1.
+
+So in both cases we need X^2 - 3 Y^2 = 1 with X = 2k EVEN and Y = 2j +/- 1 ODD.
+
+All solutions of X^2 - 3 Y^2 = 1 are X + Y sqrt3 = (2 + sqrt3)^t, t = 0,1,2,...:
+        t :  0    1    2     3      4       5        6
+       (X): 1    2    7    26     97     362     1351
+       (Y): 0    1    4    15     56     209     780  ...
+X is even exactly for ODD t, and for odd t the corresponding Y is odd.  The
+even-X solutions are therefore (X,Y) = (2,1), (26,15), (362,209), (5042,2911),
+(70226,40545), ...; list their Y-values as
+
+        Y^(0)=1, Y^(1)=15, Y^(2)=209, Y^(3)=2911, Y^(4)=40545, Y^(5)=564719, ...
+        Y^(s+1) = 14 Y^(s) - Y^(s-1)     (the recurrence for stepping by (2+sqrt3)^2 = 7+4 sqrt3).
+
+Reading off j:
+
+   branch 2 ( Y = 2j+1, j = (Y-1)/2 ):  j = 0, 7, 104, 1455, 20272, 282359, ...
+   branch 1 ( Y = 2j-1, j = (Y+1)/2 ):  j = 1, 8, 105, 1456, 20273, 282360, ...
+
+Keeping only ODD j with the required validity (branch 1 needs j >= 3, so j = 1 is
+dropped) and merging in increasing order gives precisely
+
+        j  =  7,  105,  1455,  20273,  282359,  ...
+
+(an independent brute-force search over all odd j confirms these are exactly the
+amazing odd j, with no others below 3,000,000).  In closed form, writing s = 1,2,3,...
+
+        j_s = ( Y^(s) + (-1)^s ) / 2 ,     Y^(0)=1, Y^(1)=15, Y^(s+1)=14 Y^(s) - Y^(s-1),
+
+so that branch 2 supplies the odd-s terms (j_1=7, j_3=1455, ...) and branch 1 the
+even-s terms (j_2=105, j_4=20273, ...).  The amazing odd integers, in increasing
+order, are
+
+        n_s = 3 j_s^2 ,     s = 1, 2, 3, ... :
+
+        n_1 = 147,
+        n_2 = 33075,
+        n_3 = 6351075,
+        n_4 = 1232983587,
+        n_5 = 239179814643,  ...
+
+(For example j_1 = 7: 3*49 + 3*7 + 1 = 169 = 13^2, giving r = 13; j_2 = 105:
+3*105^2 - 3*105 + 1 = 32761 = 181^2, giving r = 181.)
+
+
+================================================================================
+PART IV.  ASYMPTOTICS:  COMPUTING x, z AND THE ANSWER
+================================================================================
+
+Put  alpha = 7 + 4 sqrt3,  beta = 7 - 4 sqrt3 = 1/alpha  (the roots of
+t^2 - 14t + 1).  Solving the recurrence for Y^(s) with Y^(0)=1, Y^(1)=15:
+
+        Y^(s) = A alpha^s + B beta^s ,
+        A = 1/2 + sqrt3/3 ,   B = 1/2 - sqrt3/3 .
+
+(Indeed A + B = 1 and A alpha + B beta = 7 + 4 sqrt3 (A - B) = 7 + 4 sqrt3 * (2 sqrt3 / 3)
+= 7 + 8 = 15.)
+
+Since
+        n_s = 3 j_s^2 = (3/4) ( Y^(s) + (-1)^s )^2 ,
+
+the EVEN-indexed subsequence ( s = 2i, so (-1)^s = +1 ) is
+
+        n_{2i} = (3/4) ( Y^(2i) + 1 )^2
+               = (3/4) ( A alpha^{2i} + B beta^{2i} + 1 )^2 .
+
+Dividing by (alpha^4)^i = alpha^{4i}:
+
+        n_{2i} / (alpha^4)^i = (3/4) ( A + (B beta^{2i} + 1) alpha^{-2i} )^2 .   (8)
+
+Because beta^{2i} -> 0 and alpha^{-2i} -> 0, the right side tends to (3/4) A^2.
+Moreover B beta^{2i} + 1 > 0 for all i (|B| < 1, 0 < beta < 1), so the bracketed
+correction term (B beta^{2i}+1) alpha^{-2i} is strictly positive and decreasing
+to 0; thus the sequence in (8) decreases strictly to its limit (3/4) A^2.
+
+Determining x:
+   * If x < alpha^4, then n_{2i}/x^i -> +infinity, so a constant y > 0 exists.
+   * If x = alpha^4, then by (8) n_{2i}/x^i -> (3/4)A^2 > 0, again a valid y exists.
+   * If x > alpha^4, then n_{2i}/x^i -> 0, so NO positive y can work.
+   Hence the largest admissible value is
+
+        x = alpha^4 = (7 + 4 sqrt3)^4 .
+
+Determining z (for this x):  we need the largest z with n_{2i} >= z x^i for all
+large i, i.e. z = inf over large i of n_{2i}/x^i.  By (8) this sequence decreases
+strictly to (3/4) A^2, so it stays > (3/4)A^2 (the bound holds for all large i with
+z = (3/4)A^2), while any z' > (3/4)A^2 is eventually violated.  Hence
+
+        z = (3/4) A^2 .
+
+Now compute.  First
+
+        (7 + 4 sqrt3)^2 = 49 + 48 + 56 sqrt3 = 97 + 56 sqrt3,
+        x = (97 + 56 sqrt3)^2 = 9409 + 9408 + 2*97*56 sqrt3 = 18817 + 10864 sqrt3.
+
+Next, with A = 1/2 + sqrt3/3,
+
+        A^2 = 1/4 + 2*(1/2)*(sqrt3/3) + 1/3 = 1/4 + 1/3 + sqrt3/3 = 7/12 + sqrt3/3,
+        z = (3/4) A^2 = 7/16 + sqrt3/4 .
+
+Finally
+
+        x + 2016 z = (18817 + 10864 sqrt3) + 2016 * ( 7/16 + sqrt3/4 )
+                   = 18817 + 10864 sqrt3 + 882 + 504 sqrt3
+                   = 19699 + 11368 sqrt3 .
+
+This is of the form p + q sqrt(r) with
+
+        p = 19699 ,   q = 11368 ,   r = 3   (square-free).
+
+Therefore
+
+        p + q + r = 19699 + 11368 + 3 = 31070 .
+
+================================================================================
+                              ANSWER:  31070
+================================================================================

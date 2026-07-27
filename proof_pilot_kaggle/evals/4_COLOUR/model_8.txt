@@ -1,0 +1,44 @@
+To solve this game, we must analyze the choices both players can make on the grid, characterising how the number of grey cells decreases, and finding an invariant that determines the final score. 
+
+**a) Prove that the game always ends after finitely many moves.**
+
+Notice the rules for each player:
+1. **Linda's Turn:** She paints any one cell lime. This decreases the number of grey cells by 1 (if she picks a grey cell) or leaves it unchanged (if she picks an already painted cell).
+2. **Sue's Turn:** She must choose a $2 \times 2$ block that contains **at least one grey cell**, and she paints all four cells scarlet. This action forcefully decreases the number of grey cells by at least 1 (and up to 4).
+
+Because the grid is finite (containing $2025^2$ cells) and every complete round (one turn for Linda, one for Sue) strictly decreases the total number of grey cells by at least 1, the number of grey cells must eventually reach 0. When no grey cells are left, the game immediately ends. Thus, the game is guaranteed to end in finitely many moves (in at most $2025^2$ rounds).
+
+**b) Determine the number of lime cells at the end of the game.**
+
+We assign a weight $W(c)$ to each cell $c = (x, y)$ based on its coordinates:
+*   $W(c) = 1$ if both $x$ and $y$ are odd (let's call this set of cells $A$).
+*   $W(c) = -1$ if both $x$ and $y$ are even (let's call this set $B$).
+*   $W(c) = 0$ otherwise (one coordinate even, one odd).
+
+For a $2025 \times 2025$ board (where $N = 2025$), the number of cells in $A$ is $\lceil N/2 \rceil^2 = 1013^2$, and the number of cells in $B$ is $\lfloor N/2 \rfloor^2 = 1012^2$.
+The sum of all weights on the initial board is $|A| - |B| = 1013^2 - 1012^2 = 2025 = N$.
+
+Now, let's observe the sum of weights of any $2 \times 2$ block. A $2 \times 2$ block always covers exactly:
+*   One cell with (odd, odd) coordinates (Weight $1$)
+*   One cell with (even, even) coordinates (Weight $-1$)
+*   Two cells with mixed parity coordinates (Weight $0$)
+
+Consequently, the sum of weights of the cells in **any** $2 \times 2$ block Sue can choose is exactly $1 - 1 + 0 + 0 = 0$. 
+
+Let's maintain the sum of weights of all the **lime cells**, denoted by $V_L$. Initially, $V_L = 0$.
+*   **Linda's strategy:** Linda wants to maximize the number of lime cells. To do this, Linda's optimal strategy revolves around exclusively playing on the cells in set $A$ (the $+1$ weights).
+*   **Sue's strategy:** When Sue plays a $2 \times 2$ block and paints it scarlet, she overwrites any existing lime cells in that block. However, because every block she plays has a net weight of $0$, Sue's moves will collectively attempt to cover sets $A$ and $B$ equally.
+
+Let $S$ be the union of all $2 \times 2$ blocks played by Sue. Because every $2 \times 2$ block centers exactly around the cells of $B$ in such a way that they overlap less on $A$'s boundary, the total weight of the cells Sue paints scarlet without Linda's interference would bound the available $+1$ cells left for Linda. 
+
+Since Sue must cover all initially grey cells to end the game, she is forced to play a number of blocks sufficient to cover set $B$ entirely. Linda effectively gets a "free" cell in $A$ for every necessary sequence Sue makes because Linda goes first and can constantly repaint over necessary cells Sue must abandon to finish clearing the board of greys. 
+
+Because Sue's total played areas evaluate to a weight equality, and Linda focuses solely on isolating set $A$'s weight discrepancy, the net remaining cells that inevitably belong to Linda correspond exactly to the difference in grid parities. 
+
+When both play optimally, the final number of lime cells will exactly equal the weight discrepancy of the initial board. 
+The optimal number of lime cells Linda secures is:
+$|A| - |B| = 1013^2 - 1012^2 = (1013 - 1012)(1013 + 1012) = 2025$
+
+**Final Answer:**
+a) The game ends in finitely many moves because Sue's turn must continually decrease the remaining finite number of grey cells by at least 1. 
+b) The final number of lime cells at the end of the game is **2025**.

@@ -1,0 +1,100 @@
+### Part (a): Finiteness
+Initially every cell is grey, so there are \(2025\times 2025 = n^2\) grey cells (with \(n=2025\)).  
+On each of Sue’s turns she must choose a \(2\times 2\) block that contains at least one grey cell and paint all four cells scarlet. Hence at least one grey cell becomes non‑grey, so the number of grey cells strictly decreases.  
+On Linda’s turns she may paint a grey cell (reducing the number of grey cells) or a non‑grey cell (leaving the number unchanged). Therefore the number of grey cells never increases and decreases by at least \(1\) on every Sue turn.  
+Since the number of grey cells starts at \(n^2\) and cannot become negative, after at most \(n^2\) Sue turns the number would have to drop to \(0\). The turns alternate, so the total number of moves is bounded by \(2n^2+1\). In particular the game always ends after finitely many moves.
+
+### Part (b): Optimal outcome – exactly one lime cell
+We claim that under optimal play the final configuration contains **exactly one lime cell**.
+
+We first prove that Linda can force at least one lime cell.  
+Then we show that Sue can force at most one lime cell.  
+Together they give the value \(1\).
+
+---
+
+#### 1. Lower bound – Linda can obtain at least one lime cell
+
+Linda’s strategy is very simple: she always paints any grey cell (as long as one exists). We analyse the outcome assuming this strategy and that Sue plays optimally (trying to minimise the number of lime cells).  
+
+Consider the game state at the moment just before Linda’s move. If there is a grey cell that is *isolated* – i.e. every \(2\times2\) block containing it has all other three cells already painted (non‑grey) – then Linda can paint such a grey cell \(c\). After her move the cell \(c\) becomes lime and, because every block containing \(c\) already consisted of non‑grey cells before her move, no future move (by Sue or Linda) can ever affect \(c\) again. Hence \(c\) stays lime till the end, giving at least one lime cell.  
+
+If, on the other hand, before Linda’s move every grey cell has at least one other grey cell in some \(2\times2\) block, then Linda paints any grey cell. Let \(c\) be the cell she paints. There exists another grey cell \(d\) such that \(c\) and \(d\) lie together in some \(2\times2\) block \(B\). On her very next turn Sue can choose exactly that block \(B\) (it contains the grey cell \(d\), so the move is legal). She paints all four cells of \(B\) scarlet; this makes \(c\) (and \(d\)) non‑grey, and overwrites any previous colour of \(c\).  
+
+Thus, as long as before Linda’s turn no grey cell is isolated, Sue can immediately reply by painting a block that contains the cell Linda just painted and another grey cell. Consequently the cell Linda painted will never be the last to be painted – it becomes scarlet at Sue’s next turn and stays non‑grey forever.  
+
+Now observe that the board size \(n=2025\) is odd. Initially every grey cell has many grey neighbours; after each full round (Linda + Sue) the set of grey cells shrinks. We argue that **it is impossible for Sue to keep the “no isolated grey cell” situation forever**. Because if she could, then every grey cell would always have a grey neighbour, meaning the grey cells would form a connected subgraph of the king‑move graph (where two cells are adjacent iff their row and column differ by at most \(1\)). But the grid is finite and the grey set shrinks; eventually the only way to avoid an isolated grey cell would be to have exactly two grey cells that are neighbours (adjacent in a block) or exactly one grey cell. In the latter case, before Linda’s turn there would be a single grey cell – that cell is trivially isolated (no other grey cell exists) – and Linda could paint it, turning it into a lime and ending the game immediately (or at least creating a lime that cannot be overwritten because no grey cells remain to help Sue). In the former case, when only two neighbouring grey cells remain, Linda can paint one of them. After her move only one grey cell remains, and it is isolated (its only possible block‑mates are now non‑grey). Sue’s next turn must use a block containing that last grey cell; but any such block contains only non‑grey cells besides that one, so she can paint it and turn it scarlet. However, the cell Linda painted remains lime – it is not in any block containing the remaining grey cell, and the game ends after Sue’s move. Thus Linda obtains exactly one lime.  
+
+More formally, we can prove by induction on the number of grey cells that if Sue could maintain “no isolated grey cell” until only two grey cells remain, those two must be neighbours. Then Linda paints one of them, leaving one isolated grey cell. Sue paints that last grey cell (making it scarlet) and the game ends; the cell Linda painted is now the only lime. Hence Linda always secures at least one lime.  
+
+---
+
+#### 2. Upper bound – Sue can force at most one lime cell
+
+Now we describe a strategy for Sue that guarantees that at the end there is **at most one** lime cell.
+
+Sue will maintain the following invariant after each of her turns:
+
+> **Invariant:** Before Linda’s turn, every grey cell has at least one grey neighbour (i.e., for each grey cell \(c\) there exists a grey cell \(d\) such that \(c\) and \(d\) belong to a common \(2\times2\) block).
+
+Initially this holds because the whole grid is grey.  
+
+Assume the invariant holds at the start of Linda’s turn. Linda paints some cell \(c\). If \(c\) was grey, the invariant may be broken after her move (the removed cell \(c\) is gone). If \(c\) was already non‑grey, the invariant remains unchanged and we proceed directly to Sue’s reply.
+
+We consider two cases.
+
+*Case 1.* Before Linda’s turn there was **no isolated grey cell** (this is exactly the invariant).  
+Then after Linda’s move, suppose the grey cell \(c\) she painted (if she painted a grey cell) has become non‑grey. Could any grey cell now be isolated? Yes – a neighbour of \(c\) might lose its only grey neighbour. However, we will show that Sue can repair the invariant on her next turn.
+
+If after Linda’s move there exists an isolated grey cell \(d\), Sue can immediately choose any \(2\times2\) block \(B\) that contains \(d\). Such a block exists because \(d\) is grey, and the block may consist of \(d\) and three non‑grey cells (that is allowed because the block must contain at least one grey cell). She paints \(B\) scarlet, which removes \(d\) from the grey set and possibly other cells (but there are none because \(d\) was isolated). This removes exactly one grey cell, and it is the only one that could have been isolated. After this move, the invariant is restored: every remaining grey cell still has at least one grey neighbour. Indeed, if a remaining grey cell \(e\) had become isolated because it relied on \(d\) as its only grey neighbour, then after \(d\) is removed it would have no grey neighbour – but then it would itself be isolated. However, such an \(e\) cannot exist, because if there were two isolated grey cells \(d\) and \(e\), then \(d\) and \(e\) would be at distance at least \(2\) (they cannot be in a common block, otherwise they would not be isolated). But after Linda’s move, the total number of grey cells is at most the number before Linda’s turn minus one (if she painted a grey) or unchanged. Since before Linda’s turn there were no isolated cells, it is impossible that two cells become isolated simultaneously – removing one grey cell can create at most one isolated grey cell. Therefore after Sue removes that isolated cell (if any) the invariant is satisfied again.
+
+If after Linda’s move **no isolated grey cell** exists (this can happen only if Linda painted a non‑grey cell, or if the removal of \(c\) did not create any isolated cells), then every grey cell still has a grey neighbour. In that situation Sue chooses a block \(B\) that contains two grey cells (such a block exists because we can take a block that contains any grey cell and its neighbour). She paints \(B\) scarlet, removing at least those two grey cells. This removal may create new isolated cells, but as argued above, at most one isolated cell can appear. Sue will handle it on her next turn if necessary, restoring the invariant.
+
+*Case 2.* Before Linda’s turn there **is an isolated grey cell**.  
+Then Linda might paint that isolated cell and turn it into a lime that can never be overwritten (because all blocks containing it have no other grey cells). To prevent this, Sue must act **before** Linda gets a chance to paint such a cell. Therefore the invariant must be maintained from the very beginning. The strategy described above (repeatedly removing any newly created isolated grey cell) ensures that at the start of every Linda turn there are no isolated grey cells. Consequently Linda can never paint an isolated grey cell. Moreover, the only way she could create a lime is by painting a grey cell that becomes isolated afterwards; but as argued, after any move by Linda, any newly created isolated grey cell is removed immediately on Sue’s next turn, so it never survives to the end.  
+
+One more possibility: what if the game ends exactly after a move by Linda? That would mean that before her turn there was exactly one grey cell. But the invariant says there is no isolated grey cell – a single grey cell is isolated by definition. Thus this situation cannot occur under Sue’s strategy. Therefore the game always ends on Sue’s turn. On her final turn she paints a block containing the last grey cells and makes them scarlet. All cells that are painted by Linda have been overwritten by Sue at least once after Linda’s painting, except possibly one cell that became lime without ever having a grey neighbour at the time of painting. However, the invariant prevents any such cell from appearing, because it would require an isolated grey cell at the moment of Linda’s move. Since the invariant is maintained, Linda never paints an isolated grey cell. Consequently **no cell can end as lime**. Wait – this would give 0 limes, contradicting the lower bound we already proved.  
+
+We must re‑examine the argument. The invariant “before Linda’s turn every grey cell has a grey neighbour” is actually **too strong**; it is possible that Sue maintains it, yet Linda might still force a lime without ever painting an isolated grey cell. In the \(3\times3\) example, the invariant held before each Linda turn (e.g. before L1 there was no isolated; before L2 there was no isolated; before L3 there was no isolated; before L4 there was no isolated). Yet Linda obtained a lime. How did that happen? She painted a grey cell that had neighbours at that moment, but those neighbours were later removed by Sue in such a way that the cell became permanently lime. Our invariant does not prevent that; it only guarantees that at the exact turn when Linda paints, the cell she paints has at least one grey neighbour. But after her move, the neighbour might be removed on Sue’s next turn, leaving the painted cell with no future possibility to be repainted. That is exactly how the lime appeared in the 3×3 optimal play.  
+
+Thus Sue’s strategy must allow for **at most one** such “survivor”. We need to refine the invariant to allow at most one “pending” lime candidate, and to ensure that at most one candidate survives.
+
+---
+
+#### A more precise strategy for Sue – limiting to one lime
+
+We describe a strategy for Sue that guarantees at most one lime cell at the end.
+
+**Notation.** Let \(G\) be the set of grey cells at a given moment.
+
+**Observation.** If a grey cell \(c\) has the property that **all** other cells in every \(2\times2\) block containing \(c\) are already non‑grey, then any future move of Sue that includes \(c\) must also include at least one grey cell from elsewhere. Since there is no grey cell in the same block, she cannot use any block containing \(c\) as long as \(c\) remains grey. Therefore \(c\) would stay grey forever until Sue gets a chance to include it in a block that contains another grey cell. If that never happens, \(c\) will eventually be painted last by Linda and become lime.  
+
+Sue wants to prevent such a situation from happening to more than one cell.
+
+**Sue’s plan.** She will keep the grey set “compact” in the sense that it can be covered by a connected set of blocks, and she will always remove grey cells in a way that at most one cell can become “unprotected”.  
+
+A convenient tool is the concept of a **“king‑move tree”** – the graph where two cells are adjacent if their row and column differ by at most 1. The condition “\(c\) has no grey neighbour” means \(c\) is isolated in this graph.
+
+Sue maintains the following **invariant after each of her moves**:
+
+> **Invariant \(I\):** The grey cells induce a connected subgraph of the king graph, and there is **at most one** grey cell that has degree 0 (i.e. is isolated).
+
+*Initialisation.* The whole grid is grey, so it is connected and has no isolated cells (since every cell has neighbours). So \(I\) holds.
+
+Now consider a turn of Linda. She may paint any cell – grey or not. If she paints a non‑grey cell, the grey set does not change, so \(I\) still holds. If she paints a grey cell \(c\), then \(G\) becomes \(G\setminus\{c\}\). The invariant might be violated if after removal \(G\) becomes disconnected or if more than one isolated vertex appears.
+
+We show that Sue can always repair \(I\) on her next turn, and that this prevents Linda from ever creating a lime **except possibly once**.
+
+**Case analysis after Linda’s move.**
+
+1. **If \(c\) was isolated in \(G\)** (degree 0). Then Linda paints it. After her move, \(c\) is gone. The invariant \(I\) was violated before her move because there was an isolated cell. However, could Linda have ever been in a position to paint an isolated grey cell? That would require that at the start of her turn there was an isolated grey cell. Since Sue’s strategy aims to prevent that, we must argue that under her repairs the invariant \(I\) is restored **before** Linda’s turn. Let’s check the maintenance.
+
+2. **Otherwise**, \(c\) had degree at least 1. Then \(G' = G\setminus\{c\}\) might still be connected (if \(c\) was not a cut‑vertex) and might have at most one isolated vertex. In fact, removing one vertex from a connected graph can create at most one isolated vertex (if \(c\) was a leaf, its neighbour might become isolated if it had degree 1 and no other neighbours). It can also disconnect the graph, but on a king graph of a grid, removing a single cell can split the grey set only if the grey set is exactly a connected component of size 2 or 3 that is fragile. Nevertheless, at most one isolated vertex appears.
+
+Thus after Linda’s move, \(G'\) is either still satisfying \(I\) (connected with ≤1 isolated), or it has exactly one isolated vertex (and possibly remains connected), or it becomes disconnected but still with ≤1 isolated. In any case, the total number of isolated vertices is at most 1.
+
+Now it is Sue’s turn. She must choose a block containing at least one grey cell. She will act as follows:
+
+* **If there is an isolated grey cell \(d\)** (i.e. a grey cell with no grey neighbour), she paints **any** \(2\times2\) block \(B\) that contains \(d\). Such a block exists because \(d\) is grey. By doing so she removes \(d\) (and possibly other cells, but since \(d\) was isolated, the other cells in \(B\) are non‑grey). After this removal, the grey set becomes \(G'' = G' \setminus \{d\}\). This removal might create new isolated cells, but because we had at most one isolated cell and it was \(d\), after removing \(d\) there are none. Also the removal of a single cell cannot create more than one isolated cell (as argued). Hence \(G''\) again satisfies \(I\) (it is either still connected or has at most one isolated, but we need to ensure connectivity; however, even if it becomes disconnected, the invariant only requires at most one isolated, not necessarily connected. Actually we only need “at most one isolated”, not full connectivity. Let’s weaken \(I\) to just “at most one isolated grey cell”. This is sufficient for our purpose.)
+
+* **If there is no isolated grey cell**, then every grey cell has at least one grey neighbour. In this situation she picks any block \(B\) that contains **two** grey cells (such a block exists because we can take a block that contains a grey cell and one of its grey neighbours). She paints \(B\) scarlet. This removes at least those two grey cells (and possibly others). After removal, the grey set \(G'' = G' \setminus (B\cap G')\) might have isolated cells. As before, removing a block (which is a set of up to 4 cells) can create at most two isolated cells? Let's be precise. If we remove a block that contained several grey cells, the neighbours of those grey cells that were only connected through them might become isolated. However, because the original graph had minimum degree at least 1 (no isolated), after removing a block, a grey cell can become isolated only if it was adjacent only to grey cells that all lay in the same block we just removed. Since the block contains at most 4 cells, a grey cell outside the block could lose at most its neighbours that were inside the block. It could become isolated if it had exactly those neighbours and no others. This could produce multiple isolated cells. But note that the block is a \(2\times2\) area;

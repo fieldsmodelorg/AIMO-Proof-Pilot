@@ -1,0 +1,18 @@
+The game always ends because each Sue move reduces the number of grey cells by at least one, and there are finitely many grey cells. The players alternate, so only finitely many moves occur.
+
+Let \(n=2025\) (odd). Colour a cell *black* if both its row and column indices are odd; otherwise colour it *white*. There are \(B=\bigl(\frac{n+1}{2}\bigr)^2=1013^2\) black cells. Every \(2\times2\) block contains exactly one black cell.
+
+- **Linda can obtain at least \(B-1\) lime cells.**  
+  She first paints any white cell (this move gives no final lime). Then she never paints a black cell unless it has become *safe* – meaning all \(2\times2\) blocks containing it have already been used by Sue. Whenever she has a turn, if a safe black cell exists she paints it lime.  
+  Because she never first‑paints a black cell, every black cell must be first‑painted by Sue. Each Sue move can first‑paint at most one black cell, so the number \(s\) of Sue moves satisfies \(s\ge B\).  
+  For a black cell the last Sue move that contains it makes it safe. The final Sue move (after which no grey cell remains) is the last for its black cell; the other \(B-1\) black cells have their last Sue move among the first \(s-1\) Sue moves. The turn order is \(L_1,S_1,\dots,L_s,S_s\) (the game ends after \(S_s\)). Hence after each of those \(B-1\) Sue moves there is a Linda turn \(L_{t+1}\) on which she paints the newly safe black cell, turning it lime. Thus she obtains at least \(B-1\) lime cells.
+
+- **Sue can force at most \(B-1\) lime cells.**  
+  There exists a collection \(\mathcal C\) of \(B\) distinct \(2\times2\) blocks covering every cell, and each black cell occurs in exactly one block of \(\mathcal C\) (e.g. for black cells \((i,j)\) with \(i,j<n\) take block \((i,j)\); adjust for the last row/column accordingly). Order the blocks so that for every black cell its block from \(\mathcal C\) is used after any other block that also contains it (e.g. decreasing row+col).  
+  Sue uses these blocks in that order. Whenever a block from \(\mathcal C\) is used, its black cell becomes safe. The last used block finishes the last grey cell, so the game ends after a Sue move. Thus the turn sequence is \(L_1,S_1,\dots,L_s,S_s\) with \(s\le B\). Linda has \(s\) turns; the first turn cannot produce a final lime, and each later turn can contribute at most one lime. Hence the number of lime cells is at most \(s-1\le B-1\).
+
+Both bounds agree, so under optimal play the number of lime cells is \(B-1\). For \(n=2025\),
+
+\[
+B-1 = \left(\frac{2025+1}{2}\right)^2-1 = 1013^2-1 = 1\,026\,168.
+\]

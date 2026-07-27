@@ -1,0 +1,5 @@
+the game always ends after finitely many moves because each of sue's moves reduces the number of grey cells by at least one and the total number of grey cells is finite. linda's moves do not increase the number of grey cells. since the grid is finite and every move by sue strictly decreases the grey cells when necessary the game must terminate.
+
+when both players play optimally linda can ensure at least one lime cell by painting the final grey cell if it is her turn however sue can force the last move to be hers in some scenarios but due to the odd grid size and optimal play the number of lime cells at the end is always one. thus the final answer is
+
+\boxed{1}

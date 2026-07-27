@@ -1,0 +1,287 @@
+**Notation.**  
+Let  
+
+\[
+P(x)=x^{7}+a_{6}x^{6}+a_{5}x^{5}+a_{4}x^{4}+a_{3}x^{3}+a_{2}x^{2}+a_{1}x+a_{0}
+\]
+
+with \(a_{i}\in\mathbb Z\).  By hypothesis all coefficients are odd, and  
+
+\[
+|a_{i}|<2025^{2}\qquad (i=0,1,\dots ,7).
+\]
+
+Moreover, for every \(i\) we have \(P(|a_{i}|)=0\).
+
+---
+
+### 1.  First consequences of the condition  
+
+Since \(|a_{i}|\) is an integer root of \(P\), the Rational Root Theorem tells us that \(|a_{i}|\) divides the constant term \(a_{0}\).  Hence  
+
+\[
+|a_{i}|\mid a_{0}\qquad(i=0,1,\dots ,7). \tag{1}
+\]
+
+Define  
+
+\[
+M=\max\{|a_{i}|:0\le i\le 7\}.
+\]
+
+Because \(M\) itself is one of the numbers \(|a_{i}|\), (1) gives \(M\mid a_{0}\).  Write \(a_{0}=M\cdot k\) with \(k\in\mathbb Z\).  Then \(|a_{0}|=|k|\,M\).  But \(|a_{0}|\le M\) (by definition of \(M\)), so \(|k|\le 1\).  Since \(a_{0}\neq0\) (it is odd), \(k\neq0\); therefore \(|k|=1\) and  
+
+\[
+a_{0}= \varepsilon M,\qquad \varepsilon=\pm1. \tag{2}
+\]
+
+Thus \(M=|a_{0}|\) and \(M\) is odd (because \(a_{0}\) is odd).
+
+The hypothesis applied to \(|a_{7}|=1\) yields \(P(1)=0\); hence \(1\) is a root.  
+Applied to \(|a_{0}|=M\) we obtain \(P(M)=0\).
+
+---
+
+### 2.  The case \(M=1\)
+
+If \(M=1\), then every \(|a_{i}|\le 1\) and, being odd positive integers, they must all equal \(1\).  Hence \(a_{i}\in\{\pm1\}\) for \(i=0,\dots ,6\).
+
+The condition \(P(1)=0\) becomes  
+
+\[
+1+a_{6}+a_{5}+a_{4}+a_{3}+a_{2}+a_{1}+a_{0}=0
+\;\Longleftrightarrow\;
+a_{6}+a_{5}+a_{4}+a_{3}+a_{2}+a_{1}+a_{0}=-1.
+\]
+
+Thus we need seven numbers each \(\pm1\) whose sum is \(-1\).  This happens exactly when four of them are \(-1\) and three are \(+1\).  The number of such tuples \((a_{0},\dots ,a_{6})\) is \(\binom{7}{3}=35\).
+
+All these polynomials clearly satisfy the required conditions (all coefficients are odd, \(|a_{i}|=1<2025^{2}\), and \(1\) is a root).  Hence there are **\(35\) good polynomials with \(M=1\)**.
+
+---
+
+### 3.  The case \(M>1\)
+
+Now \(M\) is an odd integer \(>1\); therefore \(M\ge 3\).
+
+Because \(M\) is a root we can factor  
+
+\[
+P(x)=(x-M)\,Q(x),
+\]
+
+where \(Q\) is a monic polynomial of degree \(6\) with integer coefficients.  Then  
+
+\[
+Q(0)=\frac{P(0)}{-M}=\frac{a_{0}}{-M}=-\varepsilon = \pm1. \tag{3}
+\]
+
+Suppose some \(|a_{i}|\) satisfies \(d>1\) and \(d\neq M\).  Then \(d\) is a root of \(P\) and \(d\neq M\); consequently \((x-d)\) must divide \(Q(x)\), so \(d\) is an integer root of \(Q\).  By the Rational Root Theorem applied to \(Q\), \(d\) divides \(Q(0)=\pm1\), which forces \(d=\pm1\), contradicting \(d>1\).  Therefore **every** \(|a_{i}|\) is either \(1\) or \(M\).  Hence  
+
+\[
+a_{i}\in\{\pm1,\pm M\}\qquad(i=0,1,\dots ,6). \tag{4}
+\]
+
+We already know \(a_{0}=\varepsilon M\) with \(\varepsilon=\pm1\).  The two equations \(P(1)=0\) and \(P(M)=0\) give  
+
+\[
+\sum_{i=0}^{6} a_{i} = -1, \tag{5}
+\]
+\[
+M^{7}+a_{6}M^{6}+a_{5}M^{5}+a_{4}M^{4}+a_{3}M^{3}+a_{2}M^{2}+a_{1}M+a_{0}=0. \tag{6}
+\]
+
+Substituting \(a_{0}=\varepsilon M\) into (6) and dividing by \(M\;(M\neq0)\) we obtain  
+
+\[
+\varepsilon + a_{1} + a_{2}M + a_{3}M^{2} + a_{4}M^{3} + a_{5}M^{4} + a_{6}M^{5} = -M^{6}. \tag{7}
+\]
+
+---
+
+#### 3.1  Solving the system
+
+We analyse (7) modulo \(M\).  All terms containing \(M\) are multiples of \(M\); hence  
+
+\[
+\varepsilon + a_{1}\equiv 0 \pmod M. \tag{8}
+\]
+
+Because \(\varepsilon=\pm1\) and \(a_{1}\in\{\pm1,\pm M\}\), we examine the possibilities.  
+If \(a_{1}=\pm M\) then \(\varepsilon+a_{1}= \pm1\pm M\); its absolute value is \(|M\pm1|\), which is not a multiple of \(M\) (since \(M\ge3\) and \(M\nmid(M\pm1)\)).  Thus \(a_{1}\) cannot be \(\pm M\).  Therefore \(a_{1}=\pm1\), and (8) forces \(\varepsilon+a_{1}=0\); consequently  
+
+\[
+a_{1}= -\varepsilon. \tag{9}
+\]
+
+Insert \(a_{1}=-\varepsilon\) into (7):
+
+\[
+\varepsilon + (-\varepsilon) + a_{2}M + a_{3}M^{2} + a_{4}M^{3} + a_{5}M^{4} + a_{6}M^{5} = -M^{6}
+\]
+\[
+\Longrightarrow\quad a_{2}M + a_{3}M^{2} + a_{4}M^{3} + a_{5}M^{4} + a_{6}M^{5} = -M^{6}.
+\]
+
+Divide by \(M\):
+
+\[
+a_{2} + a_{3}M + a_{4}M^{2} + a_{5}M^{3} + a_{6}M^{4} = -M^{5}. \tag{10}
+\]
+
+Modulo \(M\) we get  
+
+\[
+a_{2}\equiv 0 \pmod M. \tag{11}
+\]
+
+Since \(a_{2}\in\{\pm1,\pm M\}\), (11) forces \(a_{2}=\pm M\).  Write \(a_{2}= \delta_{2}M\) with \(\delta_{2}=\pm1\).
+
+Substituting into (10) and dividing by \(M\):
+
+\[
+\delta_{2} + a_{3} + a_{4}M + a_{5}M^{2} + a_{6}M^{3} = -M^{4}. \tag{12}
+\]
+
+Modulo \(M\) gives \(\delta_{2}+a_{3}\equiv0\pmod M\).  As before, \(a_{3}\in\{\pm1,\pm M\}\); if \(a_{3}=\pm M\) then \(\delta_{2}+a_{3}\) is not a multiple of \(M\).  Hence \(a_{3}=\pm1\) and we must have \(\delta_{2}+a_{3}=0\); thus  
+
+\[
+a_{3}= -\delta_{2}. \tag{13}
+\]
+
+Now (12) becomes  
+
+\[
+\delta_{2} + (-\delta_{2}) + a_{4}M + a_{5}M^{2} + a_{6}M^{3} = -M^{4}
+\]
+\[
+\Longrightarrow\quad a_{4}M + a_{5}M^{2} + a_{6}M^{3} = -M^{4}.
+\]
+
+Divide by \(M\):
+
+\[
+a_{4} + a_{5}M + a_{6}M^{2} = -M^{3}. \tag{14}
+\]
+
+Modulo \(M\) yields \(a_{4}\equiv0\pmod M\); therefore \(a_{4}=\pm M\).  Set \(a_{4}= \delta_{4}M\) with \(\delta_{4}=\pm1\).
+
+Insert into (14) and divide by \(M\):
+
+\[
+\delta_{4} + a_{5} + a_{6}M = -M^{2}. \tag{15}
+\]
+
+Modulo \(M\) gives \(\delta_{4}+a_{5}\equiv0\pmod M\).  Consequently \(a_{5}=\pm1\) and \(\delta_{4}+a_{5}=0\); i.e.  
+
+\[
+a_{5}= -\delta_{4}. \tag{16}
+\]
+
+Now (15) simplifies to  
+
+\[
+\delta_{4} + (-\delta_{4}) + a_{6}M = -M^{2}
+\;\Longrightarrow\;
+a_{6}M = -M^{2}
+\;\Longrightarrow\;
+a_{6}= -M. \tag{17}
+\]
+
+Thus we have expressed all coefficients in terms of three signs:
+
+\[
+\begin{aligned}
+a_{0} &= \varepsilon M, &\qquad \varepsilon&=\pm1,\\[2pt]
+a_{1} &= -\varepsilon,\\[2pt]
+a_{2} &= \delta_{2} M, &\qquad \delta_{2}&=\pm1,\\[2pt]
+a_{3} &= -\delta_{2},\\[2pt]
+a_{4} &= \delta_{4} M, &\qquad \delta_{4}&=\pm1,\\[2pt]
+a_{5} &= -\delta_{4},\\[2pt]
+a_{6} &= -M.
+\end{aligned}
+\]
+
+---
+
+#### 3.2  Using the sum condition (5)
+
+\[
+\begin{aligned}
+\sum_{i=0}^{6} a_{i}
+&= \varepsilon M - \varepsilon + \delta_{2} M - \delta_{2} + \delta_{4} M - \delta_{4} - M \\
+&= M(\varepsilon + \delta_{2} + \delta_{4} - 1) - (\varepsilon + \delta_{2} + \delta_{4}).
+\end{aligned}
+\]
+
+Set \(S = \varepsilon + \delta_{2} + \delta_{4}\).  Equation (5) becomes  
+
+\[
+M(S-1) - S = -1 \;\Longrightarrow\; MS - M - S = -1 \;\Longrightarrow\; (M-1)S - M = -1.
+\]
+
+Since \(M>1\), \(M-1\neq0\); dividing gives  
+
+\[
+(M-1)S = M-1 \;\Longrightarrow\; S = 1.
+\]
+
+Thus  
+
+\[
+\varepsilon + \delta_{2} + \delta_{4} = 1.
+\]
+
+Each of \(\varepsilon,\delta_{2},\delta_{4}\) is \(\pm1\); their sum can be \(-3,-1,1,3\).  The condition \(S=1\) is satisfied exactly when two of them are \(+1\) and one is \(-1\).  There are \(\binom{3}{2}=3\) such triples \((\varepsilon,\delta_{2},\delta_{4})\).
+
+Consequently, for **each** odd \(M>1\) there are exactly **3** choices of signs, hence exactly **3** distinct polynomials satisfying all requirements.
+
+---
+
+#### 3.3  Counting the admissible \(M\)
+
+The coefficients must satisfy \(|a_{i}|<2025^{2}\).  Because all \(|a_{i}|\) are either \(1\) or \(M\), this condition is equivalent to \(M<2025^{2}\).  Moreover, \(M\) is odd (as noted after (2)).  Hence we need to count the odd integers \(M\) with  
+
+\[
+1 < M < 2025^{2}.
+\]
+
+Compute  
+
+\[
+2025^{2}=4\,100\,625.
+\]
+
+The odd numbers strictly between \(1\) and \(4\,100\,625\) are  
+
+\[
+3,\,5,\,7,\,\dots,\,4\,100\,623.
+\]
+
+The number of such integers is  
+
+\[
+\frac{4\,100\,625-3}{2}= \frac{4\,100\,622}{2}=2\,050\,311.
+\]
+
+(Indeed, the count of odd integers from \(1\) to \(4\,100\,623\) inclusive is \((4\,100\,623-1)/2+1 = 2\,050\,312\); removing \(M=1\) leaves \(2\,050\,311\).)
+
+For each of these \(2\,050\,311\) values of \(M\) we obtain \(3\) polynomials, giving  
+
+\[
+3 \times 2\,050\,311 = 6\,150\,933
+\]
+
+good polynomials with \(M>1\).
+
+---
+
+### 4.  Total number of good polynomials
+
+Adding the \(35\) polynomials from the case \(M=1\) we obtain  
+
+\[
+\boxed{6\,150\,968}.
+\]
+
+---

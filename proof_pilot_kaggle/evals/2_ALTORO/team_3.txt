@@ -1,0 +1,214 @@
+## Solution
+
+We place triangle \(ABC\) in the Cartesian plane.  
+Let \(B = (0,0)\), \(C = (17,0)\).  
+From \(AB = 26\) and \(AC = 25\) we obtain \(A = (10,24)\) (solving  
+\(x^2+y^2=676\) and \((x-17)^2+y^2=625\) gives \(x=10,\ y=24\)).
+
+### 1. Orthocenter \(H\)
+
+The altitude from \(A\) is the vertical line \(x=10\).  
+The altitude from \(B\) is perpendicular to \(AC\).  
+Since \(\overrightarrow{AC} = (7,-24)\), a direction vector for this altitude is \((24,7)\).  
+Hence the line through \(B\) is \(\{ (24t,7t) \}\).  
+Intersecting with \(x=10\) gives \(24t=10\Rightarrow t=5/12\), so  
+\[
+H = \left(10,\ \frac{35}{12}\right).
+\]
+
+### 2. Circumcircle \(\Omega\)
+
+The circumcenter \(O\) is the intersection of the perpendicular bisectors.  
+The midpoint of \(BC\) is \((8.5,0)\); the perpendicular bisector of \(BC\) is \(x=8.5\).  
+The midpoint of \(AB\) is \((5,12)\); the perpendicular bisector of \(AB\) has equation  
+\(2(x-5)+3(y-12)=0\) (since slope of \(AB\) is \(24/10=12/5\), so perpendicular slope is \(-5/12\)).  
+Solving with \(x=8.5\) yields \(O = \left(\frac{17}{2},\ \frac{253}{24}\right)\).  
+The radius is  
+\[
+R = |OA| = \sqrt{\left(10-\frac{17}{2}\right)^2+\left(24-\frac{253}{24}\right)^2}
+= \frac{325}{24}.
+\]
+
+### 3. Feet \(D,E,F\) and the nine‑point circle
+
+- \(D\) is the foot from \(A\) onto \(BC\): \(D = (10,0)\).  
+
+- For \(E\) (foot from \(B\) onto \(AC\)):  
+  Project \(B\) onto line \(AC\). With \(A=(10,24)\), \(\overrightarrow{AC}=(7,-24)\),  
+  \(|AC|^2=625\). The parameter \(t\) such that \(A+t\overrightarrow{AC}\) is the foot is  
+  \[
+  t = \frac{(B-A)\cdot\overrightarrow{AC}}{|AC|^2}
+  = \frac{(-10,-24)\cdot(7,-24)}{625}= \frac{506}{625}.
+  \]  
+  Hence  
+  \[
+  E = A + t\overrightarrow{AC} = \left(10+\frac{7\cdot506}{625},\ 24-\frac{24\cdot506}{625}\right)
+  = \left(\frac{9792}{625},\ \frac{2856}{625}\right).
+  \]
+
+- For \(F\) (foot from \(C\) onto \(AB\)):  
+  \(\overrightarrow{AB}=(-10,-24)\), \(|AB|^2=676\).  
+  Parameter \(s\) for the foot from \(C\) is  
+  \[
+  s = \frac{(C-A)\cdot\overrightarrow{AB}}{|AB|^2}
+  = \frac{(7,-24)\cdot(-10,-24)}{676}= \frac{506}{676}= \frac{253}{338}.
+  \]  
+  Then  
+  \[
+  F = A + s\overrightarrow{AB}
+  = \left(10-\frac{10\cdot253}{338},\ 24-\frac{24\cdot253}{338}\right)
+  = \left(\frac{425}{169},\ \frac{1020}{169}\right).
+  \]
+
+The circle through \(D,E,F\) is the **nine‑point circle** of \(\triangle ABC\).  
+Its centre is the midpoint of \(O\) and \(H\):
+\[
+N = \left(\frac{\frac{17}{2}+10}{2},\ \frac{\frac{253}{24}+\frac{35}{12}}{2}\right)
+= \left(\frac{37}{4},\ \frac{323}{48}\right),
+\]
+and its radius is \(R/2 = 325/48\).
+
+### 4. Point \(X\) and the second intersection \(Q\) of \(AX\) with \(\Omega\)
+
+- Line \(EF\): through \(E\) and \(F\).  
+  Its intersection with \(BC\) (the \(x\)-axis) is found by setting \(y=0\) in the equation of \(EF\).  
+  After straightforward algebra we obtain  
+  \[
+  X = \left(\frac{170}{3},\ 0\right).
+  \]
+
+- The line \(AX\) is parametrised as \(A + \lambda v\) with \(v = X-A = \left(\frac{140}{3},\ -24\right)\).  
+  The circumcircle \(\Omega\) has equation \(|P-O|^2 = R^2\).  
+  Substituting \(P = A+\lambda v\) and using \(|A-O|^2=R^2\) gives a quadratic in \(\lambda\):
+  \[
+  |v|^2\lambda^2 + 2(A-O)\cdot v\,\lambda = 0,
+  \]
+  so the non‑zero root is  
+  \[
+  \lambda_Q = -\frac{2(A-O)\cdot v}{|v|^2}.
+  \]
+  Compute  
+  \[
+  A-O = \left(10-\frac{17}{2},\ 24-\frac{253}{24}\right) = \left(\frac{3}{2},\ \frac{323}{24}\right),
+  \qquad
+  (A-O)\cdot v = \frac{3}{2}\cdot\frac{140}{3} + \frac{323}{24}\cdot(-24) = 70 - 323 = -253.
+  \]
+  Also  
+  \[
+  |v|^2 = \left(\frac{140}{3}\right)^2 + (-24)^2 = \frac{19600}{9} + 576 = \frac{24784}{9}.
+  \]
+  Hence  
+  \[
+  \lambda_Q = -\frac{2(-253)}{24784/9} = \frac{506\cdot9}{24784} = \frac{2277}{12392}.
+  \]
+  Therefore  
+  \[
+  Q = A + \lambda_Q v = \left(10 + \frac{2277}{12392}\cdot\frac{140}{3},\ 
+  24 + \frac{2277}{12392}\cdot(-24)\right)
+  = \left(\frac{57545}{3098},\ \frac{30345}{1549}\right).
+  \]
+
+### 5. Point \(P\) on the nine‑point circle
+
+A classical fact: the nine‑point circle is the image of the circumcircle under the homothety with centre \(H\) and factor \(\frac12\).  
+Consequently, for any line through \(H\), the two intersection points of that line with the nine‑point circle are exactly the midpoints of the segments from \(H\) to the two intersection points of the line with the circumcircle.
+
+The line \(HQ\) meets \(\Omega\) at \(Q\) and at another point (which we do not need explicitly).  
+Hence the two intersections of \(HQ\) with the nine‑point circle are the midpoints of \(H\) and those two circumcircle points.  
+In particular, the midpoint of \(HQ\) lies on the nine‑point circle and, because it lies between \(H\) and \(Q\), it must be the point \(P\) described in the problem.  
+Thus  
+\[
+P = \frac{H+Q}{2}.
+\]
+
+### 6. Computation of the distances \(PQ\) and \(PE\)
+
+We already have  
+\[
+H = \left(10,\ \frac{35}{12}\right),\qquad
+Q = \left(\frac{57545}{3098},\ \frac{30345}{1549}\right),\qquad
+E = \left(\frac{9792}{625},\ \frac{2856}{625}\right).
+\]
+
+First compute \(HQ\).  
+Let \(w = A-H = \left(0,\ \frac{253}{12}\right)\).  
+From the expression for \(Q\) we have \(Q-H = w + \lambda_Q v\).  
+Using \(\lambda_Q = \dfrac{506}{|v|^2}\) and the previously found \(w\cdot v = -506\), we obtain  
+\[
+|Q-H|^2 = |w|^2 + 2\frac{506}{|v|^2}(w\cdot v) + \frac{506^2}{|v|^2}
+= |w|^2 - \frac{506^2}{|v|^2}.
+\]
+Now  
+\[
+|w|^2 = \left(\frac{253}{12}\right)^2 = \frac{64009}{144},\qquad
+|v|^2 = \frac{24784}{9}.
+\]
+Thus  
+\[
+\frac{506^2}{|v|^2} = \frac{256036 \cdot 9}{24784} = \frac{2304324}{24784}
+= \frac{576081}{6196}.
+\]
+Hence  
+\[
+|Q-H|^2 = \frac{64009}{144} - \frac{576081}{6196}
+= \frac{78411025}{223056}.
+\]
+Therefore  
+\[
+HQ = \sqrt{\frac{78411025}{223056}}
+= \frac{8855\sqrt{1549}}{18588}.
+\]
+
+Since \(P\) is the midpoint of \(HQ\),  
+\[
+PQ = \frac12 HQ = \frac{8855\sqrt{1549}}{37176}.
+\]
+
+Next compute \(PE\).  
+Because \(P = \frac{H+Q}{2}\),  
+\[
+PE^2 = \left|\frac{H+Q}{2} - E\right|^2
+= \frac14\,|H+Q-2E|^2.
+\]
+After substituting the coordinates and simplifying (a lengthy but straightforward calculation) we obtain  
+\[
+PE = \frac{161161\sqrt{1549}}{929400}.
+\]
+
+### 7. The ratio \(PQ/PE\)
+
+\[
+\frac{PQ}{PE}
+= \frac{\ \dfrac{8855\sqrt{1549}}{37176}\ }{\ \dfrac{161161\sqrt{1549}}{929400}\ }
+= \frac{8855 \cdot 929400}{37176 \cdot 161161}.
+\]
+
+Factor each number:  
+
+- \(8855 = 5 \cdot 7 \cdot 253 = 5 \cdot 7 \cdot 11 \cdot 23\).  
+- \(929400 = 600 \cdot 1549 = 2^3 \cdot 3 \cdot 5^2 \cdot 1549\).  
+- \(37176 = 24 \cdot 1549 = 2^3 \cdot 3 \cdot 1549\).  
+- \(161161 = 7^2 \cdot 11 \cdot 13 \cdot 23\).
+
+Cancelling the common factors \(1549\), \(11\), \(23\), and the factor \(24\) from the denominator with the factor \(600\) in the numerator leaves  
+\[
+\frac{5 \cdot 7 \cdot 25}{7^2 \cdot 13}
+= \frac{5 \cdot 25}{7 \cdot 13}
+= \frac{125}{91}.
+\]
+
+Thus  
+\[
+\frac{PQ}{PE} = \frac{125}{91}.
+\]
+
+### 8. Answer
+
+\(a=125\), \(b=91\) are coprime positive integers, so  
+\[
+a+b = 125+91 = 216.
+\]
+
+\[
+\boxed{216}
+\]

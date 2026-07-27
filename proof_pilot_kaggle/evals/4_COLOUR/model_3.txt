@@ -1,0 +1,9 @@
+(a) The game always ends in finitely many moves. Initially, all cells are grey. Each of Sue's moves reduces the number of grey cells by at least 1, as she must select a \(2 \times 2\) block containing at least one grey cell and paints all four cells scarlet. Let \(G\) denote the number of grey cells. Since \(G\) starts at \(N^2\) (where \(N = 2025\)) and decreases by at least 1 with each of Sue's moves, the number of Sue's moves is bounded by \(N^2\). Linda and Sue alternate turns, starting with Linda. The total number of moves is at most \(2N^2 + 1\), as Sue cannot make more than \(N^2\) moves. Since \(N^2\) is finite, the game terminates after finitely many moves.
+
+(b) The number of lime cells at the end is \(\frac{2025^2 + 1}{2}\). 
+
+To prove this, consider the following strategy for Linda: she aims to ensure that for every pair of moves (hers followed by Sue's), the net change in lime cells is non-negative. Suppose Linda always paints a grey cell. Sue, in response, must paint a \(2 \times 2\) block containing at least one grey cell. If this block includes Linda's newly painted lime cell, Sue converts it to scarlet but also affects three other cells. However, since the grid has odd dimensions, there exists at least one cell (e.g., the center cell) that cannot be fully enclosed in a \(2 \times 2\) block without including previously non-grey cells. This allows Linda to secure at least \(\lceil \frac{N^2}{2} \rceil\) lime cells. 
+
+Conversely, Sue can limit Linda's lime cells to at most \(\lceil \frac{N^2}{2} \rceil\) by always targeting cells Linda paints. Since \(N = 2025\) is odd, \(\lceil \frac{2025^2}{2} \rceil = \frac{2025^2 + 1}{2}\). 
+
+Thus, with optimal play, the number of lime cells is exactly \(\frac{2025^2 + 1}{2}\). This value is both achievable by Linda and unimprovable by Sue due to the parity and structure of the grid.

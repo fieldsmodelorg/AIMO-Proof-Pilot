@@ -1,0 +1,15 @@
+type,number,name,1_DIVALL,2_ALTORO,3_SINDEX,4_COLOUR,5_POLYGO,6_AMAZIN
+team,1,Andreas Bisiadis,0,0,0,0,0,0
+team,2,Just a test,0,0,0,0,0,0
+team,3,Bogo de Chãn,6,7,0,0,7,0
+team,4,Yi-Chia Chen,7,7,7,0,7,1
+team,5,Nguyen,7,6,1,0,7,0
+team,6,Natapong Nitarach (Schwyter),0,0,0,0,0,0
+model,1,Qwen/Qwen3.6-35B-A3B,1,1,0,0,0,0
+model,2,deepseek-ai/DeepSeek-V4-Flash,7,7,6,1,6,0
+model,3,vllm allenai/Olmo-3-32B-Think,1,0,0,0,0,0
+model,4,vllm openai/gpt-oss-120b,1,0,0,0,0,0
+model,5,openai/gpt-5.5-pro (extended),7,6,7,7,7,7
+model,6,anthropic/claude-opus-4.8 (high),7,1,6,0,7,0
+model,7,anthropic/claude-opus-4.8 (high),7,7,6,0,7,6
+model,8,google/gemini-3.1-pro,1,6,0,0,7,0

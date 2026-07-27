@@ -1,0 +1,85 @@
+problem,team,name,final_score,final_answer,final_answer_correct,CG,CL,GE
+1_DIVALL,team_1,Andreas Bisiadis,0,300000,False,0,0,0
+1_DIVALL,team_2,Just a test,0,998002,False,0,0,0
+1_DIVALL,team_3,Bogo de Chãn,6,998285,True,6,6,7
+1_DIVALL,team_4,Yi-Chia Chen,7,998285,True,6,6,6
+1_DIVALL,team_5,Nguyen,7,998285,True,7,7,7
+1_DIVALL,team_6,Natapong Nitarach (Schwyter),0,300000,False,0,0,0
+1_DIVALL,model_1,Qwen/Qwen3.6-35B-A3B,1,998285,True,1,1,1
+1_DIVALL,model_2,deepseek-ai/DeepSeek-V4-Flash,7,998285,True,7,7,7
+1_DIVALL,model_3,vllm allenai/Olmo-3-32B-Think,1,502945,False,1,1,1
+1_DIVALL,model_4,vllm openai/gpt-oss-120b,1,998285,True,1,6,1
+1_DIVALL,model_5,openai/gpt-5.5-pro (extended),7,998285,True,7,7,7
+1_DIVALL,model_6,anthropic/claude-opus-4.8 (high) (browser),7,998285,True,7,7,7
+1_DIVALL,model_7,anthropic/claude-opus-4.8 (high) (claude code),7,998285,True,7,7,7
+1_DIVALL,model_8,google/gemini-3.1-pro,1,998285,True,1,1,1
+2_ALTORO,team_1,Andreas Bisiadis,0,437,False,0,0,0
+2_ALTORO,team_2,Just a test,0,19,False,0,0,0
+2_ALTORO,team_3,Bogo de Chãn,7,216,True,7,7,7
+2_ALTORO,team_4,Yi-Chia Chen,7,216,True,7,7,7
+2_ALTORO,team_5,Nguyen,6,,False,6,0,0
+2_ALTORO,team_6,Natapong Nitarach (Schwyter),0,19,False,0,0,0
+2_ALTORO,model_1,Qwen/Qwen3.6-35B-A3B,1,19,False,1,1,1
+2_ALTORO,model_2,deepseek-ai/DeepSeek-V4-Flash,7,216,True,7,7,7
+2_ALTORO,model_3,vllm allenai/Olmo-3-32B-Think,0,19,False,0,0,0
+2_ALTORO,model_4,vllm openai/gpt-oss-120b,0,19,False,0,0,0
+2_ALTORO,model_5,openai/gpt-5.5-pro (extended),6,216,True,7,7,7
+2_ALTORO,model_6,anthropic/claude-opus-4.8 (high) (browser),1,216,True,7,7,7
+2_ALTORO,model_7,anthropic/claude-opus-4.8 (high) (claude code),7,216,True,6,7,7
+2_ALTORO,model_8,google/gemini-3.1-pro,6,216,True,6,6,7
+3_SINDEX,team_1,Andreas Bisiadis,0,4,False,0,0,0
+3_SINDEX,team_2,Just a test,0,12,False,0,0,0
+3_SINDEX,team_3,Bogo de Chãn,0,32,True,0,1,1
+3_SINDEX,team_4,Yi-Chia Chen,7,32,True,6,7,7
+3_SINDEX,team_5,Nguyen,1,,False,1,1,1
+3_SINDEX,team_6,Natapong Nitarach (Schwyter),0,4,False,0,0,0
+3_SINDEX,model_1,Qwen/Qwen3.6-35B-A3B,0,12,False,0,0,0
+3_SINDEX,model_2,deepseek-ai/DeepSeek-V4-Flash,6,32,True,6,7,6
+3_SINDEX,model_3,vllm allenai/Olmo-3-32B-Think,0,12,False,0,0,0
+3_SINDEX,model_4,vllm openai/gpt-oss-120b,0,8,False,0,0,0
+3_SINDEX,model_5,openai/gpt-5.5-pro (extended),7,32,True,7,7,7
+3_SINDEX,model_6,anthropic/claude-opus-4.8 (high) (browser),6,32,True,7,7,7
+3_SINDEX,model_7,anthropic/claude-opus-4.8 (high) (claude code),6,32,True,6,7,7
+3_SINDEX,model_8,google/gemini-3.1-pro,0,32,True,1,1,6
+4_COLOUR,team_1,Andreas Bisiadis,0,1,False,0,0,0
+4_COLOUR,team_2,Just a test,0,2050313,False,0,0,0
+4_COLOUR,team_3,Bogo de Chãn,0,3,False,0,0,0
+4_COLOUR,team_4,Yi-Chia Chen,0,1,False,0,0,0
+4_COLOUR,team_5,Nguyen,0,1,False,0,0,0
+4_COLOUR,team_6,Natapong Nitarach (Schwyter),0,2050313,False,0,0,0
+4_COLOUR,model_1,Qwen/Qwen3.6-35B-A3B,0,0,False,0,0,0
+4_COLOUR,model_2,deepseek-ai/DeepSeek-V4-Flash,1,1026168,True,1,6,1
+4_COLOUR,model_3,vllm allenai/Olmo-3-32B-Think,0,2050313,False,0,0,0
+4_COLOUR,model_4,vllm openai/gpt-oss-120b,0,820125,False,0,0,0
+4_COLOUR,model_5,openai/gpt-5.5-pro (extended),7,1026168,True,7,7,7
+4_COLOUR,model_6,anthropic/claude-opus-4.8 (high) (browser),0,,False,0,0,0
+4_COLOUR,model_7,anthropic/claude-opus-4.8 (high) (claude code),0,1025156,False,0,0,0
+4_COLOUR,model_8,google/gemini-3.1-pro,0,2025,False,0,0,0
+5_POLYGO,team_1,Andreas Bisiadis,0,35,False,0,0,0
+5_POLYGO,team_2,Just a test,0,38,False,0,0,0
+5_POLYGO,team_3,Bogo de Chãn,7,6150968,True,6,6,7
+5_POLYGO,team_4,Yi-Chia Chen,7,6150968,True,7,7,7
+5_POLYGO,team_5,Nguyen,7,6150968,True,7,7,7
+5_POLYGO,team_6,Natapong Nitarach (Schwyter),0,35,False,1,0,0
+5_POLYGO,model_1,Qwen/Qwen3.6-35B-A3B,0,6150969,False,1,1,0
+5_POLYGO,model_2,deepseek-ai/DeepSeek-V4-Flash,6,6150968,True,6,7,7
+5_POLYGO,model_3,vllm allenai/Olmo-3-32B-Think,0,35,False,0,0,0
+5_POLYGO,model_4,vllm openai/gpt-oss-120b,0,35,False,0,0,0
+5_POLYGO,model_5,openai/gpt-5.5-pro (extended),7,6150968,True,7,7,7
+5_POLYGO,model_6,anthropic/claude-opus-4.8 (high) (browser),7,6150968,True,7,7,7
+5_POLYGO,model_7,anthropic/claude-opus-4.8 (high) (claude code),7,6150968,True,7,7,7
+5_POLYGO,model_8,google/gemini-3.1-pro,7,6150968,True,6,7,7
+6_AMAZIN,team_1,Andreas Bisiadis,0,2030,False,0,0,0
+6_AMAZIN,team_2,Just a test,0,2030,False,0,0,0
+6_AMAZIN,team_3,Bogo de Chãn,0,1164,False,0,0,0
+6_AMAZIN,team_4,Yi-Chia Chen,1,30162,False,1,1,1
+6_AMAZIN,team_5,Nguyen,0,,False,0,0,0
+6_AMAZIN,team_6,Natapong Nitarach (Schwyter),0,2030,False,0,0,0
+6_AMAZIN,model_1,Qwen/Qwen3.6-35B-A3B,0,2022,False,0,0,0
+6_AMAZIN,model_2,deepseek-ai/DeepSeek-V4-Flash,0,31070,True,0,0,0
+6_AMAZIN,model_3,vllm allenai/Olmo-3-32B-Think,0,2030,False,0,0,0
+6_AMAZIN,model_4,vllm openai/gpt-oss-120b,0,31196,False,0,0,0
+6_AMAZIN,model_5,openai/gpt-5.5-pro (extended),7,31070,True,7,7,7
+6_AMAZIN,model_6,anthropic/claude-opus-4.8 (high) (browser),0,,False,0,0,0
+6_AMAZIN,model_7,anthropic/claude-opus-4.8 (high) (claude code),6,31070,True,6,7,6
+6_AMAZIN,model_8,google/gemini-3.1-pro,0,1117015294,False,0,0,0

@@ -1,0 +1,46 @@
+We first prove that the game always ends after finitely many moves.  
+Initially there are \(2025^2\) grey cells.  
+On each turn, Linda paints exactly one cell lime. If she paints a grey cell, the number of grey cells decreases by 1; if she paints a cell that is already lime or scarlet, the number of grey cells does not change.  
+On each turn, Sue chooses a \(2\times2\) block that contains at least one grey cell and paints all four cells scarlet. Hence the number of grey cells decreases by at least 1.  
+Thus after every move the number of grey cells is at least one less than before, unless Linda paints a non‑grey cell and Sue’s move does not reduce the count? Actually, Sue always reduces the count by at least 1, so after each of her moves the number of grey cells decreases by at least 1. Since there are only finitely many cells, the game must end after at most \(2025^2\) moves. This proves part (a).
+
+Now we determine the number of lime cells at the end under optimal play.  
+Let \(n=2025\) (odd).  
+
+**Lower bound (Linda can guarantee at least one lime cell).**  
+Linda chooses a corner, say \((1,1)\), as her first move.  
+The only \(2\times2\) block containing \((1,1)\) is the top‑left block, and it contains three grey cells.  
+Sue must paint that block on her first turn.  
+After Sue’s move that block is all scarlet.  
+Linda then paints \((1,1)\) lime on her second turn.  
+The only block containing \((1,1)\) is now all scarlet, so \((1,1)\) will never be painted scarlet again.  
+Thus Linda can ensure at least one lime cell.
+
+**Upper bound (Sue can guarantee at most one lime cell).**  
+We construct a pairing of the cells of the \(2025\times2025\) grid that has the following property: every pair of cells is contained in the same \(2\times2\) block, and the central cell \(C=(1013,1013)\) is left unpaired.  
+Because the grid is odd, such a pairing exists. One explicit pairing is obtained by tiling the grid with disjoint \(2\times2\) blocks that cover all cells except \(C\) (e.g., take the blocks with top‑left corners \((1,1),(1,3),\dots,(2023,2023)\) for the first \(2024\) rows and columns, and then handle the remaining border cells with additional blocks, a standard construction).  
+
+Su’s strategy:  
+- If Linda paints a cell \(X\) that is not the central cell \(C\), Su paints the \(2\times2\) block that contains the partner of \(X\) in the pairing.  
+- If Linda paints the central cell \(C\), Su paints any \(2\times2\) block that contains a grey cell (such a block exists because the game has not ended).  
+
+We claim that under this strategy no cell other than \(C\) can ever become safe, and the game will end with exactly one safe cell (the central cell).  
+
+*Why no other cell can become safe.*  
+For any cell \(X\neq C\), its partner \(Y\) is in the same \(2\times2\) block.  
+When Linda paints \(X\), Su immediately paints the block containing \(Y\) (which also contains \(X\) because the pair lies in the same block).  
+Thus after Su’s move, the entire block becomes scarlet, and in particular \(X\) is painted scarlet. Hence \(X\) is never lime, and even if Linda later paints it again, it would be painted scarlet at that moment (since the block is already scarlet) and cannot become safe.  
+If Linda ever paints a cell that is already scarlet, it remains scarlet, so it cannot become safe.  
+Therefore the only cell that can possibly become safe is the central cell \(C\), because Su never paints the block containing \(C\) (the pairing leaves \(C\) unpaired, and the strategy never selects that block).  
+
+*Why the game ends with exactly one safe cell.*  
+Since Su always paints a block that contains a grey cell, the number of grey cells decreases each time she moves.  
+The total number of grey cells is finite, so the game must end after finitely many moves.  
+When the game ends, there are no grey cells.  
+All cells except possibly \(C\) have been painted scarlet by Su’s moves.  
+Linda may at some point paint \(C\) lime.  
+If she does so, \(C\) becomes lime and, because every \(2\times2\) block containing \(C\) has already been painted scarlet (by Su’s moves, since the block containing \(C\) is not painted by Su but its cells are all scarlet because the other cells in those blocks were painted scarlet), \(C\) will never be painted scarlet later. Hence \(C\) is safe.  
+If Linda never paints \(C\), then no cell is safe, but Linda can always choose to paint \(C\) at the last move to obtain a safe cell; since Linda wants to maximise the number of lime cells, she will do so.  
+Thus under optimal play, exactly one lime cell remains.
+
+Therefore the number of lime cells at the end is \(\boxed{1}\).

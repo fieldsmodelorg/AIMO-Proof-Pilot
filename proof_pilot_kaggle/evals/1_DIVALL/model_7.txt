@@ -1,0 +1,170 @@
+PROBLEM
+=======
+There are k >= 3 distinct positive integers a_1, ..., a_k with product P and
+sum strictly less than 3 * 10^6. Let g be the largest positive integer that
+divides each of (P/a_i) + 1 for 1 <= i <= k. Over all choices of the a_i and
+all k >= 3, find the maximum possible value of g.
+
+ANSWER
+======
+The maximum possible value of g is
+
+        g = 998285.
+
+It is attained, for example, by k = 3 and
+
+        a_1 = 1413,  a_2 = 999698,  a_3 = 1997983,
+
+whose sum is 2 999 094 < 3 000 000.
+
+
+NOTATION
+========
+Throughout write
+        b_i = P / a_i = product of all a_j with j != i.
+By definition g is the greatest common divisor
+        g = gcd( b_1 + 1, b_2 + 1, ..., b_k + 1 ),
+i.e. g is the largest integer with g | b_i + 1 for every i. Equivalently
+
+        b_i ≡ -1 (mod g)        for all i.            (*)
+
+We must maximise this gcd over all admissible families (a_i), k >= 3, subject to
+
+        a_1, ..., a_k distinct positive integers,  a_1 + ... + a_k < 3*10^6.
+
+
+PART 1.  STRUCTURE FORCED BY THE DIVISIBILITY (*)
+=================================================
+Fix any admissible family and let g be its associated gcd.
+
+Lemma 1 (all a_i are congruent mod g).
+For each i we have a_i * b_i = P. Reducing mod g and using (*), b_i ≡ -1, so
+
+        P = a_i * b_i ≡ a_i * (-1) ≡ -a_i  (mod g)     for every i.
+
+Hence for all i, j:  -a_i ≡ P ≡ -a_j (mod g), i.e.
+
+        a_i ≡ a_j (mod g).
+
+Thus there is a common residue c with a_i ≡ c (mod g) for all i.            ∎
+
+Lemma 2 (the residue condition).
+Since every a_j ≡ c (mod g), for each fixed i,
+
+        b_i = product over j != i of a_j ≡ c^(k-1) (mod g).
+
+Combining with (*), c^(k-1) ≡ -1 (mod g).
+In particular c * c^(k-2) ≡ -1, so c is invertible mod g, i.e. gcd(c, g) = 1.
+For k = 3 this reads
+
+        c^2 ≡ -1 (mod g).                                (R)        ∎
+
+Lemma 3 (a lower bound for the sum).
+Let r be the least positive residue of c modulo g. Because gcd(c, g) = 1 and
+(for any nontrivial case) g >= 2, we have 1 <= r <= g - 1; in particular r >= 1.
+All a_i are distinct positive integers congruent to r (mod g). The k smallest
+distinct positive integers in this residue class are
+
+        r,  r + g,  r + 2g,  ...,  r + (k-1) g,
+
+so
+
+        a_1 + ... + a_k  >=  k*r + g * (0 + 1 + ... + (k-1))
+                          =  k*r + g * C(k,2),
+
+where C(k,2) = k(k-1)/2. Since the sum is < 3*10^6,
+
+        k*r + g * C(k,2) < 3*10^6.                       (S)        ∎
+
+
+PART 2.  k >= 4 IS USELESS
+==========================
+For k >= 4 we have C(k,2) >= 6 and r >= 1, so by (S),
+
+        6 g <= C(k,2) * g <= k*r + C(k,2)*g < 3*10^6,
+
+hence g < 500000. This is far below the value 998285 produced by k = 3 in
+Part 4, so the maximum is attained with k = 3. From now on take k = 3.
+
+
+PART 3.  UPPER BOUND FOR k = 3:  g <= 998285
+============================================
+Let g be the gcd of an admissible family with k = 3, and let r (>= 1) be as in
+Lemma 3. From (R), g | c^2 + 1; reducing c to r gives r^2 ≡ -1 (mod g), so
+
+        g | r^2 + 1,   hence   r^2 + 1 = g * m   for some integer m >= 1.  (D)
+
+In particular g <= r^2 + 1. From (S) with k = 3 (C(3,2) = 3):
+
+        3r + 3g < 3*10^6   =>   r + g < 10^6   =>   r + g <= 999999.       (T)
+
+We show g <= 998285 by contradiction. Suppose g >= 998286.
+
+Case A:  r <= 999.
+Then by (D), g <= r^2 + 1 <= 999^2 + 1 = 998002 < 998286, contradicting the
+assumption g >= 998286.
+
+Case B:  r >= 1000.
+By (T), r <= 999999 - g <= 999999 - 998286 = 1713, so 1000 <= r <= 1713 and
+        r^2 + 1 <= 1713^2 + 1 = 2 934 370.
+From (D), the cofactor satisfies
+        m = (r^2 + 1) / g <= 2 934 370 / 998286 = 2.939...,
+so m ∈ {1, 2, 3}. But m = 3 is impossible: a number r^2 + 1 is never divisible
+by 3, since squares are ≡ 0 or 1 (mod 3), so r^2 + 1 ≡ 1 or 2 (mod 3). Hence
+m ∈ {1, 2}.
+
+  Subcase m = 1:  g = r^2 + 1 >= 998286  =>  r^2 >= 998285  =>  r >= 1000.
+  Then r + g = r + r^2 + 1 >= 1000 + 1000^2 + 1 = 1 001 001 > 999999,
+  contradicting (T).
+
+  Subcase m = 2:  r^2 + 1 = 2g is even, so r is odd. Also
+        g = (r^2 + 1)/2 >= 998286  =>  r^2 >= 1 996 571  =>  r >= 1414,
+  and since r is odd, r >= 1415. Then
+        r + g = r + (r^2 + 1)/2 = (r + 1)^2 / 2  >=  (1416)^2 / 2
+              = 2 005 056 / 2 = 1 002 528 > 999999,
+  again contradicting (T).
+
+Every case is impossible, so the assumption g >= 998286 fails. Therefore
+
+        g <= 998285
+
+for every admissible family with k = 3, and (with Part 2) for every admissible
+family with k >= 3.
+
+
+PART 4.  THE BOUND 998285 IS ATTAINED
+=====================================
+Take k = 3, g = 998285, and the residue r = 1413. Note
+
+        r^2 + 1 = 1413^2 + 1 = 1 996 569 + 1 = 1 996 570 = 2 * 998285,
+
+so 1413^2 ≡ -1 (mod 998285). Define the three distinct positive integers
+
+        a_1 = 1413,
+        a_2 = 1413 + g = 1413 + 998285 = 999698,
+        a_3 = 1413 + 2g = 1413 + 1 996 570 = 1 997 983.
+
+They are distinct and positive, and
+
+        a_1 + a_2 + a_3 = 1413 + 999698 + 1 997 983 = 2 999 094 < 3 000 000,
+
+so the family is admissible.
+
+Since a_1 ≡ a_2 ≡ a_3 ≡ 1413 (mod g), each
+        b_i = product of the other two a_j ≡ 1413^2 ≡ -1 (mod g),
+hence g = 998285 divides b_i + 1 for every i. Therefore the gcd of the three
+numbers b_i + 1 is a multiple of 998285. By the upper bound in Part 3 that gcd
+cannot exceed 998285, so it equals exactly 998285.
+
+(Direct check: with P = a_1 a_2 a_3, one computes
+        gcd(P/a_1 + 1, P/a_2 + 1, P/a_3 + 1) = 998285,
+confirming the value.  For the record, 998285 = 5 * 199657, both factors being
+≡ 1 (mod 4), which is consistent with -1 being a quadratic residue mod g.)
+
+
+CONCLUSION
+==========
+For every admissible choice the gcd g is at most 998285 (Parts 2 and 3), and
+this value is achieved (Part 4). Hence the maximum possible value of g is
+
+        g = 998285.

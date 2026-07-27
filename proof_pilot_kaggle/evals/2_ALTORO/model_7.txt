@@ -1,0 +1,257 @@
+================================================================================
+PROBLEM
+================================================================================
+Let ABC be a triangle with AB = 26, BC = 17, AC = 25. Let Omega and H be the
+circumcircle and orthocentre. Let D, E, F be the feet of the altitudes from
+A, B, C respectively (so D lies on BC, E on CA, F on AB). Let lines EF and BC
+meet at X, and let line AX meet Omega again at Q (Q != A). The segment HQ meets
+the circle DEF (the nine-point circle) at a point P. If PQ/PE = a/b in lowest
+terms, find a + b.
+
+ANSWER:  PQ/PE = 125/91, so a + b = 125 + 91 = 216.
+
+================================================================================
+SET-UP: COORDINATES
+================================================================================
+Place
+        B = (0, 0),    C = (17, 0),    A = (10, 24).
+
+Check of the side lengths:
+        BC = 17,
+        AB = sqrt(10^2 + 24^2) = sqrt(100 + 576) = sqrt(676) = 26,
+        AC = sqrt((10-17)^2 + 24^2) = sqrt(49 + 576) = sqrt(625) = 25.
+
+So this triangle is congruent to the given one, and all metric quantities
+(lengths, ratios) computed below are the required ones.
+
+--------------------------------------------------------------------------------
+Orthocentre H.
+--------------------------------------------------------------------------------
+Since BC lies on the x-axis, the altitude from A is the vertical line x = 10.
+The line AC has slope (0-24)/(17-10) = -24/7, so the altitude from B (through
+the origin, perpendicular to AC) has slope 7/24, i.e. y = (7/24)x. At x = 10
+this gives y = 70/24 = 35/12. Hence
+
+        H = (10, 35/12).
+
+(Consistency check with the altitude from C: line AB has slope 24/10 = 12/5,
+so the altitude from C is 12x - 5y = 170 - ... ; explicitly 5x + 12y = 85,
+which at x = 10 gives y = 35/12. Agreed.)
+
+--------------------------------------------------------------------------------
+Feet of the altitudes D, E, F.
+--------------------------------------------------------------------------------
+D = foot from A on BC = (10, 0).
+
+E = foot from B on line AC. Line AC passes through A(10,24) with slope -24/7,
+i.e. 24x + 7y = 408 (indeed 24*10 + 7*24 = 240 + 168 = 408). The foot of the
+perpendicular from the origin to the line 24x + 7y = 408 is
+        E = (408 / (24^2 + 7^2)) * (24, 7) = (408/625)(24, 7)
+          = (9792/625, 2856/625).
+
+F = foot from C on line AB. Line AB is 12x - 5y = 0. The foot from C = (17,0) is
+        F = C - ((12*17 - 5*0)/(12^2 + 5^2)) (12, -5)
+          = (17, 0) - (204/169)(12, -5)
+          = (425/169, 1020/169).
+
+--------------------------------------------------------------------------------
+The circumcircle Omega.
+--------------------------------------------------------------------------------
+Write Omega: x^2 + y^2 + d x + e y + f = 0.
+  Through B(0,0):  f = 0.
+  Through C(17,0): 289 + 17 d = 0  => d = -17.
+  Through A(10,24):100 + 576 - 170 + 24 e = 0 => 506 + 24 e = 0 => e = -253/12.
+Hence
+        Omega:  x^2 + y^2 - 17 x - (253/12) y = 0.            (1)
+
+================================================================================
+STEP 1:  THE POINT X = EF n BC
+================================================================================
+Lemma (harmonic conjugate). X is the harmonic conjugate of D with respect to
+B and C; equivalently (B, C; D, X) = -1.
+
+Proof. Because angle BEC = angle BFC = 90 degrees, the points B, C, E, F lie on
+the circle omega with diameter BC. Consider this circle. Its chord BC and its
+chord EF meet at X. Its chord BF (= line AB) and its chord CE (= line CA) meet
+at A. Its chord BE and its chord CF meet at H (the two altitudes BE, CF cross at
+the orthocentre). Thus, for the complete quadrilateral inscribed in omega with
+vertices B, F, E, C, the three diagonal points are X (= BC n EF), A (= BF n CE)
+and H (= BE n CF). Consequently the line AH is the polar of X with respect to
+omega. The line AH is the A-altitude, which meets BC at D. Since X also lies on
+BC, the polar of X meets BC at D, and therefore D and X are harmonic conjugates
+with respect to the points B, C where BC cuts omega:  (B, C; D, X) = -1.    [].
+
+Computation of X. On the x-axis use the coordinates B = 0, C = 17, D = 10.
+With X = (x0, 0), the relation (B, C; D, X) = -1 reads
+        (DB/DC) : (XB/XC) = -1,   i.e.   XB/XC = -(DB/DC).
+Here DB = 10, DC = 7 (directed B->C), so XB/XC = -10/7, giving
+        x0/(x0 - 17) = -10/7  =>  7 x0 = -10 x0 + 170  => 17 x0 = 170
+        =>  x0 = 10 ... (that is D);
+the harmonic conjugate is the OTHER solution of XB/XC = 10/7 taken externally:
+        x0/(x0 - 17) = 10/7  =>  7 x0 = 10 x0 - 170  =>  3 x0 = 170,
+so
+
+        X = (170/3, 0).                                        (2)
+
+(Direct check by intersecting line EF with y = 0 from the coordinates of E and F
+gives the same value 170/3; this is carried out and confirmed.)
+
+================================================================================
+STEP 2:  THE POINT Q = (line AX) n Omega
+================================================================================
+The direction of AX is X - A = (170/3 - 10, -24) = (140/3, -24), parallel to
+(35, -18). Parametrise the line AX by
+        (x, y) = (10 + 35 t, 24 - 18 t),     t in R,   t = 0 giving A.
+
+Substitute into (1). Compute each piece:
+   x^2 + y^2 = (10+35t)^2 + (24-18t)^2
+             = (100 + 700t + 1225 t^2) + (576 - 864t + 324 t^2)
+             = 676 - 164 t + 1549 t^2,
+   -17 x     = -170 - 595 t,
+   -(253/12) y = -(253/12)(24 - 18 t) = -506 + (759/2) t.
+
+Adding, the constant term is 676 - 170 - 506 = 0 (this just re-expresses that
+A lies on Omega), and the equation (1) becomes
+        1549 t^2 - (759/2) t = 0   =>   t ( 1549 t - 759/2 ) = 0.
+The root t = 0 is A; the second intersection corresponds to
+        t = 759 / (2 * 1549) = 759/3098.
+Therefore
+        Q_x = 10 + 35 * 759/3098 = (30980 + 26565)/3098 = 57545/3098,
+        Q_y = 24 - 18 * 759/3098 = (74352 - 13662)/3098 = 60690/3098 = 30345/1549,
+i.e.
+
+        Q = (57545/3098, 30345/1549).                          (3)
+
+(One checks directly that Q satisfies (1): substituting (3) into the left side
+of (1) yields exactly 0.)
+
+================================================================================
+STEP 3:  THE POINT P = HQ n (circle DEF)  IS THE MIDPOINT OF HQ
+================================================================================
+The circle through D, E, F is the nine-point circle of triangle ABC. It is the
+image of the circumcircle Omega under the homothety h centred at the orthocentre
+H with ratio 1/2. (Standard fact: h maps the circumcentre O to the nine-point
+centre N = (O + H)/2, the midpoint of OH, and scales the radius by 1/2; under h
+each vertex of the triangle maps to the Euler point, and the whole circumcircle
+maps onto the nine-point circle, which passes through D, E, F.)
+
+Since Q lies on Omega, its image
+        h(Q) = H + (1/2)(Q - H) = (H + Q)/2
+lies on the nine-point circle, i.e. on circle DEF. Moreover (H + Q)/2 is the
+midpoint of HQ, which lies in the interior of the segment HQ. The line HQ meets
+the circle DEF in at most two points; the midpoint is one of them and is the one
+lying on the segment HQ (the second intersection of line HQ with the circle is
+the point H + (1/2 - delta)... in fact it lies strictly outside the segment, as
+a direct solve of the quadratic confirms: parametrising HQ by H + u(Q - H), the
+two intersections occur at u = 1/2 and at a value u < 0). Hence the point P named
+in the problem is
+
+        P = (H + Q)/2.                                          (4)
+
+Using (3) and H = (10, 35/12):
+        P_x = (10 + 57545/3098)/2 = (88525/3098)/2 = 88525/6196,
+        P_y = (35/12 + 30345/1549)/2.
+For P_y put both terms over 18588 = 12*1549:
+        35/12 = 54215/18588,   30345/1549 = 364140/18588,
+        sum = 418355/18588,   half = 418355/37176.
+So
+        P = (88525/6196, 418355/37176).                        (5)
+
+================================================================================
+STEP 4:  THE LENGTHS PQ AND PE
+================================================================================
+--------------------------------------------------------------------------------
+Length PQ.
+--------------------------------------------------------------------------------
+By (4), PQ = (1/2) HQ. Now
+        Q - H = (57545/3098 - 10,  30345/1549 - 35/12)
+              = (26565/3098,  309925/18588).
+Put both coordinates over the common denominator 18588 = 12*1549 (note
+26565/3098 = 159390/18588):
+        Q - H = (1/18588) (159390, 309925).
+Hence
+        HQ^2 = (159390^2 + 309925^2) / 18588^2.
+
+Numerator:  159390^2 + 309925^2 = 121,458,677,725.
+This factors as
+        121,458,677,725 = 1549 * 8855^2,           (8855^2 = 78,411,025),
+which one verifies by multiplication: 1549 * 78,411,025 = 121,458,677,725.
+Denominator:  18588^2 = 144 * 1549^2.
+Therefore
+        HQ^2 = (1549 * 8855^2) / (144 * 1549^2) = 8855^2 / (144 * 1549),
+and, since 144 * 1549 = (12)^2 * 1549,
+        HQ = 8855 / (12 * sqrt(1549)),
+        PQ = HQ/2 = 8855 / (24 * sqrt(1549)).                  (6)
+
+--------------------------------------------------------------------------------
+Length PE.
+--------------------------------------------------------------------------------
+From (5) and E = (9792/625, 2856/625) put both points over the common
+denominator 23,235,000 = 625 * 37176 (here 37176 = 24*1549):
+        E   = (364,027,392 / 23235000,  106,174,656 / 23235000),
+        P   = (331,968,750 / 23235000,  261,471,875 / 23235000).
+Hence
+        E - P = ( 32,058,642 / 23235000,  -155,297,219 / 23235000),
+        PE^2  = (32,058,642^2 + 155,297,219^2) / 23,235,000^2.
+
+Numerator:
+        32,058,642^2 + 155,297,219^2 = 25,144,982,756,018,125.
+This factors as
+        25,144,982,756,018,125 = 625 * 1549 * 161161^2,
+                                            (161161^2 = 25,972,867,921),
+verified by multiplication:
+        161161^2 = 25,972,867,921,
+        25,972,867,921 * 1549 = 40,231,972,409,629,
+        40,231,972,409,629 * 625 = 25,144,982,756,018,125.
+Denominator:
+        23,235,000^2 = (3 * 5 * 1549 * 1000)^2 = 2^6 * 3^2 * 5^8 * 1549^2.
+Therefore
+        PE^2 = (625 * 1549 * 161161^2) / (2^6 * 3^2 * 5^8 * 1549^2)
+             = 161161^2 / (2^6 * 3^2 * 5^4 * 1549)
+             = 161161^2 / (360000 * 1549),
+and, since 360000 = 600^2,
+        PE = 161161 / (600 * sqrt(1549)).                      (7)
+
+================================================================================
+STEP 5:  THE RATIO PQ/PE
+================================================================================
+Dividing (6) by (7), the common factor sqrt(1549) cancels:
+
+        PQ      8855 / 24            8855 * 600       8855 * 25
+       ---- = -------------- = ----------------- = ------------- .
+        PE     161161 / 600       24 * 161161         161161
+
+Now use the prime factorisations
+        8855  = 5 * 7 * 11 * 23,        so 8855 * 25 = 5^3 * 7 * 11 * 23 = 221375,
+        161161 = 7^2 * 11 * 13 * 23.
+Their greatest common divisor is 7 * 11 * 23 = 1771, and
+        221375 / 1771 = 125,        161161 / 1771 = 91.
+Hence
+
+        PQ/PE = 221375 / 161161 = 125 / 91.
+
+Finally 125 = 5^3 and 91 = 7 * 13 share no common factor, so 125/91 is already
+in lowest terms. (Numerically 125/91 = 1.37362..., matching the direct numerical
+evaluation of PQ/PE.)
+
+================================================================================
+CONCLUSION
+================================================================================
+        PQ / PE = 125 / 91,   with a = 125, b = 91 coprime.
+
+        a + b = 125 + 91 = 216.
+
+================================================================================
+REMARK (a structural check)
+================================================================================
+A coordinate-free reason why Q is special: by the power of the point X,
+        XA * XQ = XB * XC      (X, A, Q collinear on Omega; X, B, C collinear),
+and also XB * XC = XE * XF, the power of X with respect to the circle omega on
+diameter BC (which contains B, C, E, F). Hence XA * XQ = XE * XF, so A, E, F, Q
+are concyclic. But A, E, F, H already lie on the circle with diameter AH (since
+angle AEH = angle AFH = 90 degrees). Therefore Q lies on the circle with
+diameter AH, giving angle AQH = 90 degrees, i.e. HQ is perpendicular to AX.
+(This perpendicularity is confirmed by the direction vectors: HQ ~ (26565/3098,
+309925/18588) is orthogonal to AX ~ (35, -18).) This is the geometric content
+behind the clean factorisations appearing above; it is not needed for the final
+arithmetic, which is established rigorously in Steps 1-5.

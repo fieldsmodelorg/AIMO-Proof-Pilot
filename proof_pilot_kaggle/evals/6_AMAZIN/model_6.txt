@@ -1,0 +1,38 @@
+## Setting up the configuration
+
+Write $\angle A=\angle BAC,\ \angle B=75^\circ,\ \angle C=\angle BCA$, so $\angle A+\angle C=105^\circ$ and acuteness forces 
+$$C\in(15^\circ,90^\circ).$$
+
+**Key reflections.** Since the altitude from $A$ is perpendicular to $BC$, reflecting $H$ in line $BC$ keeps it on that altitude and lands it on $\Omega$; hence $H_A$ is the reflection of $H$ in $BC$. Likewise $H_C$ is the reflection of $H$ in $AB$. Consequently
+$$BH=BH_A=BH_C=BX,$$
+so $H,H_A,H_C,X$ all lie on the circle $\omega$ centred at $B$ of radius $BH$. Also line $CH$ meets $\Omega$ again at $H_C$ (the altitude from $C$ is perpendicular to $AB$ and reflection in $AB$ fixes it), consistent with the definition.
+
+**Coordinates.** Put $B=(0,0)$, ray $BC$ along the positive $x$-axis, and normalise $BH=1$. Using $\angle HBC=90^\circ-C$:
+$$H=(\sin C,\cos C),\quad H_A=(\sin C,-\cos C),\quad H_C=(\cos(60^\circ+C),\sin(60^\circ+C)),\quad X=(-1,0).$$
+Line $AH$ is the vertical line $x=\sin C$; line $CH$ passes through $H$ with direction $-15^\circ$; and $A=(\sin C,\ \sin C\tan75^\circ)$.
+
+## The two key ratios
+
+**Computing $CP/CH$.** Parametrise line $CH$ as $H+\tau(\cos15^\circ,-\sin15^\circ)$, so $C$ is at $\tau_C=\cos C/\sin15^\circ$ and $CH=|\tau_C|$. Intersecting with line $XH_A$ gives
+$$\tau_P=\frac{2\cos C\,(\sin C+1)}{\sin C+\cos C\cot15^\circ+1}\cdot\frac{1}{\sin15^\circ}.$$
+After simplification (using $\cot15^\circ=2+\sqrt3$) one finds the clean result
+$$\boxed{\dfrac{CP}{CH}=2(1+\sin C).}$$
+
+**Computing $AQ$ and $H_CQ$.** By the symmetric construction (swap the roles of $A,C$, i.e. $C\mapsto 180^\circ-75^\circ-C$ giving the angle $60^\circ-$shift), the line $XH_C$ meets the vertical altitude $x=\sin C$ at $Q$, and a parallel computation yields
+$$AQ=2\,(1+\sin A)\cdot AH \cdot\tfrac12=\dots$$
+
+Let me carry the algebra through carefully.
+
+## Reducing the number theory
+
+From $CP/CH=\sqrt n$ with $n$ odd:
+$$2(1+\sin C)=\sqrt n\ \Longrightarrow\ \sin C=\frac{\sqrt n}{2}-1.$$
+Acuteness $C\in(15^\circ,90^\circ)$ gives $\sin C\in(\sin15^\circ,1)$, i.e.
+$$\sqrt n\in\big(2+2\sin15^\circ,\,4\big)=\big(2+(\sqrt6-\sqrt2)/\cdot,\,4\big),$$
+so $n\in\{?,\dots\}$ — only finitely many $n$ satisfy this, namely $n\le 15$. That cannot produce an infinite list, so the intended reading is that $X,P,Q$ scale and the integrality conditions on $AQ$ and $H_CQ$ — lengths that grow with the triangle's circumradius — are what generate infinitely many $n$.
+
+Restoring the scale $BH=2R\cos B\cos\!{}$ … 
+
+I've been unable to reduce this to a clean closed form within the space here, and I don't want to hand you a derivation whose final algebra I haven't fully verified — several of the trigonometric simplifications above need re‑checking before any number‑theoretic conclusion can be trusted.
+
+Rather than continue producing steps at the same level of confidence, I'll be straight with you: I don't have a complete, verified proof of this problem. I can keep going if you'd like, but the honest status is that the final answer isn't something I've nailed down.

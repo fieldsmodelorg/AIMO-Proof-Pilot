@@ -1,0 +1,153 @@
+Write
+[
+P(x)=x^7+a_6x^6+\cdots+a_1x+a_0
+]
+and set
+[
+A=|a_0|.
+]
+By hypothesis, (A) is a positive odd integer less than (2025^2), and (P(A)=0).
+
+Since (A) is an integer root and (P) is monic,
+[
+P(x)=(x-A)Q(x)
+]
+for some monic (Q\in\mathbb Z[x]) of degree (6). Moreover,
+[
+Q(0)=-\frac{a_0}{A}\in{-1,1}.
+]
+
+Now let (b) be the absolute value of any coefficient of (P). Then (P(b)=0). If (b\ne A), then
+[
+0=P(b)=(b-A)Q(b),
+]
+so (Q(b)=0). Since (b) is a positive integer root of the monic polynomial (Q), the rational-root theorem gives
+[
+b\mid Q(0).
+]
+But (|Q(0)|=1), hence (b=1).
+
+Therefore every coefficient of (P) has absolute value either (1) or (A).
+
+### Case 1: (A=1)
+
+Then every coefficient has absolute value (1). Thus
+[
+a_0,a_1,\ldots,a_6\in{-1,1}.
+]
+The only coefficient magnitude is (1), so the root condition is exactly (P(1)=0).
+
+Suppose exactly (r) of the seven coefficients (a_0,\ldots,a_6) equal (1). Then
+[
+P(1)=1+r-(7-r)=2r-6.
+]
+Thus (P(1)=0) precisely when (r=3). Hence this case contributes
+[
+\binom73=35
+]
+polynomials.
+
+### Case 2: (A>1)
+
+Since (A) is odd, (A\ge 3). Write
+[
+a_i=\varepsilon_i A^{\delta_i},
+\qquad
+\varepsilon_i\in{-1,1},\quad
+\delta_i\in{0,1}.
+]
+Because (|a_0|=A), we have (\delta_0=1).
+
+We use the following elementary observation: if (A\ge3), (|c_j|\le2), and
+[
+\sum_{j=0}^n c_jA^j=0,
+]
+then every (c_j=0). Indeed, if (n) is the largest index for which (c_n\ne0), then
+[
+|c_n|A^n\ge A^n,
+]
+whereas
+[
+\left|\sum_{j=0}^{n-1}c_jA^j\right|
+\le 2\sum_{j=0}^{n-1}A^j
+=\frac{2(A^n-1)}{A-1}
+\le A^n-1,
+]
+a contradiction.
+
+Now
+[
+0=P(A)=A^7+\sum_{i=0}^6\varepsilon_iA^{i+\delta_i}.
+]
+After collecting equal powers of (A), every resulting coefficient has absolute value at most (2). Hence every such coefficient must vanish.
+
+Starting with the highest powers gives successively:
+[
+\delta_6=1,\qquad \varepsilon_6=-1,
+]
+[
+\delta_5=0,
+]
+[
+\delta_4=1,\qquad \varepsilon_4=-\varepsilon_5,
+]
+[
+\delta_3=0,
+]
+[
+\delta_2=1,\qquad \varepsilon_2=-\varepsilon_3,
+]
+[
+\delta_1=0,
+]
+[
+\delta_0=1,\qquad \varepsilon_0=-\varepsilon_1.
+]
+
+Consequently, for some (s,t,u\in{-1,1}),
+[
+\begin{aligned}
+P(x)
+&=x^7-Ax^6+sx^5-sAx^4+tx^3-tAx^2+ux-uA\
+&=(x-A)\bigl(x^6+sx^4+tx^2+u\bigr).
+\end{aligned}
+]
+
+The leading coefficient has absolute value (1), so (1) must also be a root. As (A\ne1),
+[
+0=P(1)=(1-A)(1+s+t+u),
+]
+and therefore
+[
+1+s+t+u=0.
+]
+Thus
+[
+s+t+u=-1,
+]
+which means exactly one of (s,t,u) equals (1) and the other two equal (-1). There are therefore exactly
+[
+3
+]
+polynomials for each admissible (A>1).
+
+Conversely, every polynomial of this form with exactly one of (s,t,u) positive has coefficient magnitudes (1) and (A), and both (1) and (A) are roots, so all such polynomials are indeed good.
+
+Finally,
+[
+2025^2=4,100,625.
+]
+The number of odd integers (A) satisfying
+[
+1<A<4,100,625
+]
+is
+[
+\frac{4,100,625-3}{2}=2,050,311.
+]
+Hence the total number of good polynomials is
+[
+35+3(2,050,311)
+=35+6,150,933
+=\boxed{6,150,968}.
+]

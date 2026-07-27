@@ -1,0 +1,206 @@
+**Notation.** Let $a_1,\dots,a_k$ be distinct positive integers with $k\ge 3$ and product $P=\prod_{i=1}^k a_i$.  
+Define $g=\gcd\{P/a_i+1\mid 1\le i\le k\}$ and $S=\sum_{i=1}^k a_i$.  
+We are given $S<3\cdot10^6$ and are asked for the maximum possible value of $g$.
+
+---
+
+### 1.  Necessary conditions
+
+Since $g\mid(P/a_i+1)$ for every $i$, we have  
+
+\[
+\frac{P}{a_i}\equiv -1 \pmod g\qquad(i=1,\dots,k). \tag{1}
+\]
+
+Multiplying by $a_i$ gives $P\equiv -a_i\pmod g$, hence all $a_i$ are congruent modulo $g$.  
+Let $r$ be that common residue, $0\le r<g$.  From (1) we obtain  
+
+\[
+\frac{P}{a_i}\equiv r^{\,k-1}\pmod g,
+\]
+because each of the $k-1$ factors $a_j\;(j\neq i)$ is $\equiv r\pmod g$.  
+Consequently  
+
+\[
+\frac{P}{a_i}+1\equiv r^{\,k-1}+1\pmod g .
+\]
+
+Since $g$ divides this expression, we get the crucial congruence  
+
+\[
+r^{\,k-1}+1\equiv 0\pmod g . \tag{2}
+\]
+
+Moreover, if $g\ge2$ then $r\neq0$; otherwise all $a_i$ would be multiples of $g$, making $\frac{P}{a_i}+1\equiv1\pmod g$, impossible for $g>1$.  Thus  
+
+\[
+1\le r\le g-1 . \tag{3}
+\]
+
+Because the $a_i$ are distinct and all $\equiv r\pmod g$, any two of them differ by a non‑zero multiple of $g$; therefore  
+
+\[
+|a_i-a_j|\ge g\qquad(i\neq j). \tag{4}
+\]
+
+This gives a lower bound on the sum $S$.  Order the numbers increasingly:
+$a_{(1)}<a_{(2)}<\dots<a_{(k)}$.  From (4) we obtain  
+
+\[
+a_{(j)}\ge r+(j-1)g\qquad(j=1,\dots,k).
+\]
+
+Hence  
+
+\[
+S=\sum_{i=1}^k a_i\;\ge\;k r+g\,\frac{k(k-1)}{2}. \tag{5}
+\]
+
+Together with $S<3\cdot10^6$ we have  
+
+\[
+k r+g\,\frac{k(k-1)}{2}\;<\;3\cdot10^6. \tag{6}
+\]
+
+---
+
+### 2.  Bounding $g$ according to $k$
+
+#### Case $k\ge 4$
+From (6) and $r\ge 1$ we get  
+
+\[
+g\,\frac{k(k-1)}{2}\;<\;3\cdot10^6\qquad\Longrightarrow\qquad
+g<\frac{6\cdot10^6}{k(k-1)}.
+\]
+
+For $k=4$ this gives $g<\dfrac{6\cdot10^6}{12}=500\,000$, so $g\le 499\,999$.  
+For $k\ge 5$ the bound is even smaller.  Hence for **all $k\ge4$**  
+
+\[
+g\le 499\,999<998\,285. \tag{7}
+\]
+
+#### Case $k=3$
+Now $k=3$ in (2) and (6):
+
+\[
+r^{2}+1\equiv0\pmod g,\qquad
+3r+3g<3\cdot10^6\;\Longrightarrow\; r+g\le 999\,999 . \tag{8}
+\]
+
+Write $r^{2}+1=m\,g$ with $m\in\mathbb N$.  Because $r\le g-1$, we have $m\ge1$.  Our aim is to show $g\le 998\,285$.
+
+Assume, for contradiction, that $g\ge 998\,286$.  
+
+From $r^{2}+1\ge g$ we obtain $r^{2}\ge g-1\ge 998\,285$; therefore  
+
+\[
+r\ge 1000 . \tag{9}
+\]
+
+Now $r+g\le 999\,999$ together with $g\ge 998\,286$ yields  
+
+\[
+r\le 999\,999-g\le 999\,999-998\,286 = 1\,713 . \tag{10}
+\]
+
+Thus $1000\le r\le 1\,713$.
+
+Because $r^{2}+1 = m g$ and $g\ge 998\,286$, we have  
+
+\[
+m=\frac{r^{2}+1}{g}\le\frac{1\,713^{2}+1}{998\,286}
+   \approx 2.94 .
+\]
+
+Hence $m$ can only be $1$ or $2$.
+
+* **If $m=1$,** then $g=r^{2}+1$.  Then  
+  \[
+  r+g = r+r^{2}+1 = r^{2}+r+1 \ge 1000^{2}+1000+1 = 1\,001\,001 > 999\,999,
+  \]
+  contradicting (8).
+
+* **If $m=2$,** then $g=\dfrac{r^{2}+1}{2}$.  Now  
+  \[
+  r+g = r+\frac{r^{2}+1}{2}
+       = \frac{r^{2}+2r+1}{2}
+       = \frac{(r+1)^{2}}{2}.
+  \]
+  Condition (8) becomes $\dfrac{(r+1)^{2}}{2}\le 999\,999$, i.e. $(r+1)^{2}\le 1\,999\,998$.  
+  Hence $r+1\le 1414$ and therefore $r\le 1413$.
+
+  On the other hand, $g\ge 998\,286$ gives  
+  \[
+  \frac{r^{2}+1}{2}\ge 998\,286 \;\Longrightarrow\; r^{2}+1\ge 1\,996\,572
+  \;\Longrightarrow\; r^{2}\ge 1\,996\,571 .
+  \]
+  Since $1412^{2}=1\,993\,744<1\,996\,571$ and $1413^{2}=1\,996\,569$, we must have $r\ge 1413$.
+
+  Combining $r\le 1413$ and $r\ge 1413$ forces $r=1413$, but then  
+  \[
+  g = \frac{1413^{2}+1}{2}= \frac{1\,996\,569+1}{2}=998\,285,
+  \]
+  which is **strictly smaller** than the assumed $g\ge 998\,286$.  Contradiction.
+
+Thus our assumption $g\ge 998\,286$ is impossible; therefore  
+
+\[
+g\le 998\,285\qquad\text{for }k=3. \tag{11}
+\]
+
+---
+
+### 3.  Combining the cases
+From (7) we have $g\le 499\,999$ for $k\ge4$, and from (11) we have $g\le 998\,285$ for $k=3$.  
+Hence **for every admissible choice of $a_i$ and $k\ge3$**
+
+\[
+g\le 998\,285 .
+\]
+
+---
+
+### 4.  Achieving the bound
+It remains to exhibit a concrete tuple for which the gcd reaches $998\,285$.  
+
+Take $k=3$, $r=1413$ and $g=998\,285$.  Choose  
+
+\[
+a_1 = 1413,\qquad 
+a_2 = 1413 + 998\,285 = 999\,698,\qquad
+a_3 = 1413 + 2\cdot 998\,285 = 1\,997\,983 .
+\]
+
+These numbers are distinct positive integers.  Their sum is  
+
+\[
+1413+999\,698+1\,997\,983 = 2\,999\,094 < 3\cdot10^6 .
+\]
+
+Now verify that $998\,285$ divides each $P/a_i+1$.  Because each $a_j\equiv r\pmod g$ and  
+
+\[
+r^{2}+1 = 1413^{2}+1 = 1\,996\,570 = 2\cdot 998\,285 \equiv 0 \pmod g,
+\]
+
+we have $r^{2}+1\equiv0\pmod g$.  For $i=1$,
+
+\[
+\frac{P}{a_1}=a_2a_3 \equiv r^{2}\pmod g,\qquad
+\frac{P}{a_1}+1 \equiv r^{2}+1 \equiv0\pmod g .
+\]
+
+The same computation holds for $i=2,3$.  Hence $998\,285\mid\bigl(\frac{P}{a_i}+1\bigr)$ for all $i$.
+
+Consequently the greatest common divisor $g$ of these three numbers is a multiple of $998\,285$.  Because we have already proved that $g\le 998\,285$ for **any** possible choice, it follows that for this particular choice $g$ equals exactly $998\,285$.
+
+---
+
+### 5.  Answer
+\[
+\boxed{998\,285}
+\]
+
+---

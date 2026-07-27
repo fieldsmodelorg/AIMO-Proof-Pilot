@@ -1,0 +1,24 @@
+The amazing odd positive integers are those $n$ of the form $n = 3k^2$ ($k$ odd) for which either $3k^2+3k+1$ or $3k^2-3k+1$ is a perfect square. These conditions correspond to Pell equations $x^2-3y^2=1$ with $x=2m$, $y=2k\pm1$ and yield two infinite families:  
+- $A_t\!: n = 3\bigl((y_{4t-1}-1)/2\bigr)^2$ for $t\ge1$ (from $3k^2+3k+1=m^2$),  
+- $B_t\!: n = 3\bigl((y_{4t+1}+1)/2\bigr)^2$ for $t\ge1$ (from $3k^2-3k+1=m^2$),  
+where $y_n$ are the Pell numbers $y_1=1$, $y_2=4$, $y_3=15$, $y_4=56$, $y_5=209$,…  
+The numbers $A_t$ and $B_t$ satisfy $A_t<B_t<A_{t+1}<B_{t+1}$ for all $t$, so the increasing list of all amazing odd numbers is  
+$n_1=A_1=147,\; n_2=B_1=33075,\; n_3=A_2=6351075,\; n_4=B_2=1232983587,\; n_5=A_3=239179094643,\; n_6=B_3=46399827249363,\;\ldots$  
+Hence the even‑indexed terms are $n_{2i}=B_i$ for $i\ge1$.
+
+From the Pell sequence, $y_{4i+1} = \frac{\alpha^{4i+1}-\beta^{4i+1}}{2\sqrt3}$ with $\alpha=2+\sqrt3$, $\beta=2-\sqrt3$. Then  
+$n_{2i}=3\Bigl(\frac{y_{4i+1}+1}{2}\Bigr)^2 = \frac{\alpha^{8i+2}}{16} + \frac{\sqrt3}{4}\alpha^{4i+1} + \frac58 + \text{terms that vanish}$ as $i\to\infty$.  
+Thus $n_{2i} \sim \frac{\alpha^2}{16}\,\alpha^{8i}$.  
+Therefore the largest real $x$ for which there exists $y>0$ with $n_{2i}\ge y\,x^i$ eventually is $x=\alpha^8 = (2+\sqrt3)^8$.  
+For this $x$, the largest $z$ with $n_{2i}\ge z\,x^i$ eventually is $z = \frac{\alpha^2}{16} = \frac{7+4\sqrt3}{16}$.  
+
+Now compute  
+$x = (2+\sqrt3)^8 = 18817+10864\sqrt3$,  
+$2016z = 2016\cdot\frac{7+4\sqrt3}{16} = 126(7+4\sqrt3) = 882+504\sqrt3$,  
+$x+2016z = (18817+882)+(10864+504)\sqrt3 = 19699+11368\sqrt3$.  
+Thus $p=19699$, $q=11368$, $r=3$ (square‑free).  
+Hence $p+q+r = 19699+11368+3 = 31070$.
+
+\[
+\boxed{31070}
+\]

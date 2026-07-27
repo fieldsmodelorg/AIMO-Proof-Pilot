@@ -1,0 +1,342 @@
+All angles are measured in degrees.
+
+Let
+[
+\beta=\angle CBH.
+]
+Since (BH\perp AC),
+[
+\beta=90^\circ-\angle C,\qquad
+\angle A=15^\circ+\beta.
+]
+Because (ABC) is acute,
+[
+0<\beta<75^\circ.
+]
+Put
+[
+\theta=\frac{\beta}{2},
+\qquad 0<\theta<37.5^\circ.
+]
+
+## 1. Two geometric ratios
+
+Scale the triangle so that (BH=1), place (B=(0,0)), and put (BC) on the positive (x)-axis. Then
+[
+H=(\cos\beta,\sin\beta),\qquad X=(-1,0).
+]
+
+The reflection of the orthocentre across a side lies on the circumcircle. Hence (H_A) and (H_C) are respectively the reflections of (H) in (BC) and (AB). Thus
+[
+H_A=(\cos\beta,-\sin\beta),
+]
+while (BH_C=1) and the polar angle of (H_C) is
+[
+150^\circ-\beta.
+]
+
+Set
+[
+K=\cot15^\circ=2+\sqrt3.
+]
+Since (CH\perp AB), the line from (H) to (C) makes angle (-15^\circ) with (BC). Therefore
+[
+C=(\cos\beta+\sin\beta K,0).
+]
+
+Write
+[
+P=C+r(H-C).
+]
+Then (CP/CH=|r|). Also write
+[
+P=X+v(H_A-X).
+]
+Comparing (y)-coordinates gives (r=-v). Comparing (x)-coordinates then gives
+[
+r=-\frac{1+\cos\beta+\sin\beta K}
+{1+\cos\beta-\sin\beta K}.
+]
+Since
+[
+\frac{\sin\beta}{1+\cos\beta}=\tan\theta,
+]
+we obtain, with (s=\sqrt n),
+[
+s=\frac{CP}{CH}
+=\frac{1+K\tan\theta}{|1-K\tan\theta|}
+=\frac{\sin(15^\circ+\theta)}
+{|\sin(15^\circ-\theta)|}. \tag{1}
+]
+The excluded parallel case is exactly (\theta=15^\circ).
+
+We next calculate (AQ/H_CQ). Reflection in (AB) maps the line (AH), which makes angle (90^\circ) with (BC), to the line (AH_C). Hence (AH_C) makes angle
+[
+2\cdot75^\circ-90^\circ=60^\circ
+]
+with (BC).
+
+The points (X,H_C) lie on the unit circle centred at (B), at polar angles (180^\circ) and (150^\circ-2\theta). Indeed,
+[
+H_C-X
+=2\cos(75^\circ-\theta)
+\bigl(\cos(75^\circ-\theta),\sin(75^\circ-\theta)\bigr),
+]
+so (XH_C) makes angle (75^\circ-\theta) with (BC).
+
+In triangle (AQH_C), the sine of the angle at (A) is (\sin30^\circ=1/2), while the sine of the angle at (H_C) is
+[
+\sin|15^\circ-\theta|.
+]
+Thus the sine rule gives
+[
+\rho:=\frac{AQ}{H_CQ}
+=2\sin|15^\circ-\theta|. \tag{2}
+]
+
+### Case 1: (0<\theta<15^\circ)
+
+Put (d=15^\circ-\theta). Equations (1)–(2) become
+[
+s=\frac{\sin(30^\circ-d)}{\sin d},
+\qquad \rho=2\sin d.
+]
+Therefore
+[
+s\rho=2\sin(30^\circ-d)
+=\cos d-\sqrt3\sin d
+=\cos d-\frac{\sqrt3}{2}\rho.
+]
+Hence
+[
+\cos d=\rho\left(s+\frac{\sqrt3}{2}\right).
+]
+Using (\sin d=\rho/2),
+[
+1=\rho^2\left(\frac14+
+\left(s+\frac{\sqrt3}{2}\right)^2\right),
+]
+so
+[
+\boxed{\rho^{-2}=n+1+\sqrt{3n}}. \tag{3}
+]
+
+### Case 2: (15^\circ<\theta<37.5^\circ)
+
+Now put (d=\theta-15^\circ). Then
+[
+s=\frac{\sin(30^\circ+d)}{\sin d},
+\qquad \rho=2\sin d.
+]
+Thus
+[
+s\rho=\cos d+\frac{\sqrt3}{2}\rho,
+]
+and similarly
+[
+\boxed{\rho^{-2}=n+1-\sqrt{3n}}. \tag{4}
+]
+
+## 2. Characterizing the amazing integers
+
+For any fixed shape of triangle, scaling multiplies both (AQ) and (H_CQ) by the same factor. Hence some scaling makes both lengths positive integers exactly when
+[
+\frac{AQ}{H_CQ}=\rho
+]
+is rational.
+
+Suppose (n) is amazing. By (3) or (4),
+[
+n+1\pm\sqrt{3n}=\rho^{-2}\in\mathbb Q.
+]
+Therefore (\sqrt{3n}) is rational. Since (3n) is an integer, (\sqrt{3n}) is an integer. Divisibility by (3) then gives
+[
+\sqrt{3n}=3m,\qquad n=3m^2
+]
+for some positive integer (m). Since (n) is odd, (m) is odd.
+
+Furthermore, (3) or (4) is an integer which is the square of a rational number, and hence is a perfect square. Consequently there is a positive integer (k) such that either
+[
+k^2=3m^2+3m+1, \tag{5}
+]
+or
+[
+k^2=3m^2-3m+1. \tag{6}
+]
+
+Conversely, any solution of (5) produces a valid triangle from the first case: for (s=\sqrt3m), choose
+[
+\tan\theta=\frac{s-1}{K(s+1)}.
+]
+Then (0<\theta<15^\circ), and (3) gives (\rho=1/k). Scaling so that (AQ=1) gives (H_CQ=k).
+
+For (6), solving (1) in the second case gives
+[
+\tan\theta=\frac{s+1}{K(s-1)}.
+]
+When (m=1), this equals (1), giving (\theta=45^\circ), which is not an acute-triangle configuration. If (m\ge3), then (s=\sqrt3m>5), and
+[
+\tan\theta
+<\frac{3/2}{3}=\frac12<\tan30^\circ,
+]
+while (\tan\theta>\tan15^\circ). Thus (15^\circ<\theta<30^\circ), and the triangle is valid.
+
+Therefore the amazing integers correspond exactly to odd (m) satisfying (5), or odd (m\ge3) satisfying (6).
+
+## 3. The Pell equations
+
+Multiplying (5) by (4) gives
+[
+(2k)^2-3(2m+1)^2=1. \tag{7}
+]
+Similarly, (6) becomes
+[
+(2k)^2-3(2m-1)^2=1. \tag{8}
+]
+
+Let
+[
+\alpha=2+\sqrt3,
+\qquad
+\alpha^j=u_j+v_j\sqrt3.
+]
+All positive integer solutions of
+[
+U^2-3V^2=1
+]
+are given by
+[
+U+V\sqrt3=\alpha^j,\qquad j\ge1.
+]
+
+For completeness, take any positive solution (w=U+V\sqrt3). Choose (j) such that
+[
+\alpha^j\le w<\alpha^{j+1}.
+]
+Then (r=w\alpha^{-j}\in[1,\alpha)), and (r=a+b\sqrt3) for integers (a,b), with norm (1). Since (r\ge1), we have (a\ge1,b\ge0). If (b\ge1), then (a^2=1+3b^2), so (a\ge2), giving
+[
+r=a+b\sqrt3\ge2+\sqrt3=\alpha,
+]
+a contradiction. Hence (r=1), proving the assertion.
+
+Modulo (2),
+[
+u_{j+1}\equiv v_j,\qquad v_{j+1}\equiv u_j.
+]
+Thus (u_j) is even and (v_j) odd exactly when (j) is odd.
+
+Also, since
+[
+\alpha^2=7+4\sqrt3,
+]
+we have
+[
+v_{j+2}=4u_j+7v_j\equiv-v_j\pmod4.
+]
+Starting from (v_1=1), this gives
+[
+v_j\equiv
+\begin{cases}
+1\pmod4,&j\equiv1\pmod4,\
+3\pmod4,&j\equiv3\pmod4.
+\end{cases}
+]
+
+For equation (7), (v_j=2m+1\equiv3\pmod4), because (m) is odd. Hence
+[
+j\equiv3\pmod4,\qquad m=\frac{v_j-1}{2}.
+]
+
+For equation (8), (v_j=2m-1\equiv1\pmod4), so
+[
+j\equiv1\pmod4,\qquad m=\frac{v_j+1}{2}.
+]
+The case (j=1) gives (m=1), which was excluded. Therefore the amazing numbers correspond, in order, to every odd exponent
+[
+j=3,5,7,9,\ldots
+]
+and
+[
+n_i
+=3\left(\frac{v_{2i+1}+(-1)^i}{2}\right)^2. \tag{9}
+]
+These are increasing because
+[
+v_{j+2}=4u_j+7v_j>v_j+2,
+]
+so the correction by (\pm1) cannot reverse the order.
+
+In particular,
+[
+n_{2i}=3\left(\frac{v_{4i+1}+1}{2}\right)^2. \tag{10}
+]
+
+## 4. Determining (x) and (z)
+
+Since (\alpha^{-1}=2-\sqrt3),
+[
+v_j=\frac{\alpha^j-\alpha^{-j}}{2\sqrt3}.
+]
+Thus (10) gives
+[
+n_{2i}
+=3\left(
+\frac{\alpha^{4i+1}-\alpha^{-(4i+1)}}{4\sqrt3}
++\frac12
+\right)^2.
+]
+Consequently,
+[
+\frac{n_{2i}}{\alpha^{8i}}
+\longrightarrow
+3\left(\frac{\alpha}{4\sqrt3}\right)^2
+=\frac{\alpha^2}{16}. \tag{11}
+]
+It follows that
+[
+n_{2i}^{1/i}\longrightarrow\alpha^8.
+]
+Hence no (x>\alpha^8) can satisfy the required eventual lower bound.
+
+Moreover, writing (A_i=\alpha^{4i+1}),
+[
+\frac{A_i-A_i^{-1}}{4\sqrt3}+\frac12
+
+> \frac{A_i}{4\sqrt3},
+> ]
+> because (A_i^{-1}/(4\sqrt3)<1/2). Therefore
+> [
+> n_{2i}>
+> \frac{A_i^2}{16}
+> =\frac{\alpha^2}{16}(\alpha^8)^i.
+> ]
+> Thus
+> [
+> x=\alpha^8,
+> \qquad
+> z=\frac{\alpha^2}{16}.
+> ]
+
+Finally,
+[
+x+2016z=\alpha^8+126\alpha^2.
+]
+Now
+[
+\alpha^2=7+4\sqrt3,
+]
+and
+[
+\alpha^8=(97+56\sqrt3)^2
+=18817+10864\sqrt3.
+]
+Hence
+[
+x+2016z
+=(18817+10864\sqrt3)+126(7+4\sqrt3)
+=19699+11368\sqrt3.
+]
+Therefore
+[
+p+q+r=19699+11368+3=\boxed{31070}.
+]

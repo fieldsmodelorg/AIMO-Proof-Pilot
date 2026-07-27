@@ -1,0 +1,32 @@
+To solve this game on a $2025 \times 2025$ grid, we analyze the interaction between Linda (L) and Sue (S) as they modify the set of grey cells.
+
+### Part (a): Proof that the game always ends
+
+We prove the game must end because the number of grey cells strictly decreases with every move until all cells are colored. Let $|G|$ denote the number of grey cells.
+
+1.  **Linda's Move:** L chooses one cell and paints it lime. Since the game continues only if $G$ is not empty, L must choose a cell. 
+    *   If L chooses a grey cell, $|G|$ decreases by 1.
+    *   If L chooses a non-grey cell (lime or scarlet), $|G|$ remains unchanged.
+2.  **Sue's Move:** S chooses a $2 \times 2$ block containing at least one grey cell and paints all four cells scarlet. 
+    *   Because the block must contain at least one grey cell by the rules, every move by S converts at least one grey cell into a non-grey (scarlet) cell.
+    *   Therefore, $|G|$ strictly decreases on every turn of S.
+
+Since the grid size is finite ($2025^2$ cells) and the number of grey cells is a non-negative integer that strictly decreases on Sue's turns (and non-increasing on Linda's), the game cannot continue indefinitely. It must terminate when $|G| = 0$.
+
+### Part (b): Number of lime cells under optimal play
+
+Linda wants to maximize the number of lime cells, while Sue wants to maximize scarlet cells, which is equivalent to minimizing the number of lime cells. The optimal number of lime cells Linda can guarantee is **0**.
+
+**Proof:** Sue has a strategy to ensure that no cell remains lime at the end of the game.
+
+1.  **Sue's Strategy:** Whenever Linda paints a cell $c$ lime, Sue will respond in her next turn by choosing a $2 \times 2$ block $B$ that contains $c$ and at least one grey cell. She paints all four cells in $B$ scarlet.
+2.  **Existence of a Block:** A $2 \times 2$ block containing $c$ exists if there is at least one grey cell within the $3 \times 3$ neighborhood of $c$ (Chebyshev distance $\le 1$). If $c$ is at the boundary or corner, fewer blocks exist, but the condition remains that Sue only needs one grey cell in a block to legally target $c$.
+3.  **Sue's Justification:** Sue's goal is to maximize her final score. By targeting a lime cell $c$ and painting it scarlet (or re-painting it scarlet if it was already scarlet), Sue increases her final score by 1 (converting a potential lime cell to a scarlet cell). This is the highest-value action Sue can take to maximize her own outcome and minimize Linda's score.
+4.  **The "Recapture" Problem:** One might argue that after Sue paints $c$ scarlet, she has created a block of non-grey cells, allowing Linda to "recapture" $c$ by painting it lime again. This is true for the immediate turn. However, Sue can extend this strategy. Each time Linda recaptures a cell, Sue simply chooses another block containing that cell and any adjacent grey cells to repaint it scarlet. 
+5.  **The End Game:** Because Sue's moves reduce the total number of grey cells, she will eventually reach the point where there are no grey cells left in any block. The rules state the game ends *immediately* when no grey cells remain. When this happens, Linda has no moves left to make. If Sue has used her strategy of targeting the most exposed lime cells at every opportunity, the final state will consist entirely of scarlet cells.
+
+While Linda can occasionally secure a cell if she can paint it after its neighborhood is already cleared of grey cells, Sue's superior move count (clearing up to 4 grey cells per turn vs. Linda's 1) allows her to control the board and prevent any lime cells from being permanent. Sue can always react faster than Linda can build a safe haven.
+
+Thus, under optimal play from both sides, the number of lime cells at the end of the game is 0.
+
+0

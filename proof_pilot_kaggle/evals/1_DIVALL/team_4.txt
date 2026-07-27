@@ -1,0 +1,171 @@
+Let \(a_1,\dots,a_k\) be distinct positive integers with product \(P\) and sum \(S<3\cdot10^6\).  
+Define  
+
+\[
+g=\gcd\!\left(\frac{P}{a_i}+1 : 1\le i\le k\right).
+\]
+
+---
+
+### 1.  Basic congruences  
+
+For each \(i\), \(g\mid\frac{P}{a_i}+1\); hence \(\frac{P}{a_i}\equiv-1\pmod g\).  
+Multiplying by \(a_i\) gives \(P\equiv-a_i\pmod g\).  
+Thus all \(a_i\) are congruent modulo \(g\).  
+Let \(r\) be the common residue, \(0\le r<g\); then  
+
+\[
+a_i=r+g\,c_i\qquad (c_i\text{ distinct non‑negative integers}).
+\]
+
+If \(r=0\) then each \(a_i\) is a multiple of \(g\).  
+Since \(k\ge3\), \(\frac{P}{a_i}\) is a multiple of \(g\), so \(\frac{P}{a_i}+1\equiv1\pmod g\) and therefore \(g=1\).  
+Hence for any interesting case we have \(r\ge1\).
+
+For any \(i\),  
+
+\[
+\frac{P}{a_i}=\prod_{j\ne i}a_j\equiv r^{\,k-1}\pmod g.
+\]
+
+Because \(\frac{P}{a_i}\equiv-1\pmod g\), we obtain  
+
+\[
+r^{\,k-1}\equiv-1\pmod g. \tag{1}
+\]
+
+---
+
+### 2.  The sum bound  
+
+The three smallest positive numbers in the residue class \(r\pmod g\) are \(r,\;r+g,\;r+2g\) (since \(r\ge1\)). Their sum is \(3r+3g\).  
+The actual sum \(S\) is at least this sum, so  
+
+\[
+3r+3g<3\cdot10^6\quad\Longrightarrow\quad r+g<10^6. \tag{2}
+\]
+
+---
+
+### 3.  The case \(k\ge4\) cannot beat the maximum  
+
+For \(k\ge4\) the smallest \(k\) numbers in the residue class are \(r,\;r+g,\dots,\;r+(k-1)g\); their sum is  
+
+\[
+k r + g\cdot\frac{k(k-1)}{2}.
+\]
+
+Because \(S\) is at least this sum,
+
+\[
+k r + g\cdot\frac{k(k-1)}{2} < 3\cdot10^6.
+\]
+
+For \(k=4\) this gives \(4r+6g<3\cdot10^6\), i.e. \(2r+3g<1.5\cdot10^6\).  
+Since \(r\ge1\), we obtain \(3g<1.5\cdot10^6-2\), so \(g\le499\,999\).  
+For larger \(k\) the coefficient of \(g\) is even larger, so \(g\) is even smaller.  
+Hence every configuration with \(k\ge4\) satisfies \(g\le499\,999\).  
+Therefore the overall maximum must be attained for \(k=3\).
+
+---
+
+### 4.  The case \(k=3\)  
+
+For \(k=3\) equation (1) becomes \(r^2\equiv-1\pmod g\); hence  
+
+\[
+g\mid r^2+1. \tag{3}
+\]
+
+Write \(r^2+1 = g\,t\) with \(t\in\mathbb N\).  
+Together with (2) we have  
+
+\[
+r + \frac{r^2+1}{t} < 10^6. \tag{4}
+\]
+
+We now maximise \(g\) under (3) and (4).
+
+---
+
+### 5.  Maximising \(g\)  
+
+We consider the possible values of \(t\).
+
+* **\(t=1\)**: \(g = r^2+1\).  
+  Condition (4) becomes \(r^2+r+1<10^6\).  
+  The largest integer \(r\) satisfying this is \(r=999\), giving \(g=999^2+1=998\,002\).
+
+* **\(t=2\)**: \(g = \dfrac{r^2+1}{2}\).  
+  Condition (4) becomes \(r+\dfrac{r^2+1}{2}<10^6\;\Longleftrightarrow\; (r+1)^2<2\cdot10^6\).  
+  Since \(1414^2=2\,002\,225>2\cdot10^6\) and \(1413^2=1\,996\,569<2\cdot10^6\), we have \(r+1\le1414\), i.e. \(r\le1413\).  
+  Moreover \(r\) must be odd (because \(r^2+1\) is even). The largest odd \(r\le1413\) is \(r=1413\).  
+  Then  
+
+  \[
+  g = \frac{1413^2+1}{2}= \frac{1\,996\,569+1}{2}=998\,285.
+  \]
+
+* **\(t\ge3\)**: We show that \(g\le998\,285\).  
+  Suppose, for contradiction, that \(g\ge998\,286\).  
+  From (2) we have \(r<10^6-g\le1714\), so \(r\le1713\).  
+  Then \(r^2+1\le1713^2+1=2\,934\,570\).  
+  Since \(t\ge3\),  
+
+  \[
+  g = \frac{r^2+1}{t}\le\frac{r^2+1}{3}\le\frac{2\,934\,570}{3}=978\,190.
+  \]
+
+  This contradicts \(g\ge998\,286\). Hence \(g\le998\,285\) for every \(t\ge3\).
+
+Thus the largest possible \(g\) for \(k=3\) is at most \(998\,285\), and we already have a construction achieving this value.
+
+---
+
+### 6.  Construction attaining \(g=998\,285\)  
+
+Take \(r=1413\) and \(g=998\,285\).  
+Set  
+
+\[
+a_1=1413,\qquad a_2=1413+998\,285=999\,698,\qquad a_3=1413+2\cdot998\,285=1\,997\,983.
+\]
+
+These are distinct positive integers. Their sum is  
+
+\[
+1413+999\,698+1\,997\,983=2\,997\,094<3\cdot10^6.
+\]
+
+Now compute:
+
+\[
+\begin{aligned}
+\frac{P}{a_1}+1 &= a_2a_3+1 = (r+g)(r+2g)+1 = r^2+3rg+2g^2+1 \\
+               &= (r^2+1)+g(3r+2g)=g t + g(3r+2g)=g(t+3r+2g),\\[2mm]
+\frac{P}{a_2}+1 &= a_1a_3+1 = r(r+2g)+1 = r^2+2rg+1 = (r^2+1)+2rg = g t + 2rg = g(t+2r),\\[2mm]
+\frac{P}{a_3}+1 &= a_1a_2+1 = r(r+g)+1 = r^2+rg+1 = (r^2+1)+rg = g t + rg = g(t+r).
+\end{aligned}
+\]
+
+Here \(t = \dfrac{r^2+1}{g} = \dfrac{1413^2+1}{998\,285}= \dfrac{1\,996\,570}{998\,285}=2\).  
+Thus  
+
+\[
+\frac{P}{a_1}+1 = g(2+3\cdot1413+2\cdot998\,285)=g\cdot2\,000\,811,\qquad
+\frac{P}{a_2}+1 = g\cdot2\cdot1414 = g\cdot2828,\qquad
+\frac{P}{a_3}+1 = g\cdot(2+1413)=g\cdot1415.
+\]
+
+Since \(\gcd(2828,1415)=1\) (because \(2828=2\cdot1414\) and \(1415\) is odd and coprime to \(1414\)), the three numbers have greatest common divisor exactly \(g\).  
+Hence \(g=998\,285\) is attainable.
+
+---
+
+### 7.  Conclusion  
+
+The largest possible value of \(g\) over all choices of \(k\ge3\) and distinct positive integers \(a_i\) is  
+
+\[
+\boxed{998285}.
+\]

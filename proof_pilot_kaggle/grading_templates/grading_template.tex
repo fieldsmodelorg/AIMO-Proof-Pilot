@@ -1,0 +1,166 @@
+% =====================================================================
+%  AIMO Proof Pilot — Independent grading template
+%
+%  HOW TO USE THIS FILE
+%  --------------------
+%  1. COPY this file (do not edit it in place) and rename it, e.g.
+%        grade_4_COLOUR_team_3_<your-initials>.tex
+%  2. Fill in EVERY field marked  [ like this ]  (italic) below, and
+%     delete the surrounding brackets.
+%  3. Compile with pdflatex if you like, then EMAIL the .tex
+%     to the organisers.
+%  4. Do NOT commit your grade to the repository. Initial grading is
+%     independent; the organisers collect the grades and upload them later.
+%
+%  Organisers note: when grades are reconciled, this single-grader page
+%  is combined with the other graders' pages behind a front page that
+%  records the final grading decision.
+% =====================================================================
+\documentclass[11pt]{article}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{longtable}
+\usepackage[hidelinks]{hyperref}
+\usepackage{parskip}
+
+\newcommand{\field}[1]{\textbf{#1:}\hspace{0.5em}}
+% Placeholder for text the grader replaces. Renders as italic in [brackets]
+% so it displays cleanly and is easy to spot. Delete it once filled in.
+\newcommand{\fillin}[1]{{\itshape[#1]}}
+
+\begin{document}
+
+% ----------------------------------------------------------------------
+%  Header — identify the submission and grader
+% ----------------------------------------------------------------------
+{\centering\Large\bfseries AIMO Proof Pilot — Grading Sheet\par}
+\vspace{1em}
+
+\begin{tabular}{@{}p{0.5\textwidth}p{0.45\textwidth}@{}}
+\field{Problem (\#\_ID)} \fillin{e.g. 4\_COLOUR}      & \field{Submission} \fillin{e.g. team\_3 / model\_2} \\[0.6em]
+\field{Grader initials} \fillin{e.g. SB}             & \field{Date} \fillin{YYYY-MM-DD} \\
+\end{tabular}
+
+\vspace{0.4em}
+\hrule
+\vspace{0.8em}
+
+% ----------------------------------------------------------------------
+%  Reminder of the scoring scale
+% ----------------------------------------------------------------------
+\textbf{Scoring scale (0/1/6/7) — two binary decisions:}
+\begin{enumerate}[label=\textbf{Step \arabic*.}, leftmargin=*, nosep]
+    \item \textbf{Is the solution essentially complete?}
+    \begin{itemize}[leftmargin=1.4em, nosep]
+        \item If \textbf{no}: award \textbf{1} for significant partial progress, otherwise \textbf{0}.
+        \item If \textbf{yes}: award \textbf{7}, or \textbf{6} if there is a minor error or omission.
+    \end{itemize}
+\end{enumerate}
+Grade against the \textbf{markscheme} (\texttt{docs/markschemes.pdf}).
+
+\vspace{0.8em}
+
+% ----------------------------------------------------------------------
+%  Proposed mark
+% ----------------------------------------------------------------------
+\section*{1. Proposed mark}
+
+\textbf{Proposed mark} (choose one): \qquad \fbox{0} \qquad \fbox{1} \qquad \fbox{6} \qquad \fbox{7}
+
+% ----------------------------------------------------------------------
+%  Reasoning
+% ----------------------------------------------------------------------
+\section*{2. Reasoning}
+
+Justify the mark with explicit reference to the markscheme points (e.g. \texttt{ME1}) where possible.
+
+\bigskip
+\fillin{Your reasoning here.}
+\bigskip
+
+\paragraph{Significantly different approach?}
+If the solution is significantly different from the reference solution, map it onto the markscheme milestones as best you can, state your rationale here, and flag it for discussion.
+
+\bigskip
+\fillin{If applicable: how you matched the approach to the milestones, and your rationale. Otherwise write ``N/A''.}
+\bigskip
+
+\clearpage
+
+% ----------------------------------------------------------------------
+%  Errors / issues log
+% ----------------------------------------------------------------------
+\section*{3. Errors / issues}
+
+List \textbf{every} error or issue you find, \emph{even minor ones}, with the corresponding line number(s) in the submission. The \emph{short summary} should be a brief phrase (we will later turn these into reusable codes); the \emph{detailed description} should give the full explanation. Mark each as:
+\begin{itemize}
+	\item \emph{Trivial} -- those listed under \texttt{NME} which we won't penalise;
+	\item \emph{Minor} -- those listed under \texttt{ME} which could turn $7 \to 6$; or
+	\item \emph{Major} -- those listed under \texttt{NEC} which would drop a solution to $0/1$
+\end{itemize}
+guided by the markscheme.
+
+\paragraph{Exception for fundamentally wrong solutions.} If the solution is \emph{entirely} wrong (so the mark is clearly $0$), you do \textbf{not} need to rigorously catalogue every single error. Label the most serious ones --- enough to justify the mark --- and add a final row (or a note) recording that there were further minor errors which you have not itemised.
+
+\paragraph{What counts as an error.} Flag as errors not only false statements and logical gaps, but also issues such as \textbf{answering the wrong problem}, \textbf{using a different set of conditions from those given in the problem} (e.g.\ silently changing or weakening a hypothesis), proving a different statement from the one asked, or assuming what was to be proved. Record these with an appropriate severity (usually \emph{major}).
+
+\renewcommand{\arraystretch}{1.3}
+\begin{longtable}{@{}p{1.6cm}p{3.2cm}p{8.0cm}p{1.7cm}@{}}
+\toprule
+\textbf{Line(s)} & \textbf{Short summary} & \textbf{Detailed description} & \textbf{Severity} \\
+\midrule
+\endhead
+\fillin{e.g. 12--15} & \fillin{brief phrase} & \fillin{full explanation} & \fillin{trivial / minor / major} \\
+\addlinespace
+ & & & \\
+\addlinespace
+ & & & \\
+\addlinespace
+ & & & \\
+\bottomrule
+\end{longtable}
+
+(Add rows as needed.)
+
+\clearpage
+
+% ----------------------------------------------------------------------
+%  Proof quality (qualitative — does not affect the 0/1/6/7 mark)
+% ----------------------------------------------------------------------
+\section*{4. Proof quality (qualitative)}
+
+These two questions capture \emph{stylistic} qualities of the write-up for our later analysis. They do \textbf{not} affect the 0/1/6/7 mark --- answer them independently of the score. Choose one option per question (the examples are there to keep graders consistent).
+
+\subsection*{4a. Readability}
+\textit{How much difficulty did you have following the proof? (Was it easy to read, or did you have to re-read passages to understand them?)}
+
+\medskip
+\textbf{Choose one:} \qquad \fbox{None} \qquad \fbox{A bit} \qquad \fbox{A lot}
+\begin{itemize}[leftmargin=1.6em, nosep]
+    \item \textbf{None} --- read smoothly in a single pass; steps, notation, and structure were clear throughout.
+    \item \textbf{A bit} --- mostly clear, but a few passages needed re-reading (e.g.\ a terse step, ambiguous notation, or a slightly confusing ordering).
+    \item \textbf{A lot} --- frequently hard to follow; had to re-read many parts, reconstruct missing links, or untangle a disorganised argument.
+\end{itemize}
+
+\medskip
+\fillin{Optional: a sentence or two on the worst readability issues, with line numbers.}
+
+\subsection*{4b. Conciseness}
+\textit{How much unnecessary or inefficient content was there? (Were lemmas proved efficiently, or was there significant irrelevant / repetitive material?)} Judge \textbf{local} optimisations only --- e.g.\ a sub-argument proved more verbosely than needed, or repetition --- \emph{not} whether the overall approach takes a globally sub-optimal route.
+
+\medskip
+\textbf{Choose one:} \qquad \fbox{None} \qquad \fbox{A bit} \qquad \fbox{A lot}
+\begin{itemize}[leftmargin=1.6em, nosep]
+    \item \textbf{None} --- tight throughout; lemmas proved efficiently, with little or no wasted content.
+    \item \textbf{A bit} --- some redundancy or slightly laboured steps, but nothing major (e.g.\ a lemma proved more verbosely than necessary, or a little repetition).
+    \item \textbf{A lot} --- substantial irrelevant or repetitive content, or several sub-arguments proved far less efficiently than they could have been.
+\end{itemize}
+
+\medskip
+\fillin{Optional: a sentence or two on the main conciseness issues, with line numbers.}
+
+\end{document}

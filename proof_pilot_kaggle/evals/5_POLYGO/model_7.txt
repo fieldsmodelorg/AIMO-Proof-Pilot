@@ -1,0 +1,200 @@
+PROBLEM
+=======
+A polynomial P(x) is called "good" if it has integer coefficients and:
+  - it is monic of degree 7;
+  - the absolute values of all of its coefficients are odd and strictly less than 2025^2;
+  - the absolute values of all of its coefficients are roots of P.
+How many good polynomials are there?
+
+ANSWER
+======
+                6 150 968.
+
+Equivalently, this number is (3 * 2025^2 + 61) / 2.
+
+
+=====================================================================
+COMPLETE PROOF
+=====================================================================
+
+Notation.
+---------
+Write
+        P(x) = c_7 x^7 + c_6 x^6 + c_5 x^5 + c_4 x^4 + c_3 x^3 + c_2 x^2 + c_1 x + c_0 ,
+with all c_i integers and c_7 = 1 (monic of degree 7).
+
+Since the absolute value of every coefficient is required to be ODD, every
+coefficient is a nonzero odd integer. In particular c_i != 0 for all i.
+
+Let
+        M := max_{0<=i<=7} |c_i| .
+Because every |c_i| is odd, M is a positive odd integer, so M = 1 or M >= 3.
+
+Two coefficient-absolute-values are roots automatically by the conditions:
+
+  (R1)  |c_7| = 1 is a coefficient absolute value, hence 1 is a root: P(1) = 0.
+
+  (R2)  M = |c_j| for some index j, and that absolute value must be a root,
+        hence P(M) = 0.
+
+We will also repeatedly use the parity fact: every c_i and M are odd, so any
+integer combination of them whose value we compute can be reduced mod 2; e.g.
+M + c_i is even, c_i*M + c_k is even, etc.
+
+The whole count splits into the two cases M = 1 and M >= 3.
+
+
+---------------------------------------------------------------------
+CASE 1:  M = 1
+---------------------------------------------------------------------
+Here every |c_i| = 1, so every coefficient is +1 or -1, with c_7 = 1.
+The only absolute value occurring among the coefficients is 1, so the ONLY
+root that the third condition forces is the value 1; that is, the conditions
+are satisfied exactly when P(1) = 0.
+
+Now P(1) = c_7 + c_6 + ... + c_0 is a sum of eight numbers each equal to +-1.
+This sum is 0 iff exactly four of the eight coefficients equal +1 and four
+equal -1. Since c_7 = +1 is fixed, we must choose which three of the remaining
+seven coefficients c_0,...,c_6 are equal to +1 (the other four being -1).
+
+        Number of choices = C(7,3) = 35 .
+
+Each such choice gives a distinct good polynomial, and every M = 1 good
+polynomial arises this way. Hence Case 1 contributes exactly
+
+        35  good polynomials.
+
+
+---------------------------------------------------------------------
+CASE 2:  M >= 3  (M odd)
+---------------------------------------------------------------------
+Throughout this case |c_i| <= M for all i, and P(M) = 0 by (R2).
+
+We first show that the coefficients are completely determined, up to three
+sign choices, by M.
+
+Lemma 1.  c_6 = -M.
+
+Proof. From P(M) = 0,
+        M^7 + c_6 M^6 = -( c_5 M^5 + c_4 M^4 + ... + c_1 M + c_0 ),
+i.e.
+        M^6 (M + c_6) = -( c_5 M^5 + ... + c_0 ).
+Taking absolute values and using |c_i| <= M,
+        M^6 |M + c_6| <= sum_{i=0}^{5} |c_i| M^i <= M * sum_{i=0}^{5} M^i
+                        = sum_{j=1}^{6} M^j .
+Therefore
+        |M + c_6| <= sum_{j=1}^{6} M^j / M^6 = 1 + 1/M + 1/M^2 + ... + 1/M^5 .
+For M >= 3 the tail satisfies 1/M + ... + 1/M^5 <= 1/3 + 1/9 + 1/27 + 1/81 + 1/243
+< 1/2, so |M + c_6| < 3/2. But M and c_6 are both odd, so M + c_6 is an even
+integer; an even integer of absolute value < 3/2 is 0. Hence c_6 = -M.    []
+
+Because c_6 = -M, the two top terms cancel in P(M): M^7 + c_6 M^6 = 0. Thus
+P(M) = 0 reduces to
+
+        (E5)   c_5 M^5 + c_4 M^4 + c_3 M^3 + c_2 M^2 + c_1 M + c_0 = 0.
+
+Lemma 2.  c_5 = ±1 and c_4 = -c_5 M.
+
+Proof. Group (E5) as
+        M^4 (c_5 M + c_4) = -( c_3 M^3 + c_2 M^2 + c_1 M + c_0 ).
+Taking absolute values with |c_i| <= M,
+        M^4 |c_5 M + c_4| <= M (M^3 + M^2 + M + 1),
+so
+        |c_5 M + c_4| <= (M^3 + M^2 + M + 1)/M^3 = 1 + 1/M + 1/M^2 + 1/M^3 .
+For M >= 3 this is at most 1 + 1/3 + 1/9 + 1/27 = 40/27 < 3/2. Since c_5 M + c_4
+is even (both factors odd), it must be 0:
+        c_4 = -c_5 M .
+Now |c_4| <= M forces |c_5| * M <= M, i.e. |c_5| <= 1; as c_5 is a nonzero odd
+integer, c_5 = ±1, and then |c_4| = M.    []
+
+Substituting c_4 = -c_5 M back into (E5): c_5 M^5 + c_4 M^4 = c_5 M^5 - c_5 M^5
+= 0, so (E5) collapses to
+
+        (E3)   c_3 M^3 + c_2 M^2 + c_1 M + c_0 = 0.
+
+Lemma 3.  c_3 = ±1 and c_2 = -c_3 M.
+
+Proof. Group (E3) as M^2 (c_3 M + c_2) = -(c_1 M + c_0). Then
+        M^2 |c_3 M + c_2| <= M(M + 1),  so  |c_3 M + c_2| <= (M+1)/M = 1 + 1/M .
+For M >= 3 this is <= 4/3 < 3/2, and c_3 M + c_2 is even, hence 0:
+        c_2 = -c_3 M .
+Then |c_2| <= M forces |c_3| <= 1, so c_3 = ±1 and |c_2| = M.    []
+
+Substituting into (E3): c_3 M^3 + c_2 M^2 = 0, so (E3) collapses to
+
+        (E1)   c_1 M + c_0 = 0,   i.e.   c_0 = -c_1 M .
+
+Since |c_0| <= M, we get |c_1| <= 1, so c_1 = ±1 and |c_0| = M.
+
+Summary of the forced shape (write s = c_5, t = c_3, u = c_1, each ±1):
+
+        c_7 = 1,   c_6 = -M,
+        c_5 = s,   c_4 = -sM,
+        c_3 = t,   c_2 = -tM,
+        c_1 = u,   c_0 = -uM.
+
+Thus
+        P(x) = x^7 - M x^6 + s x^5 - sM x^4 + t x^3 - tM x^2 + u x - uM
+             = x^6 (x - M) + s x^4 (x - M) + t x^2 (x - M) + u (x - M)
+             = (x - M)( x^6 + s x^4 + t x^2 + u ).                      (*)
+
+So necessarily P has the form (*) with M >= 3 odd and s, t, u in {+1, -1}.
+Note the multiset of coefficient absolute values is exactly {1, M}.
+
+Now we impose the remaining requirements and count.
+
+  * M < 2025^2 is required since M = |c_6| must be strictly less than 2025^2.
+
+  * M is a root of (*) automatically (factor x - M); good, since M = |c_6| etc.
+    must be a root.
+
+  * 1 must be a root by (R1). From (*),
+        P(1) = (1 - M)(1 + s + t + u).
+    Since M >= 3, the factor (1 - M) != 0, so P(1) = 0 forces
+        s + t + u = -1.
+    For s, t, u in {±1}, the sum s + t + u lies in {-3, -1, 1, 3}; it equals
+    -1 exactly when exactly one of s, t, u is +1 and the other two are -1.
+    There are C(3,1) = 3 such sign patterns.
+
+Conversely, take ANY odd M with 3 <= M < 2025^2 and any of these 3 sign
+patterns. Then the polynomial (*) has integer coefficients, is monic of degree
+7, every coefficient absolute value lies in {1, M} (both odd, both < 2025^2),
+and both 1 and M are roots (1 because s+t+u = -1, M from the factor x-M). Hence
+it is good. So these are precisely the good polynomials with M >= 3.
+
+Distinct (M, s, t, u) give distinct polynomials (M is read off as -c_6, and the
+signs as c_5, c_3, c_1), so there is no double counting.
+
+Count for Case 2.
+The admissible values of M are the odd integers with 3 <= M < 2025^2. Since
+2025^2 = 4 100 625 is odd, the odd integers in [1, 2025^2) are 1, 3, 5, ...,
+4 100 623, of which there are (2025^2 - 1)/2 = 2 050 312; removing M = 1 leaves
+        (2025^2 - 3)/2 = 2 050 311  admissible values of M.
+Each contributes 3 polynomials, so Case 2 contributes
+        3 * 2 050 311 = 6 150 933  good polynomials.
+
+
+---------------------------------------------------------------------
+TOTAL
+---------------------------------------------------------------------
+The cases M = 1 and M >= 3 are exhaustive and disjoint (they are distinguished
+by max|c_i|). Adding the two counts:
+
+        35  +  6 150 933  =  6 150 968 .
+
+In closed form,
+        35 + 3 * (2025^2 - 3)/2 = (3 * 2025^2 + 61)/2 = 6 150 968 .
+
+
+=====================================================================
+CONCLUSION
+=====================================================================
+The number of good polynomials is
+
+                        6 150 968 .
+
+A worked example of a good polynomial (M = 3, (s,t,u) = (1,-1,-1)):
+        P(x) = (x - 3)(x^6 + x^4 - x^2 - 1)
+             = x^7 - 3x^6 + x^5 - 3x^4 - x^3 + 3x^2 - x + 3,
+with coefficient absolute values {1, 3, 1, 3, 1, 3, 1, 3}; both 1 and 3 are
+roots (P(1) = P(3) = 0), all coefficients are odd, and all are < 2025^2.

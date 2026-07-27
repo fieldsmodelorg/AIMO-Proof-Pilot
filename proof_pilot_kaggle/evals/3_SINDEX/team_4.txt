@@ -1,0 +1,157 @@
+We consider a finite nonempty multiset \(S\) of positive integers \(<20\).  Let  
+\[
+f(x)=\sum_{a\in S}x^a
+\]  
+be its generating function (coefficient of \(x^a\) equals the multiplicity of \(a\)).  
+For a fixed positive integer \(i\) the condition that \(S\) can be partitioned into \(A_i,B_i\) with \(A_i=i+B_i\) is equivalent to  
+\[
+f(x)=(1+x^i)g_i(x)
+\]  
+for some polynomial \(g_i(x)\) with non‑negative integer coefficients.  
+The index of \(S\) is the largest \(n\) for which this holds for every \(i=1,\dots,n\); if no such \(n\) exists the index is \(0\).
+
+Let \(L_n(x)\) be the least common multiple (in \(\mathbb Z[x]\)) of the polynomials \(1+x^i\) for \(i=1,\dots,n\).  
+If \(S\) has index at least \(n\) then each \(1+x^i\) divides \(f(x)\), hence \(L_n(x)\) divides \(f(x)\); therefore  
+\[
+f(x)=L_n(x)\,h(x)
+\]  
+for some polynomial \(h(x)\) with integer coefficients.  Moreover \(f(0)=0\) and \(\deg f\le 19\) (because all elements are \(<20\)).
+
+---
+### 1.  The maximum possible index \(N\)
+
+The cyclotomic factorisation of \(1+x^i\) is  
+\[
+1+x^i=\prod_{\substack{d\mid 2i\\ d\nmid i}}\Phi_d(x),
+\]  
+where \(\Phi_d\) are the cyclotomic polynomials.  Hence  
+\[
+L_n(x)=\prod_{\substack{d\ \text{primitive for some}\ i\le n}}\Phi_d(x).
+\]  
+For \(n=5\) the relevant divisors are \(2,4,6,8,10\); for \(n=6\) we also have \(12\).  
+Thus  
+\[
+L_5(x)=\Phi_2\Phi_4\Phi_6\Phi_8\Phi_{10},\qquad
+L_6(x)=L_5(x)\,\Phi_{12}.
+\]  
+Their degrees are  
+\[
+\deg L_5=1+2+2+4+4=13,\qquad \deg L_6=13+4=17.
+\]
+
+**Index \(6\) is impossible.**  
+Assume that a multiset \(S\) has index \(\ge6\). Then \(f=L_6h\) with \(\deg f\le19\), so \(\deg h\le2\). Write \(h(x)=ax+bx^2\) (\(a,b\) integers).  Because \(f(0)=0\) we have \(h(0)=0\).  
+Now consider the condition for \(i=1\).  Set \(Q_1(x)=L_6(x)/(1+x)\).  Using the product form,  
+\[
+Q_1(x)=\bigl(\Phi_4\Phi_6\Phi_8\Phi_{10}\bigr)(1-x^2+x^4)
+\]  
+and an explicit multiplication gives  
+\[
+Q_1(x)=1-2x+3x^2-3x^3+4x^4-4x^5+5x^6-5x^7+6x^8-5x^9+5x^{10}-4x^{11}+4x^{12}-3x^{13}+3x^{14}-2x^{15}+x^{16}.
+\]  
+The product \(Q_1(x)h(x)\) must have non‑negative coefficients.  Computing the coefficients yields the inequalities  
+
+\[
+\begin{aligned}
+k=1 &: a\ge0,\\
+k=2 &: -2a+b\ge0 \;\Rightarrow\; b\ge2a,\\
+k=3 &: 3a-2b\ge0 \;\Rightarrow\; b\le\frac32a,\\
+k=11 &: 5a-5b\ge0 \;\Rightarrow\; a\ge b,\\
+k=17 &: a-2b\ge0 \;\Rightarrow\; a\ge2b.
+\end{aligned}
+\]  
+The conditions \(b\ge2a\) and \(b\le\frac32a\) force \(b=2a\); then \(a\ge2b\) gives \(a\ge4a\), so \(a=0\) and consequently \(b=0\).  Hence no non‑zero polynomial \(h\) of degree \(\le2\) exists, contradicting the existence of a non‑empty \(S\) with index \(6\).  Therefore \(N\le5\).
+
+**Index \(5\) is attainable.**  
+Define  
+\[
+f(x)=x\prod_{i=1}^{5}(1+x^i)=x+x^2+x^3+2x^4+2x^5+3x^6+3x^7+3x^8+3x^9+3x^{10}+2x^{11}+2x^{12}+x^{13}+x^{14}+x^{15}+x^{16}.
+\]  
+For each \(i=1,\dots,5\) we have  
+\[
+\frac{f(x)}{1+x^i}=x\prod_{\substack{j=1\\j\neq i}}^{5}(1+x^j),
+\]  
+which is a product of polynomials with non‑negative coefficients, hence has non‑negative coefficients.  Thus the index of this multiset is at least \(5\).  Combined with \(N\le5\) we obtain \(N=5\).
+
+---
+### 2.  The smallest possible maximum element \(M\) for index \(5\)
+
+Let \(S\) have index \(5\) and write \(f(x)=L_5(x)\,h(x)\) with \(h(0)=0\) and \(\deg f\le19\).  Because \(\deg L_5=13\), we have \(\deg h\le6\).  We first show that \(\deg h\ge3\).  Suppose \(\deg h\le2\), write \(h(x)=ax+bx^2\).  
+Now use the condition for \(i=1\): \(f/(1+x)= (L_5/(1+x))\,h\) must have non‑negative coefficients.  
+Set  
+\[
+Q_1^{(5)}(x)=\frac{L_5(x)}{1+x}= \Phi_4\Phi_6\Phi_8\Phi_{10}=
+1-2x+4x^2-5x^3+7x^4-7x^5+8x^6-7x^7+7x^8-5x^9+4x^{10}-2x^{11}+x^{12}.
+\]  
+The product \((ax+bx^2)Q_1^{(5)}\) gives the inequalities  
+
+\[
+\begin{aligned}
+x^2 &: -2a+b\ge0 \;\Rightarrow\; b\ge2a,\\
+x^3 &: 4a-2b\ge0 \;\Rightarrow\; b\le2a,
+\end{aligned}
+\]  
+so \(b=2a\).  Then the coefficient of \(x^5\) is \(7a-5b=7a-10a=-3a\ge0\), which forces \(a=0\) and hence \(b=0\).  Thus no non‑zero \(h\) of degree \(\le2\) exists.  Therefore \(\deg h\ge3\), and consequently \(\deg f=\deg L_5+\deg h\ge13+3=16\).  Hence the maximum element \(M\) of \(S\) satisfies \(M\ge16\).
+
+The example above has maximum element \(16\); therefore \(M=16\).
+
+---
+### 3.  The smallest possible number of elements for index \(5\) and maximum element \(16\)
+
+Now assume that \(S\) has index \(5\) and its maximum element is exactly \(16\).  Then \(\deg f=16\) and \(\deg h=3\).  Write \(h(x)=ax+bx^2+cx^3\) with integers \(a,b,c\).  Because all coefficients of \(f\) are non‑negative and \(f(0)=0\), we have \(a,b,c\ge0\) (the coefficient of \(x^1\) is \(a\), etc.).  The number of elements of \(S\) is  
+\[
+f(1)=L_5(1)\,h(1)=8\,(a+b+c),
+\]  
+since \(L_5(1)=\Phi_2(1)\Phi_4(1)\Phi_6(1)\Phi_8(1)\Phi_{10}(1)=2\cdot2\cdot1\cdot2\cdot1=8\).  To minimise the number of elements we must minimise \(a+b+c\) subject to the condition that for every \(i=1,\dots,5\) the polynomial \(Q_i(x)h(x)\) has non‑negative coefficients, where \(Q_i(x)=L_5(x)/(1+x^i)\).
+
+The most restrictive condition comes from \(i=1\).  Using the same \(Q_1^{(5)}(x)\) as above, the coefficients of \((ax+bx^2+cx^3)Q_1^{(5)}\) must be non‑negative.  Computing these coefficients gives the following inequalities (the coefficient of \(x^k\) is \(a\,q_{k-1}+b\,q_{k-2}+c\,q_{k-3}\), where \(q_j\) are the coefficients of \(Q_1^{(5)}\)):
+
+\[
+\begin{array}{c|c}
+k & \text{coefficient} \\ \hline
+2 & -2a+b \\
+3 & 4a-2b+c \\
+4 & -5a+4b-2c \\
+5 & 7a-5b+4c \\
+6 & -7a+7b-5c \\
+7 & 8a-7b+7c \\
+8 & -7a+8b-7c \\
+9 & 7a-7b+8c \\
+10 & -5a+7b-7c \\
+11 & 4a-5b+7c \\
+12 & -2a+4b-5c \\
+13 & a-2b+4c \\
+14 & b-2c \\
+15 & c
+\end{array}
+\]
+
+All of these must be \(\ge0\).  The first and last inequalities give \(b\ge2a\) and \(b\ge2c\), so \(a,b,c\ge0\).
+
+**Solving the system.**  
+If \(a=0\) then from \(b\ge2c\) and the inequality for \(k=5\) (\(7\cdot0+4c\ge5b\)) we obtain \(4c\ge5b\ge10c\), hence \(c=0\) and then \(b=0\).  Thus \(a\ge1\).  
+
+For \(a=1\) we have \(b\ge2\).  The inequality \(b\ge2c\) together with \(a+4c\ge2b\) (from \(k=13\)) gives  
+\[
+1+4c\ge2b\ge4c\quad\Longrightarrow\quad1\ge0,
+\]  
+which is always true.  The strongest constraints are the ones from the coefficients of \(x^5\) and \(x^6\):  
+\[
+7+4c\ge5b,\qquad 7+5c\le7b.
+\]  
+For \(b=2\) we obtain \(4c\ge3\) and \(5c\le7\), so \(c=1\).  For \(b=3\) we would need \(c\ge?\) but then \(b\ge2c\) forces \(c\le1\), and the inequality \(7+5c\le7b\) becomes \(7+5c\le21\), which is satisfied, but the inequality \(7+4c\ge5b\) gives \(7+4c\ge15\Rightarrow4c\ge8\Rightarrow c\ge2\), contradicting \(c\le1\).  Hence the only possibility for \(a=1\) is \((a,b,c)=(1,2,1)\).
+
+For \(a\ge2\) we have \(b\ge2a\ge4\).  The inequality \(b\ge2c\) together with \(a+4c\ge2b\) gives  
+\[
+2b\le a+4c\le a+2b\quad\text{(since }c\le b/2\text{)},
+\]  
+which is automatically true.  The inequality \(7a+5c\le7b\) forces \(c\le (7b-7a)/5\).  For \(a=2\) and \(b=4\) we get \(c\le (28-14)/5=3.2\), and from \(b\ge2c\) we have \(c\le2\).  The inequality \(7a+4c\ge5b\) gives \(14+4c\ge20\Rightarrow4c\ge6\Rightarrow c\ge2\).  Hence \(c=2\).  Then \(a+b+c=8\).  For larger \(a\) the sum is even larger.  Thus the smallest possible sum is \(a+b+c=4\), attained at \((1,2,1)\).
+
+Therefore the number of elements is at least \(8\cdot4=32\).  The example \(f(x)=x\prod_{i=1}^5(1+x^i)\) corresponds to \(h(x)=x+2x^2+x^3\) and has exactly \(32\) elements.  Hence the minimal possible number of elements is \(m=32\).
+
+---
+### 4.  Conclusion
+
+\[
+\boxed{N=5},\qquad \boxed{M=16},\qquad \boxed{m=32}.
+\]

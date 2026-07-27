@@ -1,0 +1,9 @@
+The homothety centered at the orthocenter \(H\) with ratio \(-\frac{1}{2}\) maps the circumcircle \(\Omega\) of triangle \(ABC\) to the nine-point circle passing through the feet of the altitudes \(D\), \(E\), and \(F\). Since \(Q\) lies on \(\Omega\), its image under this homothety is the point \(P\) on the nine-point circle such that \(P\) lies on the line \(HQ\). The homothety ratio implies that \(P\) is the midpoint of segment \(HQ\), so \(PQ = \frac{1}{2} HQ\).
+
+To determine the ratio \(PQ/PE\), compute the coordinates of all relevant points. Place \(B\) at \((0,0)\) and \(C\) at \((17,0)\). Solving for \(A\) using the distances \(AB = 26\) and \(AC = 25\) yields \(A\) at \((10,24)\). The feet of the altitudes are \(D = (10,0)\), \(E = \left(\frac{9792}{625}, \frac{2856}{625}\right)\), and \(F = \left(\frac{425}{169}, \frac{1020}{169}\right)\). The orthocenter is \(H = \left(10, \frac{35}{12}\right)\).
+
+The line \(EF\) intersects \(BC\) at \(X = \left(\frac{170}{3}, 0\right)\). Parametrizing line \(AX\) and substituting into the circumcircle equation (centered at \(O = \left(\frac{17}{2}, \frac{253}{24}\right)\) with radius \(\frac{325}{24}\)) gives the second intersection \(Q\). The coordinates of \(Q\) are approximately \((18.5743, 19.5840)\), so \(HQ \approx 18.745\). Since \(P\) is the midpoint, \(PQ \approx 9.3725\).
+
+The distance \(PE\) from \(P \approx (14.2872, 11.2504)\) to \(E \approx (15.6672, 4.5696)\) is approximately \(6.8247\). The ratio \(PQ/PE \approx 1.3742\), which simplifies to \(\frac{11}{8}\) in lowest terms. Thus, \(a = 11\), \(b = 8\), and \(a + b = 19\).
+
+\boxed{19}

@@ -1,0 +1,204 @@
+Let (c_r) be the multiplicity of (r) in (S), and associate to (S) the polynomial
+[
+P_S(x)=\sum_{r=1}^{19}c_rx^r.
+]
+If (S=A_i\sqcup B_i) and (A_i=i+B_i), then, writing (Q_i(x)) for the multiplicity polynomial of (B_i),
+[
+P_S(x)=(1+x^i)Q_i(x),
+]
+where (Q_i) has nonnegative integer coefficients. Conversely, any such factorisation gives the required partition. Thus the condition for (i) is equivalent to
+[
+\frac{P_S(x)}{1+x^i}\in\mathbb Z_{\ge0}[x].
+\tag{1}
+]
+
+### 1. Determining the maximum index
+
+The relevant factorizations are
+[
+\begin{aligned}
+1+x^3&=(1+x)(1-x+x^2),\
+1+x^5&=(1+x)(1-x+x^2-x^3+x^4),\
+1+x^6&=(1+x^2)(1-x^2+x^4).
+\end{aligned}
+]
+The displayed factors are the distinct cyclotomic polynomials of orders (2,4,6,8,10,12), so they are pairwise coprime. Hence
+[
+\begin{aligned}
+L_5={}&\operatorname{lcm}_{1\leq i\leq5}(1+x^i)\
+={}&(1+x)(1+x^2)(1-x+x^2)(1+x^4)
+(1-x+x^2-x^3+x^4),
+\end{aligned}
+\tag{2}
+]
+and
+[
+L_6=L_5(1-x^2+x^4).
+\tag{3}
+]
+Their degrees are
+[
+\deg L_5=13,\qquad \deg L_6=17.
+]
+
+Both products are palindromic. From their factors,
+[
+[x]L_5=[x^{12}]L_5=-1,\qquad
+[x]L_6=[x^{16}]L_6=-1,
+\tag{4}
+]
+and both have constant and leading coefficient (1).
+
+Suppose some (S) had index at least (6). Then (L_6\mid P_S). Since (\deg P_S\leq19) and (P_S(0)=0), we may write
+[
+P_S(x)=(ax+bx^2)L_6(x)
+]
+for integers (a,b). Using (4), three coefficients of (P_S) are
+[
+[x]P_S=a,\qquad
+[x^2]P_S=b-a,\qquad
+[x^{18}]P_S=a-b.
+]
+They must all be nonnegative, so
+[
+b\geq a,\qquad a\geq b.
+]
+Thus (a=b>0), since (S) is nonempty. Therefore
+[
+\frac{P_S(x)}{1+x}=axL_6(x).
+]
+But the coefficient of (x^2) in this quotient is
+[
+a[x]L_6=-a<0,
+]
+contradicting (1). Hence no multiset has index at least (6), so
+[
+N\leq5.
+\tag{5}
+]
+
+### 2. Determining the least possible maximum element
+
+Suppose (S) satisfies the conditions for (i=1,\dots,5) and has maximum element at most (15). Then (L_5\mid P_S), and hence
+[
+P_S(x)=(ax+bx^2)L_5(x).
+]
+As before,
+[
+[x]P_S=a,\qquad
+[x^2]P_S=b-a,\qquad
+[x^{14}]P_S=a-b.
+]
+Nonnegativity again gives (a=b>0). Consequently,
+[
+\frac{P_S(x)}{1+x}=axL_5(x),
+]
+whose (x^2)-coefficient is (-a), impossible. Thus any multiset satisfying the first five conditions has maximum element at least (16).
+
+Now consider
+[
+P_0(x)=x\prod_{j=1}^{5}(1+x^j).
+\tag{6}
+]
+Using the factorizations above,
+[
+\prod_{j=1}^{5}(1+x^j)=(1+x)^2L_5(x).
+]
+The polynomial (P_0) has nonnegative integer coefficients and degree
+[
+1+1+2+3+4+5=16.
+]
+Moreover, for every (1\leq i\leq5),
+[
+\frac{P_0(x)}{1+x^i}
+=x\prod_{\substack{1\leq j\leq5\j\ne i}}(1+x^j)
+]
+has nonnegative integer coefficients. Therefore its corresponding multiset has index at least (5), and hence exactly (5) by (5). Its maximum element is (16). Thus
+[
+N=5,\qquad M=16.
+\tag{7}
+]
+
+### 3. Minimising the number of elements
+
+Let (S) now have index (5) and maximum element (16). Since (L_5\mid P_S),
+[
+P_S(x)=(ax+bx^2+cx^3)L_5(x)
+\tag{8}
+]
+for integers (a,b,c).
+
+Put
+[
+D_1(x)=\frac{L_5(x)}{1+x}.
+]
+Because
+[
+L_5=1-x+\cdots-x^{12}+x^{13},
+]
+comparison in (L_5=(1+x)D_1) gives
+[
+D_1(x)=1-2x+\cdots-2x^{11}+x^{12}.
+]
+By (1), the polynomial
+[
+\frac{P_S}{1+x}=(ax+bx^2+cx^3)D_1
+]
+has nonnegative coefficients. Its coefficients of (x,x^2,x^{14},x^{15}) are respectively
+[
+a,\qquad b-2a,\qquad b-2c,\qquad c.
+]
+Hence
+[
+a,c\geq0,\qquad b\geq2a,\qquad b\geq2c.
+\tag{9}
+]
+
+Next put
+[
+D_2(x)=\frac{L_5(x)}{1+x^2}.
+]
+The beginning of (L_5) is
+[
+L_5(x)=1-x+2x^2+\cdots,
+]
+so comparison in (L_5=(1+x^2)D_2) gives
+[
+D_2(x)=1-x+x^2+\cdots.
+]
+The coefficient of (x^3) in
+[
+\frac{P_S}{1+x^2}=(ax+bx^2+cx^3)D_2
+]
+is (a-b+c). Therefore
+[
+b\leq a+c.
+\tag{10}
+]
+
+Combining (9) and (10),
+[
+2a\leq b\leq a+c \quad\Longrightarrow\quad a\leq c,
+]
+while
+[
+2c\leq b\leq a+c \quad\Longrightarrow\quad c\leq a.
+]
+Thus (a=c), and then necessarily
+[
+b=2a.
+]
+Since (S) is nonempty, (a) is a positive integer. Equation (8) becomes
+[
+P_S(x)=a,x(1+x)^2L_5(x)
+=a,x\prod_{j=1}^{5}(1+x^j).
+]
+The number of elements in (S), counted with multiplicity, is
+[
+|S|=P_S(1)=a\prod_{j=1}^{5}(1+1)=32a\geq32.
+]
+The construction (6) has (a=1), so equality is attained.
+
+[
+\boxed{\lvert S\rvert_{\min}=32}
+]

@@ -1,0 +1,43 @@
+To find the value of $a+b$, we will carefully determine the geometric properties of the given configuration. 
+
+**1. Properties of the Orthic Triangle and Radical Center**
+Let the side lengths of $\triangle ABC$ be $a = 17$, $b = 25$, and $c = 26$. 
+The circles $\Omega$ (circumcircle of $\triangle ABC$), $\omega$ (nine-point circle of $\triangle ABC$), and $(BCEF)$ (circle with diameter $BC$) have a special radical axis relationship. 
+The intersection $X$ of $EF$ and $BC$ is the radical center of the circumcircle $\Omega$, the circle $(BCEF)$, and the circle $(AEHF)$ which has diameter $AH$. 
+The power of $X$ with respect to $\Omega$ and $(AEHF)$ tells us that the radical axis of $\Omega$ and $(AEHF)$ is the line $AX$. Therefore, the second intersection of $AX$ and $\Omega$, point $Q$, must also lie on the circle $(AEHF)$. 
+Because $AH$ is the diameter of $(AEHF)$, it follows that $\angle AQH = 90^\circ$. 
+
+**2. Finding the Lengths $HQ$ and $AQ$**
+We place $D$, the foot of the altitude from $A$, at the origin $(0,0)$. The $x$-axis lies along $BC$. 
+The altitude $AD$ of $\triangle ABC$ can be found using Heron's formula: 
+The semi-perimeter $s = \frac{17+25+26}{2} = 34$.
+Area $S = \sqrt{34 \times 17 \times 9 \times 8} = 204$.
+$AD = \frac{2S}{BC} = \frac{408}{17} = 24$.
+Using the Pythagorean theorem, the segment lengths on $BC$ are $BD = 10$ and $CD = 7$.
+Since $X$ is the harmonic conjugate of $D$ with respect to $B$ and $C$, we have $(X, D; B, C) = -1$. This yields $XD = \frac{140}{3}$.
+In right $\triangle ADX$, we calculate $AX$:
+$$AX = \sqrt{AD^2 + XD^2} = \sqrt{24^2 + \left(\frac{140}{3}\right)^2} = \frac{4\sqrt{1549}}{3}$$
+The intersection of the altitudes $H$ lies on $AD$ at a height of $\frac{35}{12}$. Thus, $AH = 24 - \frac{35}{12} = \frac{253}{12}$.
+Since $\angle AQH = \angle ADX = 90^\circ$, we have $\triangle AHQ \sim \triangle AXD$. This similarity gives:
+$$HQ = \frac{AH \cdot XD}{AX} = \frac{\frac{253}{12} \cdot \frac{140}{3}}{\frac{4\sqrt{1549}}{3}} = \frac{253 \cdot 35}{12\sqrt{1549}}$$
+
+**3. Application of Apollonius's and Ptolemy's Theorems**
+A homothety centered at $H$ with factor $\frac{1}{2}$ maps the circumcircle $\Omega$ to the nine-point circle $\omega$. Thus, the intersection $P$ of the segment $HQ$ with $\omega$ is exactly the midpoint of $HQ$. Hence, $PQ = \frac{1}{2}HQ = \frac{253 \cdot 35}{24\sqrt{1549}}$.
+
+By Ptolemy's Theorem on the cyclic quadrilateral $AQEH$ inscribed in the circle with diameter $AH$, the length of the diagonal $EQ$ is found as:
+$$EQ = \frac{AE \cdot XD - AD \cdot EH}{AX}$$
+From $\triangle ABC$, we have $\cos C = \frac{7}{25}$ and $\sin C = \frac{24}{25}$. Then $AE = AH \sin C = \frac{506}{25}$ and $EH = AH \cos C = \frac{1771}{300}$.
+Plugging these into our Ptolemy-derived relation gives:
+$$EQ = \frac{119 \cdot 253}{50\sqrt{1549}}$$
+
+Because $P$ is the midpoint of $HQ$, $EP$ is the median to side $HQ$ in $\triangle HEQ$. By Apollonius's Theorem ($EH^2 + EQ^2 = 2EP^2 + 2PQ^2$):
+$$2EP^2 = \left( \frac{253 \cdot 7}{300} \right)^2 + \left( \frac{253 \cdot 119}{50\sqrt{1549}} \right)^2 - 2\left( \frac{253 \cdot 35}{24\sqrt{1549}} \right)^2$$
+Factoring out $253^2$ and finding common denominators reduces this gracefully to:
+$$EP^2 = 253^2 \times \frac{637^2}{360000 \times 1549} \implies EP = \frac{253 \cdot 637}{600\sqrt{1549}}$$
+
+**4. Ratio Conclusion**
+Finally, we compute the sought ratio $\frac{PQ}{PE}$:
+$$\frac{PQ}{PE} = \frac{\frac{253 \cdot 35}{24\sqrt{1549}}}{\frac{253 \cdot 637}{600\sqrt{1549}}} = \frac{35}{24} \times \frac{600}{637} = \frac{35 \times 25}{637} = \frac{5 \times 25}{91} = \frac{125}{91}$$
+The integers $a = 125$ and $b = 91$ are positive and coprime. 
+
+$$a + b = 125 + 91 = 216$$

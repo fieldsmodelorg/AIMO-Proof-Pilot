@@ -1,0 +1,125 @@
+We prove that \(P\) is the midpoint of \(HQ\) and then compute the ratio.
+
+**1.  Coordinates**.  
+Place \(B=(0,0)\), \(C=(17,0)\) and \(A=(10,24)\); this satisfies \(AB=26,\ AC=25\).  
+The triangle is acute (e.g. \(17^2+25^2>26^2\)).
+
+**2.  Orthocenter and feet**.  
+\(BC\) horizontal ⇒ altitude from \(A\) is \(x=10\).  
+Slope of \(AC=\frac{0-24}{17-10}=-\frac{24}{7}\) ⇒ altitude from \(B\): \(y=\frac{7}{24}x\).  
+Intersection gives \(H=(10,\frac{35}{12})\); the foot \(D=(10,0)\).  
+
+Foot \(E\) from \(B\) to \(AC\): line \(AC\): \(24x+7y-408=0\) ⇒  
+\(E=\left(\frac{24\cdot408}{625},\frac{7\cdot408}{625}\right)=\left(\frac{9792}{625},\frac{2856}{625}\right)\).  
+
+Foot \(F\) from \(C\) to \(AB\): line \(AB\): \(12x-5y=0\) ⇒  
+\(F=\left(\frac{425}{169},\frac{1020}{169}\right)\).
+
+**3.  Point \(X=EF\cap BC\)**.  
+\(BC\): \(y=0\). Using \(x_X=\frac{x_Ey_F-x_Fy_E}{y_F-y_E}\) and noting common factor \(17\) in \(E,F\) we obtain  
+\(X=\left(\frac{170}{3},0\right)\).
+
+**4.  Point \(Q\) – second intersection of \(AX\) with circumcircle**.  
+For the circumcircle, the power of \(X\) gives \(XA\cdot XQ=XB\cdot XC\) (directed lengths).  
+\(XB=\frac{170}{3},\ XC=\frac{119}{3}\;\Rightarrow\; XB\cdot XC=\frac{20230}{9}\).  
+\(XA=\sqrt{\left(\frac{140}{3}\right)^2+24^2}=\frac{4\sqrt{1549}}{3}\) ⇒  
+\(XQ=\frac{XB\cdot XC}{XA}=\frac{20230}{12\sqrt{1549}}\); clearly \(XQ<XA\) so \(Q\) lies between \(X\) and \(A\).  
+
+Set \(\mu=\frac{XQ}{XA}=\frac{XB\cdot XC}{XA^2}=\frac{20230}{24784}=\frac{10115}{12392}\).  
+Then \(Q=X+\mu(A-X)\). Writing \(d=1549\) and  
+\(K=5\cdot7\cdot11\cdot23=8855\), simplification yields  
+
+\[
+Q-H=\left(\frac{3K}{2d},\frac{35K}{12d}\right). \tag{1}
+\]
+
+Hence  
+
+\[
+HQ^2=\left(\frac{3K}{2d}\right)^2+\left(\frac{35K}{12d}\right)^2
+      =K^2\left(\frac{9}{4d^2}+\frac{1225}{144d^2}\right)
+      =\frac{K^2\cdot1549}{144d^2}=\frac{K^2}{144d},
+\]  
+so \(HQ=\dfrac{K}{12\sqrt{d}}\). \tag{2}
+
+**5.  Identification of \(P\)**.  
+The nine‑point circle (through \(D,E,F\)) is the image of the circumcircle under the homothety with centre \(H\) and factor \(\frac12\) (the midpoints of \(HA,HB,HC\) lie on it and its centre is the midpoint of \(OH\), radius \(R/2\)).  
+Since \(Q\) lies on the circumcircle, its image under this homothety – the midpoint of \(HQ\) – lies on the nine‑point circle and on segment \(HQ\) (because \(H\) is inside the circumcircle for an acute triangle).  
+Therefore the intersection \(P\) of segment \(HQ\) with the nine‑point circle is precisely the midpoint of \(HQ\). Consequently  
+
+\[
+PQ=\frac12HQ=\frac{K}{24\sqrt{d}}. \tag{3}
+\]
+
+**6.  Computation of \(PE\)**.  
+With \(P=\bigl(10+\frac{3K}{4d},\frac{35}{12}+\frac{35K}{24d}\bigr)\) and \(E=\left(\frac{9792}{625},\frac{2856}{625}\right)\) write  
+
+\[
+U=E_x-P_x=\frac{9792}{625}-10-\frac{3K}{4d}
+          =\frac{3542}{625}-\frac{3K}{4d}, 
+\]  
+\[
+V=E_y-P_y=\frac{2856}{625}-\frac{35}{12}-\frac{35K}{24d}
+          =\left(\frac{2856}{625}-\frac{35}{12}\right)-\frac{35K}{24d}.
+\]  
+Using \(3542=2\cdot1771\) and \(1771=K/5\) gives \(3542=2K/5\).  
+Also \(\frac{2856}{625}-\frac{35}{12}=\frac{12397}{7500}\) and \(12397=7\cdot1771=7K/5\).  
+
+Hence  
+
+\[
+U=K\left(\frac{2}{3125}-\frac{3}{4d}\right),\qquad
+V=K\left(\frac{7}{37500}-\frac{35}{24d}\right).
+\]
+
+Insert \(d=1549\):  
+
+\[
+8d-9375=3017=7\cdot431,\quad 14d-109375=-87689=-7\cdot12527,
+\]  
+so  
+
+\[
+U=K\cdot\frac{8d-9375}{12500d}=\frac{7K\cdot431}{12500d},\qquad
+V=K\cdot\frac{14d-109375}{75000d}=-\frac{7K\cdot12527}{75000d}
+   =-\frac{7K\cdot12527}{6\cdot12500d}.
+\]
+
+Therefore  
+
+\[
+PE^2=U^2+V^2
+     =\frac{49K^2}{12500^2d^2}\left(431^2+\frac{12527^2}{36}\right)
+     =\frac{49K^2}{12500^2d^2}\cdot\frac{36\cdot431^2+12527^2}{36}.
+\]
+
+Now \(36\cdot431^2+12527^2=36\cdot185761+156925729=163613125
+=325^2\cdot1549=325^2 d\).  Substituting,
+
+\[
+PE^2=\frac{49K^2}{12500^2d^2}\cdot\frac{325^2 d}{36}
+     =\frac{49K^2\cdot325^2}{12500^2\cdot36\,d}.
+\]  
+
+Since \(\frac{325}{12500}=\frac{13}{500}\), \(\frac{325^2}{12500^2}=\frac{169}{250000}\).  Thus  
+
+\[
+PE^2=\frac{49K^2\cdot169}{250000\cdot36\,d}
+     =\frac{49K^2\cdot169}{9\,000\,000\,d},
+\qquad\text{so}\qquad
+PE=\frac{7\cdot13\cdot K}{3000\sqrt{d}}=\frac{91K}{3000\sqrt{d}}. \tag{4}
+\]
+
+**7.  Ratio**.  
+From (3) and (4),
+
+\[
+\frac{PQ}{PE}=\frac{K/(24\sqrt{d})}{91K/(3000\sqrt{d})}
+           =\frac{3000}{24\cdot91}
+           =\frac{125}{91}.
+\]  
+Thus \(a=125,\ b=91\) are coprime, and \(a+b=216\).
+
+\[
+\boxed{216}
+\]
