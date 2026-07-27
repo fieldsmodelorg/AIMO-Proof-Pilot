@@ -1,0 +1,71 @@
+We prove that the sequence eventually becomes affine periodic.
+
+**Step 1: Finiteness of the set of primes that appear.**  
+Let \(P\) be the set of all primes dividing at least one term \(a_n\). Since \(a_1>1\), \(P\neq\varnothing\). Let \(p=\min P\). Choose the smallest index \(k\) such that \(p\mid a_k\).
+
+For any \(n\ge k\), if \(p\nmid a_n\) then \(\gcd(a_n,a_k)>1\) (because \(a_n\) must share a factor with \(a_k\)). Hence there exists a prime \(q\neq p\) that divides both \(a_n\) and \(a_k\). Thus \(q\) is a prime divisor of \(a_k\). Consequently every prime that occurs in the sequence after index \(k\) is either \(p\) or a divisor of \(a_k\). The primes that occur before index \(k\) are among the (finite) prime divisors of \(a_1,\dots,a_{k-1}\). Therefore \(P\) is finite.
+
+**Step 2: The set \(A\) of numbers that share a factor with every term.**  
+Define  
+\[
+A = \{\,x>1 \mid \gcd(x,a_i)>1 \text{ for all } i\ge 1\,\}.
+\]  
+Because each \(a_i\) obviously belongs to \(A\) (by definition of the sequence), \(A\) is nonempty.
+
+For each \(n\) let \(A_n = \{\,x>1 \mid \gcd(x,a_i)>1 \text{ for } i=1,\dots,n\,\}\). Then \(A = \bigcap_{n\ge 1} A_n\) and \(A_n\supseteq A_{n+1}\).
+
+**Lemma 1.** For every \(n\ge 1\),  
+\[
+a_{n+1} = \min\bigl(A\cap (a_n,\infty)\bigr).
+\]
+
+*Proof.* By the definition of the sequence, \(a_{n+1}\) is the smallest integer \(>a_n\) that belongs to \(A_n\). Since \(A\subseteq A_n\) (any number that shares a factor with all terms certainly shares a factor with the first \(n\) terms), we have  
+\[
+a_{n+1} \le \min\bigl(A\cap (a_n,\infty)\bigr).
+\]  
+On the other hand, we show that \(a_{n+1}\in A\). For any \(i>n\), the term \(a_i\) must share a factor with all previous terms, hence with \(a_{n+1}\); therefore \(\gcd(a_i,a_{n+1})>1\) for every \(i>n\). Together with \(\gcd(a_{n+1},a_1),\dots,\gcd(a_{n+1},a_n)>1\) (by the definition of \(a_{n+1}\)), we obtain \(a_{n+1}\in A\). Thus  
+\[
+a_{n+1} \ge \min\bigl(A\cap (a_n,\infty)\bigr).
+\]  
+Hence equality holds. ∎
+
+Consequently the sequence \((a_n)\) is exactly the increasing enumeration of the elements of \(A\) that are at least \(a_1\); i.e., if we list the elements of \(A\) in increasing order as \(b_1<b_2<\cdots\), there exists an index \(m\) such that \(b_m=a_1\) and for all \(n\ge 1\)  
+\[
+a_n = b_{m+n-1}.
+\]
+
+**Step 3: Structure of \(A\) using hitting sets.**  
+Let \(P\) be the (finite) set of all primes that divide some term. For each \(i\ge 1\) denote by \(P_i\) the set of prime divisors of \(a_i\); clearly \(P_i\subseteq P\).
+
+A number \(x>1\) belongs to \(A\) if and only if the set \(D(x)\) of prime divisors of \(x\) satisfies \(D(x)\cap P_i\neq\varnothing\) for every \(i\). In other words, \(D(x)\) is a *hitting set* for the family \(\{P_i\}_{i\ge 1}\).
+
+Because \(P\) is finite, the collection of all hitting sets is finite. Let \(\mathcal H\) be the set of minimal hitting sets (with respect to inclusion). For each \(H\in\mathcal H\) set  
+\[
+d_H = \prod_{p\in H}p.
+\]  
+If \(x\in A\) then \(D(x)\) is a hitting set, so there exists \(H\in\mathcal H\) with \(H\subseteq D(x)\). Hence \(d_H\mid x\) and \(x\) is a multiple of \(d_H\). Conversely, if \(x\) is a multiple of \(d_H\) for some \(H\in\mathcal H\), then \(H\subseteq D(x)\), so \(D(x)\) is a hitting set and therefore \(x\in A\). Thus  
+\[
+A = \bigcup_{H\in\mathcal H} \{\,k\cdot d_H \mid k\ge 1\,\}.
+\]  
+This is a finite union of arithmetic progressions.
+
+Let \(L = \operatorname{lcm}\{d_H\mid H\in\mathcal H\}\). For any integer \(x\),  
+\[
+x\in A \;\Longleftrightarrow\; x+L\in A.
+\]  
+Indeed, if \(x\in A\) then \(x\) is a multiple of some \(d_H\); since \(L\) is a multiple of \(d_H\), \(x+L\) is also a multiple of \(d_H\) and therefore belongs to \(A\). Conversely, if \(x+L\in A\) then \(x+L\) is a multiple of some \(d_H\); because \(L\) is a multiple of \(d_H\), the difference \(x\) is also a multiple of \(d_H\), so \(x\in A\). Hence \(A\) is periodic with period \(L\).
+
+**Step 4: The enumeration of a periodic set.**  
+Let \(R = \{\,r\in\{0,1,\dots,L-1\}\mid r\in A\,\}\) be the set of residues modulo \(L\) that appear in \(A\). Because \(A\) is periodic, the elements of \(A\) are exactly the integers \(x>1\) such that \(x\bmod L\in R\). Let \(T = |R|\) (the number of distinct residues). Since the residues repeat every \(L\), the increasing enumeration of \(A\) satisfies  
+\[
+b_{k+T} = b_k + L \qquad\text{for all }k\ge 1.
+\]  
+(Proof: The numbers of \(A\) in each interval \([m L,\,(m+1)L)\) are precisely the numbers of the form \(r+m L\) with \(r\in R\). Sorting these numbers in increasing order, the pattern of residues repeats every \(T\) steps, giving the affine periodicity.)
+
+**Step 5: Conclusion.**  
+We have already established that \(a_n = b_{m+n-1}\) for a fixed \(m\). Therefore for every positive integer \(n\),  
+\[
+a_{n+T} = b_{m+n-1+T} = b_{m+n-1} + L = a_n + L.
+\]  
+
+Thus the required positive integers exist (for instance \(T = |R|\) and \(L = \operatorname{lcm}\{d_H\mid H\in\mathcal H\}\)), completing the proof. ∎

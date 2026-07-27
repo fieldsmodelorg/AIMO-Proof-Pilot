@@ -1,0 +1,167 @@
+We determine all functions \(f:\mathbb{R}_{>0}\to\mathbb{R}_{>0}\) satisfying  
+\[
+\sqrt{\frac{x^{2}+f(y)^{2}}{2}}\ge\frac{f(x)+y}{2}\ge\sqrt{x\,f(y)}\qquad(\forall x,y>0). \tag{0}
+\]
+
+---
+### 1.  A functional equation  
+Put \(x=f(y)\) in (0).  The left inequality gives  
+\[
+\sqrt{\frac{f(y)^{2}+f(y)^{2}}{2}}=f(y)\ge\frac{f(f(y))+y}{2},
+\]  
+and the right inequality gives  
+\[
+\frac{f(f(y))+y}{2}\ge\sqrt{f(y)\,f(y)}=f(y).
+\]  
+Thus both inequalities are equalities, hence  
+\[
+\frac{f(f(y))+y}{2}=f(y)\quad\Longrightarrow\quad f(f(y))=2f(y)-y\qquad(\forall y>0). \tag{1}
+\]
+
+---
+### 2.  A lower bound for \(f\)  
+Assume that there exists \(y_{0}>0\) with \(f(y_{0})<y_{0}\).  Define the sequence \((x_{n})\) by \(x_{0}=y_{0}\) and \(x_{n+1}=f(x_{n})\).  From (1) we obtain  
+\[
+x_{n+2}=2x_{n+1}-x_{n},
+\]  
+so the general solution is \(x_{n}=y_{0}+n\bigl(f(y_{0})-y_{0}\bigr)\).  Because \(f(y_{0})-y_{0}<0\), for sufficiently large \(n\) the term \(x_{n}\) becomes non‑positive.  Then \(x_{N-1}>0\) and \(x_{N}=f(x_{N-1})\le0\), contradicting \(f(x)>0\) for all \(x>0\).  Therefore  
+\[
+f(x)\ge x\qquad(\forall x>0). \tag{2}
+\]
+
+---
+### 3.  Introducing \(g(x)=f(x)-x\)  
+Define \(g(x)=f(x)-x\ge0\).  Then \(f(x)=x+g(x)\).  Substituting into (1) gives  
+\[
+f(f(x))=f(x+g(x))=x+g(x)+g(x+g(x))=2(x+g(x))-x=x+2g(x),
+\]  
+hence  
+\[
+g\bigl(x+g(x)\bigr)=g(x)\qquad(\forall x>0). \tag{3}
+\]  
+Thus \(g\) is constant on each forward orbit \(\{x+ng(x)\mid n\ge0\}\) (provided the arguments stay positive).
+
+---
+### 4.  Proving that \(g\) is constant  
+
+Assume, for contradiction, that \(g\) is **not** constant.  Then there exist \(a,b>0\) with \(g(a)>g(b)\).  Write  
+\[
+c=g(a),\qquad d=g(b),\qquad c>d\ge0.
+\]
+
+We treat two cases.
+
+---
+#### Case 1: \(d=0\)  
+
+Here \(g(b)=0\) and \(g(a)=c>0\).  From (3) we have \(g(a+nc)=c\) and \(f(a+nc)=a+nc+c\) for every \(n\ge0\).
+
+First apply the left inequality of (0) to the pair \((a,b)\):  
+\[
+\sqrt{\frac{a^{2}+b^{2}}{2}}\ge\frac{a+c+b}{2}.
+\]  
+Squaring and simplifying yields  
+\[
+(a-b)^{2}\ge c^{2}+2c(a+b). \tag{4}
+\]
+
+If \(a\ge b+2c\), then \((a-b)^{2}\ge4c^{2}\) and (4) would give \(4c^{2}\ge c^{2}+2c(a+b)\), i.e. \(3c^{2}\ge2c(a+b)\).  Because \(a\ge b+2c\), we have \(a+b\ge2b+2c\), so \(3c^{2}\ge2c(2b+2c)=4bc+4c^{2}\), which is impossible.  Hence  
+\[
+a<b+2c. \tag{5}
+\]
+
+Now we show that a contradiction arises.
+
+*Subcase 1a: \(a\ge c+b\).*  
+Then (5) gives \(c+b\le a<b+2c\).  Apply the left inequality to \((a,b)\) again:  
+\[
+\sqrt{\frac{a^{2}+b^{2}}{2}}\ge\frac{a+c+b}{2}.
+\]  
+As derived from (4), this inequality is equivalent to  
+\[
+\bigl(a-(c+b)\bigr)^{2}\ge2c^{2}+4cb. \tag{6}
+\]  
+Because \(a-(c+b)<c\) (by (5)), the left‑hand side of (6) is smaller than \(c^{2}\), while the right‑hand side is at least \(2c^{2}>c^{2}\) (since \(b>0\)).  This is a contradiction.
+
+*Subcase 1b: \(a<c+b\).*  
+Let \(n\) be the smallest non‑negative integer such that \(a+nc\ge c+b\).  Then  
+\[
+c+b\le a+nc<b+2c,
+\]  
+so \(0\le (a+nc)-(c+b)<c\).  Apply the left inequality to \((x,b)\) with \(x=a+nc\):  
+\[
+\sqrt{\frac{x^{2}+b^{2}}{2}}\ge\frac{x+c+b}{2}.
+\]  
+The same manipulation as above gives  
+\[
+\bigl(x-(c+b)\bigr)^{2}\ge2c^{2}+4cb. \tag{7}
+\]  
+Again the left‑hand side is smaller than \(c^{2}\) (because \(x-(c+b)<c\)), while the right‑hand side is at least \(2c^{2}\), a contradiction.
+
+Thus Case 1 cannot occur.
+
+---
+#### Case 2: \(d>0\)  
+
+Now \(c>d>0\).  Consider the orbits  
+\[
+A=\{a+nc\mid n\ge0\},\qquad B=\{b+md\mid m\ge0\}.
+\]  
+For any \(x\in A,\;y\in B\) we have \(f(x)=x+c\) and \(f(y)=y+d\).
+
+Apply the left inequality of (0) to such a pair:  
+\[
+\sqrt{\frac{x^{2}+(y+d)^{2}}{2}}\ge\frac{x+c+y}{2}.
+\]  
+Squaring and simplifying yields  
+\[
+(x-y)^{2}-2c(x+y)+4dy+2d^{2}-c^{2}\ge0. \tag{8}
+\]  
+Let \(\delta=x-y\).  Then \(x+y=2y+\delta\), and (8) becomes  
+\[
+\delta^{2}-2c\delta-4y(c-d)+2d^{2}-c^{2}\ge0. \tag{9}
+\]
+
+We now show that we can choose \(x\in A,\;y\in B\) with \(y\) arbitrarily large and \(|\delta|\) bounded.  
+
+*If \(c/d\) is rational:* write \(c=pk,\;d=qk\) with coprime positive integers \(p,q\) and \(k>0\).  For any integer \(t\ge0\) set  
+\[
+n=qt,\qquad m=pt.
+\]  
+Then \(x=a+nc=a+pqkt\), \(y=b+md=b+pqkt\).  Hence \(x-y=a-b\) (constant) and \(y\to\infty\) as \(t\to\infty\).
+
+*If \(c/d\) is irrational:* the set \(\{n(c/d)-m\mid n,m\in\mathbb{N}\}\) is dense in \(\mathbb{R}\).  Consequently, for any \(\varepsilon>0\) and any large number \(M\) we can find integers \(n,m\) with \(m\) sufficiently large such that  
+\[
+|(a-b)+(nc-md)|<\varepsilon,
+\]  
+and simultaneously \(y=b+md>M\).  Thus we obtain \(x=a+nc,\;y=b+md\) with \(y\) arbitrarily large and \(|\delta|<\varepsilon\).
+
+In both sub‑cases we have sequences \((x_{t},y_{t})\) with \(y_{t}\to\infty\) and \(|\delta_{t}|\le K\) for some constant \(K\).  Substituting into (9) gives  
+\[
+\delta_{t}^{2}-2c\delta_{t}+2d^{2}-c^{2}-4y_{t}(c-d)\ge0.
+\]  
+Because \(c-d>0\), the term \(-4y_{t}(c-d)\) tends to \(-\infty\) as \(y_{t}\to\infty\).  Hence for sufficiently large \(y_{t}\) the left‑hand side is negative, contradicting (9).  Therefore Case 2 cannot occur either.
+
+---
+Since both possibilities lead to a contradiction, our assumption that \(g\) is not constant is false.  Hence \(g\) is constant.  Write \(g(x)=c\) for all \(x>0\); by (2) we have \(c\ge0\).  Consequently  
+\[
+\boxed{f(x)=x+c\qquad(\forall x>0)}. \tag{10}
+\]
+
+---
+### 5.  Verification  
+
+Let \(c\ge0\) and set \(f(x)=x+c\).  For all \(x,y>0\),  
+
+\[
+\begin{aligned}
+\sqrt{\frac{x^{2}+(y+c)^{2}}{2}} &\ge \frac{x+y+c}{2} \qquad\text{(QM–AM inequality)},\\[2mm]
+\frac{x+y+c}{2} &\ge \sqrt{x\,(y+c)} \qquad\text{(AM–GM inequality)}.
+\end{aligned}
+\]
+
+Thus every function of the form \(f(x)=x+c\) with \(c\ge0\) satisfies the original chain of inequalities.  No other functions do.
+
+\[
+\boxed{f(x)=x+c\quad\text{with}\quad c\ge0}
+\]

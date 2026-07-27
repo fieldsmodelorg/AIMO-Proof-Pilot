@@ -1,0 +1,101 @@
+We first note that after the stick is cut at all marked points, the pieces are positive lengths summing to \(1\).  The players then take turns choosing a piece; each wants to maximise his own total.  A standard greedy argument shows that the optimal strategy for both players is always to take the largest remaining piece.  Consequently, if the pieces are sorted in non‑increasing order  
+\[
+a_1\ge a_2\ge\cdots\ge a_k,\qquad\sum_{i=1}^k a_i=1,
+\]  
+the first player (Liu) obtains the sum of the odd‑indexed pieces  
+\[
+V=a_1+a_3+a_5+\cdots .
+\]  
+Thus the problem reduces to: Liu chooses a set \(L\) of at most \(n\) points on the stick, then Xia chooses a set \(X\) of at most \(n\) points disjoint from \(L\).  The stick is cut at all points of \(L\cup X\); let the pieces be sorted as above.  Liu’s total is \(V(L\cup X)\).  He wants to maximise the minimum of \(V\) over all admissible \(X\); denote this value by \(c(n)\).
+
+---
+
+### 1.  Lower bounds
+
+**For all \(n\).**  If Liu marks no points, then after Xia’s marks the pieces are determined by \(X\).  Sort them as \(a_1\ge a_2\ge\cdots\ge a_k\).  From \(a_{2i-1}\ge a_{2i}\) we obtain  
+\[
+a_1+a_3+\cdots\ge a_2+a_4+\cdots .
+\]  
+Adding the two inequalities gives \(2(a_1+a_3+\cdots)\ge 1\), so the odd‑sum is at least \(\frac12\).  Hence \(c(n)\ge\frac12\) for every positive integer \(n\).
+
+**For \(n=1\).**  Liu marks the point \(\frac13\).  The stick is cut into two pieces of lengths \(\frac13\) and \(\frac23\).  
+If Xia marks no point, Liu receives the whole stick, i.e. \(\frac23\).  
+If Xia marks a point, he must split either piece.  Splitting the smaller piece \(\frac13\) gives three pieces \(\frac23,\,y,\frac13-y\); the odd‑sum is \(\frac23+\min(y,\frac13-y)\ge\frac23\).  Splitting the larger piece \(\frac23\) into \(x\) and \(\frac23-x\) yields pieces \(x,\frac23-x,\frac13\).  The sum of the odd‑indexed pieces is \(1-\text{median}\).  The median is at most \(\frac13\) (achieved when the two pieces from the larger piece are equal), so the odd‑sum is at least \(\frac23\).  Thus in every case Liu obtains at least \(\frac23\), so \(c(1)\ge\frac23\).
+
+---
+
+### 2.  Upper bounds
+
+#### 2.1  The case \(n=1\)
+
+Let \(x\) be the point Liu marks (if he marks no point, Xia can mark \(\frac12\) and the odd‑sum becomes \(\frac12<\frac23\), so the bound is already satisfied).  We show that for every \(x\in(0,1)\) there exists a point \(y\) that Xia can mark so that the resulting odd‑sum is at most \(\frac23\).  Then Liu cannot guarantee more than \(\frac23\); hence \(c(1)\le\frac23\).
+
+Because the stick is symmetric under reflection, we may assume \(x\ge\frac12\).  The two pieces after Liu’s mark are \(x\) (larger) and \(1-x\) (smaller).  Xia can mark a point inside the larger piece; let \(y\) be that point with \(0<y<x\).  The three pieces are \(y,\;x-y,\;1-x\).  The odd‑sum is \(1-\text{median}\).  We want to choose \(y\) so that the median is at least \(\frac13\).
+
+- **If \(x\ge\frac23\):**  Take \(y=\frac{x}{2}\).  Then the pieces are \(\frac{x}{2},\frac{x}{2},1-x\).  Since \(\frac{x}{2}\ge\frac13\) for \(x\ge\frac23\), the median is \(\frac{x}{2}\) and the odd‑sum is \(1-\frac{x}{2}\le\frac23\) (equality at \(x=\frac23\)).
+
+- **If \(\frac12\le x<\frac23\):**  Take \(y=\frac23-x\).  Then \(y>0\) and \(y<x\) (because \(x\ge\frac12\) gives \(\frac23-x\le\frac16\le x\)).  The pieces are \(x-y=2x-\frac23,\; \frac23-x,\;1-x\).  Since \(x<\frac23\), we have \(2x-\frac23<\frac23-x\) and \(1-x>\frac23-x\)? Actually we need to sort:  
+  * For \(x\in[\frac12,\frac23]\), we have \(2x-\frac23\le\frac13\le1-x\)? Let’s verify: \(2x-\frac23\le\frac13\) when \(x\le\frac12\)? Wait, for \(x=\frac12\), \(2x-\frac23=\frac13\); for \(x=\frac23\), \(2x-\frac23=\frac13\). So \(2x-\frac23\) is between \(\frac13\) and \(\frac13\)? Actually it is exactly \(\frac13\) at both endpoints, and it is increasing? Actually \(2x-\frac23\) is linear, so for \(x\) between \(\frac12\) and \(\frac23\), it ranges from \(\frac13\) to \(\frac13\)? That can't be. Let's compute: at \(x=\frac12\), \(2x-\frac23=1-\frac23=\frac13\); at \(x=\frac23\), \(2x-\frac23=\frac43-\frac23=\frac13\). So it's constant? Wait, \(2x-\frac23\) at \(x=\frac12\) gives \(1-\frac23=\frac13\); at \(x=\frac23\) gives \(\frac43-\frac23=\frac13\). So it's exactly \(\frac13\) for all \(x\)? No, \(2x-\frac23\) is linear with slope 2, so at \(x=0.6\), \(2*0.6-0.6667=1.2-0.6667=0.5333\). That is >0.3333. So my earlier statement is wrong. Let's recalc: For \(x=0.6\), \(2x-\frac23=1.2-0.6667=0.5333\). So it's not constant. So we need to sort correctly.
+
+Better to sort explicitly. The three numbers are:
+\[
+A = x-y = x-(\frac23-x)=2x-\frac23,\qquad B = y = \frac23-x,\qquad C = 1-x.
+\]
+We have \(A\ge B\)? Since \(A-B = 2x-\frac23 - (\frac23-x) = 3x-\frac43\). For \(x\ge\frac12\), \(3x-\frac43 \ge \frac32-\frac43 = -\frac16\), so it can be negative. Actually at \(x=\frac12\), \(A-B = 3/2-4/3 = 1/6 >0\); at \(x=\frac23\), \(A-B = 2-4/3 = 2/3 >0\). So \(A\ge B\) for \(x\ge\frac12\). Also compare \(A\) and \(C\): \(A-C = 2x-\frac23 - (1-x) = 3x-\frac53\). This is negative for \(x<\frac53\), so for \(x\le\frac23\), \(A-C \le 3/2-5/3 = -1/6 <0\). So \(A \le C\) for \(x\le\frac23\). Thus the sorted order is: largest is \(C=1-x\), then \(A=2x-\frac23\), then \(B=\frac23-x\). So the median is \(A = 2x-\frac23\). The odd‑sum is \(1 - (2x-\frac23) = \frac53 - 2x\). But we want to check if this is ≤ 2/3? Actually we want the odd-sum ≤ 2/3. For \(x=\frac12\), odd-sum = 5/3 - 1 = 2/3; for \(x=\frac23\), odd-sum = 5/3 - 4/3 = 1/3? That would be less than 2/3. But we must ensure that the median is at least 1/3? Let's compute median: for \(x=\frac23\), \(A=2*(2/3)-2/3=4/3-2/3=2/3\), median=2/3, odd-sum=1/3, which is even smaller. But is that correct? If \(x=2/3\), then \(y=2/3-x=0\), not allowed. So we need a different choice for \(x=2/3\): we can take \(y=x/2=1/3\), which gives median=1/3 and odd-sum=2/3. So our construction for \(x<2/3\) should use a different \(y\)? Let's re-evaluate.
+
+We want to guarantee odd-sum ≤ 2/3. For \(x\) in [1/2, 2/3), we can try to make the median as large as possible. The median is the middle piece. The three pieces are \(y, x-y, 1-x\). The median is maximised when the three pieces are as balanced as possible, but the fixed piece \(1-x\) is already >1/3. So we want to make the two pieces from the larger piece as close to each other and to \(1-x\) as possible. The maximum possible median is achieved when we make the two pieces from the larger piece equal to each other? But then the median is the larger of those two? Actually if we set \(y = x/2\), then pieces are \(x/2, x/2, 1-x\). Since \(1-x > x/2\) for \(x<2/3\)? For x=0.6, 1-x=0.4, x/2=0.3, so sorted: 0.4,0.3,0.3, median=0.3. That gives odd-sum = 0.4+0.3 = 0.7? Wait odd-sum is sum of largest and smallest: 0.4+0.3=0.7. That's >2/3. So not good.
+
+Better to choose \(y\) such that the median is as large as possible. The median is the second largest. To make the median large, we want the two larger pieces to be as close as possible. The larger piece is \(1-x\) (since \(1-x > x/2\) for \(x<2/3\)? Actually for x=0.6, 1-x=0.4, x/2=0.3, so 1-x is larger. So the largest piece is \(1-x\). The second largest will be the larger of the two pieces from the larger piece, i.e., \(\max(y, x-y)\). To make the median large, we want \(\max(y, x-y)\) as large as possible, but it cannot exceed \(1-x\) because it's the second largest. Actually we want the median to be at least 1/3, and we want odd-sum = 1 - median ≤ 2/3. So we need median ≥ 1/3. Since the median is the second largest, we can try to make the two pieces from the larger piece as large as possible, but they must sum to \(x\). The maximum possible value for the second largest piece is achieved when we split \(x\) into two pieces as unequal as possible? Actually if we split \(x\) into \(y\) and \(x-y\), the larger of the two is at most \(x\) (if one piece is 0, but not allowed). To make the second largest piece large, we want one of the pieces from the larger piece to be as large as possible, close to \(x\). But then the other piece becomes very small, so the median becomes the larger of the two from the larger piece, which could be almost \(x\). However, the largest piece is \(1-x\). So if we make one piece from the larger piece very large, say \(y\) close to \(x\), then the pieces are \(x-y\) (very small), \(y\) (close to \(x\)), and \(1-x\). Then the sorted order: \(y\) (largest), \(1-x\) (second), \(x-y\) (smallest). Then median = \(1-x\). So odd-sum = \(y + (x-y) = x\). So we can achieve odd-sum = \(x\). Since \(x<2/3\), this is ≤2/3. So we can choose \(y\) close to \(x\) (e.g., \(y = x - \varepsilon\), with \(\varepsilon\) small enough so that \(x-y = \varepsilon\) is positive and the median is \(1-x\), which is >1/3? For \(x=0.6\), \(1-x=0.4\), median=0.4, odd-sum=0.6, which is ≤2/3. So we can achieve odd-sum = x. To get exactly ≤2/3, we can take \(y\) such that \(y\) is close to \(x\) but also \(x-y\) is small. But we need to ensure that the median is indeed \(1-x\) and not \(y\). For \(y\) close to \(x\), we have \(y > 1-x\) for \(x>1/2\)? For x=0.6, 1-x=0.4, y close to 0.6, so y>0.4, so y is the largest, and 1-x is second, so median=1-x. So odd-sum = x. So we can achieve any value x by choosing y appropriately. Since x<2/3, we get odd-sum ≤2/3. For x=2/3, we can use y=x/2=1/3 giving odd-sum=2/3. So for all x≥1/2, we can achieve odd-sum ≤2/3.
+
+Thus the upper bound for n=1 is proven.
+
+Now, to give a clean argument, we can do:
+
+For x ≥ 1/2, choose y = x - ε, where ε > 0 is small enough so that x - ε > 1 - x (since x > 1/2, we can choose ε such that x-ε > 1-x). Then the pieces are: x-ε, ε, 1-x. Sorted: x-ε (largest), 1-x (second), ε (smallest). Median = 1-x. Odd-sum = (x-ε)+ε = x. Since x ≤ 1 (and we want odd-sum ≤ 2/3), we need x ≤ 2/3. For x > 2/3, we use a different construction: split the larger piece into two equal halves. So we can unify:
+
+- If x ≥ 2/3, set y = x/2. Then odd-sum = 1 - x/2 ≤ 2/3.
+- If 1/2 ≤ x < 2/3, set y = x - δ where δ is small and positive such that x-δ > 1-x. Then odd-sum = x ≤ 2/3.
+
+(For x = 1/2, we can take y = 1/2 - δ, but then x-δ = 1/2-δ, and 1-x = 1/2, so x-δ < 1-x, so the order changes. For x=1/2, we can instead use the equal split: y = x/2 = 1/4 gives pieces 1/4,1/4,1/2, median=1/4, odd-sum=1/2+1/4=3/4? That's >2/3. So we need a different construction for x=1/2. We can use y = 1/6 as earlier. So we need to handle the boundary carefully.
+
+Better to do a unified approach: For any x, the minimal possible odd-sum is at most 2/3. We can prove by considering two cases:
+
+- If x ≥ 2/3, take y = x/2, odd-sum = 1 - x/2 ≤ 2/3.
+- If 0 < x < 2/3, take y = 2/3 - x (if x ≤ 2/3, then 2/3-x > 0). Then pieces: x - (2/3-x) = 2x-2/3, 2/3-x, 1-x. We need to sort. For x ≤ 2/3, 2x-2/3 ≤ 2/3-2/3=0? Actually 2x-2/3 can be negative if x<1/3. But we are assuming x≥1/2? Actually if x<1/2, we can reflect. So we can restrict to x≥1/2. For x∈[1/2,2/3), we have 2x-2/3 ≥ 1/3? At x=1/2, 2x-2/3=1-2/3=1/3; at x=2/3, 2x-2/3=4/3-2/3=2/3. So it's increasing. Also 1-x is decreasing. We need to sort the three numbers: A=2x-2/3, B=2/3-x, C=1-x. Compare A and C: A-C = 2x-2/3 - (1-x) = 3x-5/3. For x≤5/9? Actually at x=1/2, 3/2-5/3=9/6-10/6=-1/6; at x=2/3, 2-5/3=1/3>0. So there is a crossover. So we need to handle subcases. This is messy.
+
+Given the earlier candidate solutions, the simplest is to do the case analysis as in candidate r03-p0026, which used the median approach. That candidate gave a construction for each interval. We can adopt a clean version:
+
+For any x, we can find y such that the median is at least 1/3. Then odd-sum ≤ 2/3.
+
+We can present the proof as follows:
+
+**Upper bound for n=1:**
+
+Assume w.l.o.g. that x ≥ 1/2 (otherwise reflect). The two pieces after Liu’s mark are x and 1-x.
+
+- If x ≥ 2/3, choose y = x/2. Then pieces are x/2, x/2, 1-x. Since x/2 ≥ 1-x (because x ≥ 2/3), the sorted order is x/2, x/2, 1-x, median = x/2, odd-sum = 1 - x/2 ≤ 2/3.
+- If 1/2 ≤ x < 2/3, choose y = 1-x - ε, where ε > 0 is small enough that y > 0 and y < x. Then pieces are x, y, 1-x-y. Since y < x and 1-x-y < 1-x, the largest piece is x. The second largest is max(y, 1-x-y). We can choose ε so that 1-x-y = ε, and y = 1-x-ε. Then the three pieces are x, 1-x-ε, ε. Since x > 1-x-ε (because x > 1-x for x>1/2), the sorted order is x, 1-x-ε, ε. Median = 1-x-ε. Then odd-sum = x + ε. To make this ≤ 2/3, we need ε ≤ 2/3 - x. Since x < 2/3, 2/3 - x > 0. We can choose ε = 2/3 - x (which is positive). Then y = 1-x - (2/3-x) = 1/3. So we set y = 1/3. But then y = 1/3, and we need y < x? For x ≥ 1/2, 1/3 < x, so fine. And also we need y not equal to x. So we can choose y = 1/3. Then pieces are x, 1-x-1/3 = 2/3-x, 1/3. For x in [1/2,2/3), 2/3-x ≤ 1/3? Actually for x=0.6, 2/3-x=0.0667; for x=0.5, 2/3-0.5=0.1667. So pieces: x, 2/3-x, 1/3. Sorted: x (largest), 1/3 (second), 2/3-x (smallest). Median = 1/3, odd-sum = x + (2/3-x) = 2/3. So we achieve exactly 2/3. For x = 1/2, pieces: 1/2, 2/3-1/2=1/6, 1/3, sorted: 1/2, 1/3, 1/6, median=1/3, odd-sum=2/3. For x = 2/3, we are in the previous case. So this works.
+
+Thus we can give a unified construction: for x ≥ 1/2, choose y = 1/3 if x < 2/3, and y = x/2 if x ≥ 2/3. But we need to check that y is distinct from x and 0<y<1. For x=1/2, y=1/3 is fine. For x=0.7, y=0.35, fine. For x=2/3, y=1/3, but then y=1/3 is not equal to x=2/3, fine. However, for x=2/3, the construction with y=1/3 gives pieces: 2/3, 1/3, 1/3, sorted: 2/3, 1/3, 1/3, median=1/3, odd-sum=2/3, which is also ≤2/3. So we can simply use y=1/3 for all x ≥ 1/2? Let's test: for x=0.6, y=1/3 gives pieces: 0.6, 0.4-1/3=0.0667? Actually 1-x=0.4, 1-x-y=0.4-0.3333=0.0667. So pieces: 0.6, 0.3333, 0.0667. Sorted: 0.6, 0.3333, 0.0667, median=0.3333, odd-sum=0.6+0.0667=0.6667 = 2/3. Good. For x=0.9, y=1/3 gives pieces: 0.9, 0.1-0.3333? Actually 1-x=0.1, 1-x-y=0.1-0.3333 negative, not allowed. So we cannot use y=1/3 when x > 2/3 because then 1-x-y becomes negative. So we need to split the larger piece, not the smaller piece. For x > 2/3, we use y = x/2, which gives pieces x/2, x/2, 1-x, median = x/2, odd-sum = 1 - x/2 ≤ 2/3. For x = 2/3, both constructions give the same result. So the case analysis is fine.
+
+Thus the upper bound for n=1 is rigorous.
+
+Now, for n≥2, we need to show that Liu cannot guarantee more than 1/2. The symmetric construction works:
+
+- If 1/2 ∉ L, Xia marks 1/2. Then the stick is cut at 1/2, and the pieces are two halves of length 1/2 each. The odd-sum is 1/2.
+- If 1/2 ∈ L, let L = {1/2} ∪ L' with L' ⊆ (0,1)\{1/2} and |L'| ≤ n-1. For every x ∈ L' such that 1-x ∉ L, Xia marks 1-x. (Note: if 1-x ∈ L already, we don't need to mark it.) The set of points marked by Xia has size at most |L'| ≤ n-1, so at most n. The resulting set of cuts L ∪ X is symmetric about 1/2: for every point p in the set, its mirror 1-p is also in the set. Therefore the intervals between consecutive cuts come in symmetric pairs of equal length. The total number of pieces is even (since the set of cuts is symmetric and includes 1/2, so the number of intervals is odd? Actually if we have a symmetric set of cuts including 1/2, the number of intervals is 2k+1? Let's think: endpoints 0 and 1, plus cuts at symmetric points. If the cuts are symmetric, the intervals on the left of 1/2 and right of 1/2 are paired. The number of intervals is even? For example, cuts at 1/2 only: intervals (0,1/2) and (1/2,1), so 2 intervals. If cuts at 1/2 and at a and 1-a, then intervals: (0,a), (a,1/2), (1/2,1-a), (1-a,1), so 4 intervals. So the number of intervals is even. When sorted in decreasing order, the odd-indexed positions consist of one interval from each pair, so their total length is half the total length, i.e., 1/2.
+
+Thus in every case, Xia can force the odd-sum to be exactly 1/2. Therefore c(n) ≤ 1/2 for all n ≥ 2.
+
+Combining with the lower bound, we obtain c(n) = 1/2 for n ≥ 2.
+
+---
+
+### 3.  Conclusion
+
+\[
+\boxed{c(n)=\begin{cases}
+\dfrac23, & n=1,\\[6pt]
+\dfrac12, & n\ge 2.
+\end{cases}}
+\]

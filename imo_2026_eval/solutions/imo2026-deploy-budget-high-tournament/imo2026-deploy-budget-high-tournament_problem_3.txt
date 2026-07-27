@@ -1,0 +1,95 @@
+Let the stick be the interval \([0,1]\). After all marks are made, the stick is cut at every marked point, producing a finite collection of pieces whose lengths sum to \(1\). The two players then take turns claiming an unclaimed piece; each wants to maximise his own total length.  
+A standard greedy argument shows that both players can guarantee that the first player (Liu) obtains the sum of the pieces in the odd positions when the pieces are sorted in non‑increasing order.  
+Indeed, if the pieces are \(a_1\ge a_2\ge\cdots\ge a_m\) with \(\sum a_i=1\), then the optimal strategy for both is always to take the largest remaining piece. Consequently, if both play optimally, Liu receives  
+\[
+S = a_1 + a_3 + a_5 + \cdots .
+\]  
+Thus the value of the game for a given set of cut points is exactly this odd‑sum.
+
+For each positive integer \(n\) let  
+\[
+c(n) = \max_{|A|\le n}\; \min_{|B|\le n,\;B\cap A=\varnothing} S(A\cup B),
+\]  
+where \(A\) is the set of points marked by Liu and \(B\) those marked by Xiang. We determine \(c(n)\).
+
+---
+### 1.  A universal lower bound
+
+Liu may mark no points.  Then the stick is a single piece of length \(1\).  The opponent adds at most \(n\) points, so the final number of pieces \(m\) satisfies \(1\le m\le n+1\).  Let the pieces be \(a_1\ge a_2\ge\cdots\ge a_m>0\) with \(\sum a_i=1\).  Because  
+\[
+a_1\ge a_2,\; a_3\ge a_4,\;\dots
+\]  
+(the last term is taken as zero if \(m\) is even), we have  
+\[
+\sum_{\text{odd}} a_i \ge \sum_{\text{even}} a_i .
+\]  
+Since the total sum is \(1\), it follows that  
+\[
+\sum_{\text{odd}} a_i \ge \frac12 .
+\]  
+Therefore, by marking no points, Liu can guarantee at least \(\frac12\) for every \(n\).  Hence  
+\[
+c(n)\ge\frac12\qquad\text{for all }n\ge1.
+\]
+
+---
+### 2.  The case \(n=1\)
+
+**Lower bound.**  Liu marks the point \(\frac13\).  The stick is cut into two intervals of lengths \(\frac13\) and \(\frac23\).  The opponent (Xiang) may add at most one point.
+
+* If he adds no point, the pieces are \(\frac13\) and \(\frac23\); the odd‑sum is \(\frac23\).
+* If he adds a point in the larger interval (length \(\frac23\)), say at \(\frac13+y\) with \(0<y<\frac23\), the three pieces are \(\frac13,\;y,\;\frac23-y\).  The sorted order is either \(\frac23-y,\;\frac13,\;y\) (when \(y\le\frac13\)) or \(y,\;\frac13,\;\frac23-y\) (when \(y\ge\frac13\)).  In both cases the sum of the odd‑indexed pieces equals \(\frac23\).
+* If he adds a point in the smaller interval, the odd‑indexed sum is at least \(\frac23+\text{positive term}>\frac23\).
+
+Thus the worst‑case for Liu is exactly \(\frac23\), so \(c(1)\ge\frac23\).
+
+**Upper bound.**  Suppose Liu marks a point at \(x\in(0,1)\).  By symmetry we may assume \(x\le\frac12\).  The two pieces have lengths \(x\) and \(1-x\).  The opponent may either mark no point, or mark a point in the larger piece (length \(1-x\)).  (Marking in the smaller piece cannot give a smaller odd‑sum than the other options, because the smallest piece can be made arbitrarily small, making the odd‑sum arbitrarily close to \(1-x\) from above.)  
+
+If the opponent marks no point, the odd‑sum is \(1-x\).
+
+If the opponent marks in the larger piece, he splits it into \(y\) and \(1-x-y\) with \(0<y<1-x\).  The three pieces are \(x,\;y,\;1-x-y\).  Their odd‑sum equals \(1\) minus the median of the three numbers.  To minimise the odd‑sum, we maximise the median.  We analyse the maximum median over \(y\).
+
+Let \(a=x,\;b=y,\;c=1-x-y\).  The median is the second largest.  
+
+*Case \(x\le\frac13\).*  Then \(x\le\frac{1-x}{2}\).  For every admissible \(y\) we have \(x\le 1-x-y\) (since \(1-x-y\ge\frac{1-x}{2}\ge x\)).  The median is maximised when \(y=\frac{1-x}{2}\); then the three numbers are \(x,\frac{1-x}{2},\frac{1-x}{2}\) and the median is \(\frac{1-x}{2}\).  Hence the minimum odd‑sum is \(1-\frac{1-x}{2}=\frac{1+x}{2}\).
+
+*Case \(x>\frac13\).*  Then \(x>\frac{1-x}{2}\).  The median can be made equal to \(x\) by choosing \(y=x\) (or any \(y\) with \(y\ge x\) and \(c\le x\)).  For example, take \(y=x\); the pieces are \(x,x,1-2x\) and the median is \(x\).  Hence the minimum odd‑sum is \(1-x\).
+
+Thus the opponent can always force an odd‑sum of  
+\[
+g(x)=\begin{cases}
+\dfrac{1+x}{2}, & 0<x\le\frac13,\\[6pt]
+1-x, & \frac13<x\le\frac12.
+\end{cases}
+\]  
+The maximum of \(g(x)\) on \([0,\frac12]\) is \(\frac23\), attained at \(x=\frac13\).  Consequently, for any mark by Liu the opponent can force the odd‑indexed sum to be at most \(\frac23\).  Therefore \(c(1)\le\frac23\).
+
+Together with the lower bound we obtain  
+\[
+c(1)=\frac23 .
+\]
+
+---
+### 3.  The case \(n\ge2\)
+
+We already have \(c(n)\ge\frac12\).  It remains to show that Liu cannot guarantee more than \(\frac12\); i.e. for any set \(A\) of at most \(n\) marks by Liu, there exists a set \(B\) of at most \(n\) marks (disjoint from \(A\)) such that the resulting odd‑sum is at most \(\frac12\).
+
+Consider the midpoint \(\frac12\).
+
+*If \(\frac12\notin A\):* The opponent marks the point \(\frac12\).  This cuts the stick into two pieces of length \(\frac12\) each.  The sorted list is \(\frac12,\frac12\) and the odd‑sum is exactly \(\frac12\).
+
+*If \(\frac12\in A\):* The opponent marks the points \(\frac14\) and \(\frac34\) (or, if either of these points already belongs to \(A\), he can perturb each by an arbitrarily small amount so that they become distinct and not in \(A\)).  The stick is then cut at \(\frac14,\frac12,\frac34\), producing four intervals of length \(\frac14\) each (up to an arbitrarily small perturbation).  The sorted pieces are \(\frac14+\varepsilon,\frac14+\varepsilon,\frac14-\varepsilon,\frac14-\varepsilon\) for a sufficiently small \(\varepsilon>0\), and the odd‑sum is \((\frac14+\varepsilon)+(\frac14-\varepsilon)=\frac12\).
+
+In both cases the opponent uses at most two points, which is at most \(n\) for \(n\ge2\).  Hence the opponent can always force the odd‑sum to be exactly \(\frac12\) (or arbitrarily close to \(\frac12\)).  Therefore the worst‑case odd‑sum for Liu is at most \(\frac12\), so \(c(n)\le\frac12\).
+
+Together with the lower bound we obtain  
+\[
+c(n)=\frac12\qquad\text{for all }n\ge2.
+\]
+
+---
+### 4.  Conclusion
+
+\[
+\boxed{c(1)=\frac23,\qquad c(n)=\frac12\ \text{for all }n\ge2.}
+\]

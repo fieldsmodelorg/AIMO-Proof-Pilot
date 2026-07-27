@@ -1,0 +1,86 @@
+**Answer:** Mulan can guarantee victory if and only if \(\theta = \frac{180^\circ}{n}\) for some integer \(n\ge 2\).
+
+**Proof.**
+
+We first show that if \(\theta\) is of this form then Mulan has a winning strategy.  Then we show that if \(\theta\) is not of this form then Shan‑Yu can prevent a win from some initial triangle.
+
+---
+
+### 1.  Sufficiency: \(\theta = 180^\circ/n\) with \(n\ge 2\)
+
+Assume the current triangle has angles \((\alpha,\beta,\gamma)\) with \(\alpha+\beta+\gamma=180^\circ\).
+
+*If one of the angles equals \(\theta\)*, Mulan wins immediately.
+
+*If one of the angles equals \(k\theta\) with \(k\ge 2\)*, Mulan can win in finitely many steps by repeatedly splitting that angle.  Indeed, if the triangle has an angle \(M\theta\) with \(M\ge 2\), she cuts that angle into \(\theta\) and \((M-1)\theta\).  The two resulting triangles contain \(\theta\) and \((M-1)\theta\).  If Shan‑Yu keeps the triangle containing \(\theta\), Mulan wins; otherwise he keeps the triangle containing \((M-1)\theta\), which again is a multiple of \(\theta\) with a smaller coefficient.  Repeating this process, after at most \(M-1\) steps Mulan obtains a triangle with an angle \(\theta\) and wins.
+
+Thus it suffices to show that from **any** triangle with no angle that is a multiple of \(\theta\), Mulan can force a triangle that contains a multiple of \(\theta\) (with coefficient at least \(2\)).
+
+Let the triangle have angles \(a,b,c\) and assume no angle is a multiple of \(\theta\).  Without loss of generality let \(c\) be the largest angle.  We claim that \(c>\theta\).  Indeed, if \(c\le\theta\) then because \(\theta\le 90^\circ\) (since \(n\ge 2\) implies \(\theta\le 90^\circ\)), we would have \(c\le 90^\circ\).  But the largest angle in any triangle is at least \(60^\circ\).  If \(c<\theta\), then all angles are \(<\theta\); consequently the sum \(a+b+c<3\theta\).  For \(n\ge 3\) we have \(3\theta\le 180^\circ\) (because \(\theta=180/n\)), so the sum would be less than \(180^\circ\), a contradiction.  For \(n=2\) we have \(\theta=90^\circ\) and the claim \(c>\theta\) is not always true, but for \(\theta=90^\circ\) we already have a direct one‑move winning strategy (see below).  Hence for \(n\ge 3\) we have \(c>\theta\).
+
+Now choose an integer \(m\) with \(1\le m\le n-1\) such that \(m\theta\in (a,\,a+c)\).  This is possible because the interval \((a,a+c)\) has length \(c>\theta\) and the multiples of \(\theta\) are spaced by \(\theta\).  Set  
+
+\[
+c_1=m\theta-a,\qquad c_2=(n-m)\theta-b.
+\]
+
+Then  
+
+\[
+c_1+c_2 = (m\theta-a)+((n-m)\theta-b)=n\theta-(a+b)=180^\circ-(a+b)=c.
+\]
+
+Since \(m\theta>a\) and, because \(m\theta<a+c\), we have \((n-m)\theta=180^\circ-m\theta>b\), so both \(c_1\) and \(c_2\) are positive.  Therefore Mulan can cut the angle \(c\) into the two parts \(c_1\) and \(c_2\) by choosing a point \(P\) on the side opposite the vertex of angle \(c\).
+
+The two triangles obtained are  
+
+\[
+T_1:\;(a,\;c_1,\;180^\circ-a-c_1)=(a,\;m\theta-a,\;(n-m)\theta),\qquad
+T_2:\;(b,\;c_2,\;180^\circ-b-c_2)=(b,\;(n-m)\theta-b,\;m\theta).
+\]
+
+Both contain an angle that is a multiple of \(\theta\): \((n-m)\theta\) in \(T_1\) and \(m\theta\) in \(T_2\).  The adversary will discard one of them; the remaining triangle has a multiple of \(\theta\) (if \(m=1\) or \(m=n-1\) then one of the triangles already contains \(\theta\), but the adversary may avoid that triangle and keep the other one, which has a multiple with coefficient \(\ge 2\)).  Thus Mulan has forced a triangle that contains a multiple of \(\theta\) with coefficient at least \(2\).
+
+Now she can apply the reduction described above and win in finitely many steps.
+
+**The case \(\theta=90^\circ\)** (i.e., \(n=2\)) is handled directly: if the current triangle already has a \(90^\circ\) angle, Mulan wins; otherwise let its angles be \(A,B,C\) with no right angle.  Because the triangle is not right, at least two angles are acute; let \(B\) and \(C\) be those acute angles (if the triangle is obtuse, the obtuse angle is \(>90^\circ\) and the other two are acute).  Mulan cuts the vertex with the obtuse angle (if present) or any vertex (if the triangle is acute) and chooses the split so that the two resulting triangles both have a \(90^\circ\) angle.  More concretely, she chooses a vertex with angle \(A\) and splits it into \(x=90^\circ-B\) and \(A-x\).  The two triangles then have angles \((B,90^\circ-B,90^\circ)\) and \((C,90^\circ-C,90^\circ)\).  Both contain a \(90^\circ\) angle, so whatever Shan‑Yu keeps, the new triangle has a right angle and Mulan wins in one move.  (The cut is possible because \(x>0\) and \(A-x>0\); the point \(P\) exists on the opposite side.)  Hence \(\theta=90^\circ\) is winning.
+
+Thus for every \(\theta=180^\circ/n\) (\(n\ge 2\)) Mulan has a winning strategy.
+
+---
+
+### 2.  Necessity: if \(180^\circ/\theta\) is not an integer, Mulan cannot guarantee victory
+
+Assume that \(180^\circ/\theta\) is not an integer.  We exhibit an initial triangle from which Shan‑Yu can avoid ever giving Mulan a triangle with an angle \(\theta\).  Choose a positive real number \(\varepsilon\) such that none of the three numbers \(180^\circ-2\varepsilon,\;\varepsilon,\;\varepsilon\) is a multiple of \(\theta\).  This is possible because the set of multiples of \(\theta\) is countable and we can pick \(\varepsilon\) from the interval \((0,90^\circ)\) that avoids those discrete points.  Let the initial triangle \(T\) have angles \((180^\circ-2\varepsilon,\;\varepsilon,\;\varepsilon)\).  By construction, no angle of \(T\) is a multiple of \(\theta\).
+
+We now prove that from any triangle with no angle that is a multiple of \(\theta\), the adversary can always choose a triangle after Mulan’s move that also has no angle that is a multiple of \(\theta\).  Consequently, by always discarding the triangle that contains a multiple (if any), Shan‑Yu can keep the invariant that the triangle never contains a multiple of \(\theta\).  Since \(\theta\) itself is a multiple, Mulan can never obtain a triangle with an angle \(\theta\) and therefore cannot win.
+
+Let the current triangle have angles \(a,b,c\) with \(a+b+c=180^\circ\), and suppose none of \(a,b,c\) is a multiple of \(\theta\).  Mulan chooses a vertex, say the one with angle \(c\), and splits it into \(x\) and \(c-x\) (\(0<x<c\)).  The two resulting triangles are  
+
+\[
+T_1:\;(a,\;x,\;180^\circ-a-x),\qquad
+T_2:\;(b,\;c-x,\;180^\circ-b-(c-x)).
+\]
+
+We show that it is impossible for both \(T_1\) and \(T_2\) to contain an angle that is a multiple of \(\theta\).
+
+Denote \(A_1=a,\;B_1=x,\;C_1=180^\circ-a-x\) and \(A_2=b,\;B_2=c-x,\;C_2=180^\circ-b-(c-x)\).  Note that \(C_1 = b+c-x\) and \(C_2 = a+x\) (since \(a+b+c=180^\circ\)).
+
+If both triangles have a multiple of \(\theta\), then at least one of the angles in each triangle is a multiple.  The possible combinations are:
+
+* **Case 1:** \(x\) and \(c-x\) are multiples.  Then \(x+(c-x)=c\) is a multiple of \(\theta\), contradicting that \(c\) is not a multiple.
+* **Case 2:** \(x\) and \(a+x\) are multiples.  Then \(a = (a+x)-x\) is a multiple, contradicting that \(a\) is not a multiple.
+* **Case 3:** \(b+c-x\) and \(c-x\) are multiples.  Then \(b = (b+c-x)-(c-x)\) is a multiple, contradicting that \(b\) is not a multiple.
+* **Case 4:** \(b+c-x\) and \(a+x\) are multiples.  Then their sum \((b+c-x)+(a+x)=a+b+c=180^\circ\) is a multiple of \(\theta\).  This would imply that \(180^\circ/\theta\) is an integer, contrary to our assumption.
+
+Thus none of the four cases can occur.  Therefore at least one of the two triangles has no angle that is a multiple of \(\theta\).  The adversary discards the other triangle and keeps the one with no multiple.
+
+By induction, Shan‑Yu can maintain the invariant forever.  Consequently Mulan can never force a triangle with an angle \(\theta\), and she cannot guarantee victory.
+
+---
+
+Since the sufficiency and necessity arguments are complete, the answer is exactly the set of angles \(\theta\) for which \(\frac{180^\circ}{\theta}\) is an integer, i.e.  
+
+\[
+\boxed{\theta = \frac{180^\circ}{n}\ \text{for some integer}\ n\ge 2}.
+\]

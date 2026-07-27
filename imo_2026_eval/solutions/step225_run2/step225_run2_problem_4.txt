@@ -1,0 +1,93 @@
+We prove that Mulan can guarantee victory if and only if \(\theta = \frac{180^\circ}{n}\) for some integer \(n\ge 2\).
+
+---
+### 1.  Preliminary definitions
+
+A triangle is called **good** if it has an angle that is an integer multiple of \(\theta\).  
+If a triangle is good, Mulan can force a win.  Indeed, if it already has an angle \(\theta\) the game ends immediately.  Otherwise it contains an angle \(k\theta\) with \(k\ge 2\).  Mulan splits that angle into \(\theta\) and \((k-1)\theta\) by cutting from the side opposite that vertex.  The two resulting triangles have angles  
+\[
+(b,\theta,180^\circ-b-\theta)\quad\text{and}\quad(c,(k-1)\theta,180^\circ-c-(k-1)\theta)
+\]  
+(up to renaming).  The first triangle contains \(\theta\), the second contains \((k-1)\theta\); both are good.  By induction on \(k\) Mulan eventually forces a triangle with an angle \(\theta\) and wins.  Hence every good triangle is a winning position for Mulan.
+
+---
+### 2.  Sufficiency: \(\theta = 180^\circ/n\) with \(n\in\mathbb{N},\ n\ge 2\)
+
+Assume \(180^\circ/\theta = n\) is an integer.  We show that from any initial triangle Mulan can win.
+
+Let the triangle have angles \(a,b,c>0\) with \(a+b+c=180^\circ\).  If the triangle is already good we are done.  Otherwise none of \(a,b,c\) is a multiple of \(\theta\).
+
+* **Case \(n=2\) (\(\theta=90^\circ\)).**  
+  Let \(a\) be the largest angle.  
+  – If \(a\ge 90^\circ\), then \(b,c<90^\circ\).  Cut from the side opposite \(a\), splitting \(a\) into \(90^\circ-b\) and \(90^\circ-c\) (both positive because \(b,c<90^\circ\)).  The two children have angles  
+    \[
+    (b,\;90^\circ-b,\;90^\circ),\qquad (c,\;90^\circ-c,\;90^\circ),
+    \]  
+    both containing a right angle, hence good.  
+  – If \(a<90^\circ\), then all angles are \(<90^\circ\).  The same cut (using \(90^\circ-b\) and \(90^\circ-c\)) again yields two children with a right angle.  
+  In either subcase Mulan wins in one move.
+
+* **Case \(n=3\) (\(\theta=60^\circ\)).**  
+  If the triangle is not good, no angle is a multiple of \(60^\circ\).  If all angles were \(\le 60^\circ\) then the only possibility would be \(60^\circ,60^\circ,60^\circ\), which is good.  Hence the largest angle \(a>60^\circ\).  The interval \((b,\;b+a)\) has length \(a>60^\circ\); the multiples of \(60^\circ\) are \(60^\circ,120^\circ,\dots\), so there exists an integer \(m\) with \(1\le m\le 2\) such that \(b<m\cdot60^\circ<b+a\).  Set \(t=m\cdot60^\circ-b\) (\(0<t<a\)).  The two children are  
+  \[
+  (b,\;t,\;a+c-t),\qquad (c,\;a-t,\;b+t).
+  \]  
+  Now \(a+c-t=180^\circ-b-t=180^\circ-m\cdot60^\circ=(3-m)\cdot60^\circ\) and \(b+t=m\cdot60^\circ\); both are multiples of \(60^\circ\).  Thus both children are good.  Mulan cuts as above and then wins by the induction on multiples.
+
+* **Case \(n\ge 4\).**  
+  Because \(180^\circ=n\theta\) and all angles are positive, the largest angle \(a\) must satisfy \(a>\theta\) (if all angles were \(\le\theta\) then the sum would be \(\le 3\theta < n\theta\), contradiction).  The interval \((b,\;b+a)\) has length \(a>\theta\).  The multiples of \(\theta\) are spaced by \(\theta\), so there exists an integer \(m\) with \(1\le m\le n-1\) such that \(b<m\theta<b+a\).  Set \(t=m\theta-b\) (\(0<t<a\)).  The children are  
+  \[
+  (b,\;t,\;a+c-t),\qquad (c,\;a-t,\;b+t).
+  \]  
+  Compute  
+  \[
+  a+c-t = 180^\circ-b-t = 180^\circ-m\theta = (n-m)\theta,
+  \qquad
+  b+t = m\theta.
+  \]  
+  Both are multiples of \(\theta\); hence both children are good.  Mulan cuts as above, obtaining two good children, and then wins by induction on the multiple.
+
+Thus when \(180^\circ/\theta\) is an integer, Mulan can force a win from any initial triangle.
+
+---
+### 3.  Necessity: \(\theta\) must satisfy \(180^\circ/\theta\in\mathbb{N}\)
+
+Assume that \(180^\circ/\theta\) is **not** an integer.  Consider the equilateral triangle \(T_0\) with angles \(60^\circ,60^\circ,60^\circ\).  Because \(180^\circ/\theta\) is not an integer, \(60^\circ\) cannot be an integer multiple of \(\theta\) (otherwise \(180^\circ/\theta = 3\cdot(60^\circ/\theta)\) would be an integer).  Hence \(T_0\) is not good.
+
+We prove a key lemma.
+
+**Lemma.**  Let a triangle have angles \(a,b,c\) (positive, sum \(180^\circ\)) and assume that none of \(a,b,c\) is a multiple of \(\theta\).  Then for any cut (splitting one angle), at least one of the two resulting triangles has no angle that is a multiple of \(\theta\).
+
+*Proof.*  Without loss, suppose Mulan splits angle \(a\) into \(t\) and \(a-t\) (\(0<t<a\)).  The children are  
+\[
+T_1 = (b,\;t,\;a+c-t),\qquad
+T_2 = (c,\;a-t,\;b+t).
+\]  
+If both \(T_1\) and \(T_2\) had an angle that is a multiple of \(\theta\), then because \(b\) and \(c\) are not multiples, the only possibilities are:
+\[
+\begin{aligned}
+&\text{(i)}\ t = p\theta,\quad a-t = q\theta,\\
+&\text{(ii)}\ t = p\theta,\quad b+t = q\theta,\\
+&\text{(iii)}\ a+c-t = p\theta,\quad a-t = q\theta,\\
+&\text{(iv)}\ a+c-t = p\theta,\quad b+t = q\theta,
+\end{aligned}
+\]  
+for some integers \(p,q\ge 1\).
+
+- In (i) we obtain \(a = (p+q)\theta\), contradicting that \(a\) is not a multiple.
+- In (ii) we obtain \(b = (q-p)\theta\), contradicting that \(b\) is not a multiple.
+- In (iii) we obtain \(c = (p-q)\theta\), contradicting that \(c\) is not a multiple.
+- In (iv) adding the two equations gives \(a+b+c = (p+q)\theta\), i.e. \(180^\circ = (p+q)\theta\), which would mean \(\theta\) divides \(180^\circ\).
+
+Since we are in the case where \(\theta\) does **not** divide \(180^\circ\), (iv) cannot happen.  Hence it is impossible for both children to be good; therefore at least one child is not good.  ∎
+
+Now start the game from \(T_0\).  By the lemma, for any cut that Mulan makes, at least one of the two children is not good.  Shan‑Yu can choose that child.  The new triangle is also not good.  By repeating the argument, Shan‑Yu can always select a child that has no angle multiple of \(\theta\).  Consequently the game never produces a triangle that contains an angle equal to \(\theta\) (because such an angle is a multiple of \(\theta\)).  Thus Mulan never wins.  Therefore when \(180^\circ/\theta\) is not an integer, Mulan cannot guarantee victory.
+
+---
+### 4.  Conclusion
+
+Mulan can guarantee victory in finitely many steps, no matter how Shan‑Yu plays, **if and only if**  
+\[
+\boxed{\theta = \frac{180^\circ}{n}\quad\text{for some integer }n\ge 2}.
+\]  
+Equivalently, \(\theta\) is a divisor of a straight angle.

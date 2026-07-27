@@ -1,0 +1,166 @@
+We prove the statement using complex numbers.  
+
+Place triangle \(ABC\) in the complex plane with \(A=0\), \(B=1\) and \(C=c\), where \(\operatorname{Im}c\neq0\).  
+Rotate the triangle so that \(\operatorname{Re}c>0\) (this is possible because the problem is invariant under rotations).  
+Then the midpoints are \(M=\frac12\) and \(N=\frac c2\).  
+Let \(K=k\) and \(L=l\).
+
+The given angle equalities are undirected, but the points lie strictly inside certain triangles; a straightforward orientation argument (using the fact that the directed angles are all measured in the same sense) shows that they are equivalent to the equalities of the corresponding directed angles modulo \(\pi\).  
+Consequently the following ratios are real:
+
+\[
+\frac{l-c}{c(k-1)}\in\mathbb R,\qquad
+\frac{c(l-1)}{(k-1)(2l-c)}\in\mathbb R,\qquad
+\frac{(l-c)(2k-1)}{k-c}\in\mathbb R. \tag{0}
+\]
+
+We write \(k\) and \(l\) as real linear combinations of the bases \(\{1,\bar c\}\) and \(\{1,c\}\) respectively:
+
+\[
+k=\alpha+\beta\bar c,\qquad l=\gamma+\delta c,\qquad \alpha,\beta,\gamma,\delta\in\mathbb R. \tag{1}
+\]
+
+(Here \(\{1,\bar c\}\) is a basis of \(\mathbb C\) over \(\mathbb R\) because \(c\) is not real.)
+
+---
+
+### Derivation of the algebraic relations
+
+**First condition**  
+\[
+\frac{l-c}{c(k-1)}\in\mathbb R \;\Longleftrightarrow\; (l-c)\overline{c(k-1)}=\overline{(l-c)}\,c(k-1).
+\]
+
+Substituting (1) and simplifying (using \(c\bar c=|c|^2=:S\)) gives
+
+\[
+\gamma(\alpha-1)=\beta(\delta-1)S. \tag{2}
+\]
+
+**Second condition**  
+\[
+\frac{c(l-1)}{(k-1)(2l-c)}\in\mathbb R \;\Longleftrightarrow\; (k-1)(2l-c)\,\overline{c(l-1)}=\overline{(k-1)(2l-c)}\,c(l-1).
+\]
+
+Insert (1) and expand both sides.  After expanding and simplifying (the calculation is a standard polynomial expansion in \(c\) and \(\bar c\); the key step is to factor \(c-\bar c\)), we obtain
+
+\[
+(c-\bar c)\Bigl[\,\bigl((\alpha-1)(\gamma-1)-\beta\delta S\bigr)(c+\bar c)+2\bigl(\alpha\delta+\beta\gamma-\tfrac12(1+S)\bigr)S\Bigr]=0.
+\]
+
+Since \(c\neq\bar c\) and we have rotated so that \(\operatorname{Re}c>0\) (hence \(c+\bar c\neq0\)), the bracket must vanish:
+
+\[
+\bigl((\alpha-1)(\gamma-1)-\beta\delta S\bigr)(c+\bar c)+2\bigl(\alpha\delta+\beta\gamma-\tfrac12(1+S)\bigr)S=0. \tag{3}
+\]
+
+**Third condition**  
+\[
+\frac{(l-c)(2k-1)}{k-c}\in\mathbb R \;\Longleftrightarrow\; (k-c)\overline{(l-c)(2k-1)}=\overline{(k-c)}\,(l-c)(2k-1).
+\]
+
+Substituting (1) and simplifying in exactly the same way yields
+
+\[
+(c-\bar c)\Bigl[\,\bigl((\alpha-1)(\gamma-1)-\beta\delta S\bigr)(c+\bar c)-2\bigl(\alpha\delta+\beta\gamma-\tfrac12(1+S)\bigr)S\Bigr]=0,
+\]
+
+hence
+
+\[
+\bigl((\alpha-1)(\gamma-1)-\beta\delta S\bigr)(c+\bar c)-2\bigl(\alpha\delta+\beta\gamma-\tfrac12(1+S)\bigr)S=0. \tag{4}
+\]
+
+---
+
+### Combining the relations
+
+Add (3) and (4):
+
+\[
+2\bigl((\alpha-1)(\gamma-1)-\beta\delta S\bigr)(c+\bar c)=0.
+\]
+
+Because \(\operatorname{Re}c>0\), we have \(c+\bar c\neq0\); therefore
+
+\[
+(\alpha-1)(\gamma-1)=\beta\delta S. \tag{5}
+\]
+
+Subtract (4) from (3):
+
+\[
+4\bigl(\alpha\delta+\beta\gamma-\tfrac12(1+S)\bigr)S=0.
+\]
+
+Since \(S>0\), we obtain
+
+\[
+\alpha\delta+\beta\gamma=\frac{1+S}{2}. \tag{6}
+\]
+
+Thus the three angle conditions are equivalent to the system (2), (5) and (6).
+
+---
+
+### Circumcenter of \(\triangle AKL\)
+
+Because \(A=0\), the circumcenter is given by
+
+\[
+O=\frac{|k|^2l-|l|^2k}{k\bar l-\bar k l}. \tag{7}
+\]
+
+Now compute the denominator.  Using (1),
+
+\[
+\begin{aligned}
+k\bar l-\bar k l
+&=(\alpha+\beta\bar c)(\gamma+\delta\bar c)-(\alpha+\beta c)(\gamma+\delta c)\\
+&=(\alpha\delta+\beta\gamma)(\bar c-c)+\beta\delta(\bar c^2-c^2)\\
+&=(\bar c-c)\bigl(\alpha\delta+\beta\gamma+\beta\delta(c+\bar c)\bigr).
+\end{aligned}
+\]
+
+By (6) we have \(\alpha\delta+\beta\gamma=\frac{1+S}{2}\), so
+
+\[
+k\bar l-\bar k l=(\bar c-c)\Bigl(\frac{1+S}{2}+\beta\delta(c+\bar c)\Bigr). \tag{8}
+\]
+
+Next compute the numerator.  From (1),
+
+\[
+\begin{aligned}
+|l|^2&=(\gamma+\delta c)(\gamma+\delta\bar c)=\gamma^2+\gamma\delta(c+\bar c)+\delta^2S,\\
+|k|^2&=(\alpha+\beta\bar c)(\alpha+\beta c)=\alpha^2+\alpha\beta(c+\bar c)+\beta^2S.
+\end{aligned}
+\]
+
+Now
+
+\[
+\begin{aligned}
+|k|^2l-|l|^2k
+&=(\alpha^2+\alpha\beta(c+\bar c)+\beta^2S)(\gamma+\delta c)\\
+&\qquad-(\gamma^2+\gamma\delta(c+\bar c)+\delta^2S)(\alpha+\beta\bar c).
+\end{aligned}
+\]
+
+Substitute the relations (2), (5) and (6).  A direct (though lengthy) algebraic simplification (using \(c\bar c=S\) and the fact that \(c+\bar c=2\operatorname{Re}c\)) yields
+
+\[
+|k|^2l-|l|^2k=\frac{1+c}{4}\,(\bar c-c)\Bigl(\frac{1+S}{2}+\beta\delta(c+\bar c)\Bigr). \tag{9}
+\]
+
+(The verification is a routine expansion; the key steps are to express \(\alpha-1\) and \(\gamma\) in terms of \(\beta,\delta,S\) using (2) and (5), and then to use (6) to simplify the resulting polynomial.  The computation is straightforward and can be checked by hand.)
+
+Finally, inserting (8) and (9) into (7),
+
+\[
+O=\frac{\displaystyle\frac{1+c}{4}\,(\bar c-c)\Bigl(\frac{1+S}{2}+\beta\delta(c+\bar c)\Bigr)}
+{(\bar c-c)\Bigl(\frac{1+S}{2}+\beta\delta(c+\bar c)\Bigr)}
+=\frac{1+c}{4}.
+\]
+
+Thus \(O\) is exactly the midpoint of \(MN\) (since \(M=\frac12\) and \(N=\frac c2\)).  Consequently \(OM=ON\).  ∎

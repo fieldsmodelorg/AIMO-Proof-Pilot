@@ -1,0 +1,180 @@
+We determine all functions \(f:\mathbb{R}_{>0}\to\mathbb{R}_{>0}\) satisfying  
+
+\[
+\sqrt{\frac{x^2+f(y)^2}{2}}\ge\frac{f(x)+y}{2}\ge\sqrt{xf(y)}\qquad(\forall x,y>0). \tag{*}
+\]
+
+---
+
+### 1.  A functional equation  
+
+Put \(x=f(y)\) in \((*)\).  From the left inequality  
+\[
+\sqrt{\frac{f(y)^2+f(y)^2}{2}}=f(y)\ge\frac{f(f(y))+y}{2},
+\]  
+from the right inequality  
+\[
+\frac{f(f(y))+y}{2}\ge\sqrt{f(y)f(y)}=f(y).
+\]  
+Thus both inequalities become equalities, so  
+\[
+\frac{f(f(y))+y}{2}=f(y)\quad\Longrightarrow\quad f(f(y))=2f(y)-y\qquad(\forall y>0). \tag{1}
+\]
+
+---
+
+### 2.  A lower bound for \(f\)  
+
+Assume that for some \(x_0>0\) we have \(f(x_0)<x_0\).  Set \(x_1=f(x_0)\) and define inductively \(x_{n+1}=f(x_n)\).  From (1) we obtain  
+\[
+x_{n+2}=f(x_{n+1})=f(f(x_n))=2f(x_n)-x_n=2x_{n+1}-x_n.
+\]  
+This linear recurrence has the general solution \(x_n=x_0+n(x_1-x_0)\).  Because \(x_1-x_0<0\), there exists an integer \(N\) such that \(x_0+N(x_1-x_0)\le0\).  Then \(x_N\le0\), contradicting the positivity of all iterates.  Hence  
+\[
+f(x)\ge x\qquad(\forall x>0). \tag{2}
+\]
+
+---
+
+### 3.  Introducing \(g(x)=f(x)-x\)  
+
+Set \(g(x)=f(x)-x\).  By (2) we have \(g(x)\ge0\).  Substituting \(f(x)=x+g(x)\) into (1) gives  
+\[
+f\bigl(x+g(x)\bigr)=x+2g(x)\quad\Longrightarrow\quad x+g(x)+g\bigl(x+g(x)\bigr)=x+2g(x),
+\]  
+so  
+\[
+g\bigl(x+g(x)\bigr)=g(x)\qquad(\forall x>0). \tag{3}
+\]
+
+---
+
+### 4.  Basic properties of \(f\) and \(g\)  
+
+**Injectivity of \(f\).**  If \(f(a)=f(b)\) then applying (1) yields \(2f(a)-a=2f(b)-b\), hence \(a=b\).
+
+**Strict monotonicity of \(f\).**  Suppose \(a<b\) and \(f(a)\ge f(b)\).  By injectivity, \(f(a)>f(b)\).  Apply the right inequality of \((*)\) with \((b,a)\):  
+\[
+\frac{f(b)+a}{2}\ge\sqrt{b\,f(a)}.
+\]  
+Apply it with \((f(b),a)\) and use (1):  
+\[
+\frac{f(f(b))+a}{2}=\frac{2f(b)-b+a}{2}\ge\sqrt{f(b)\,f(a)}.
+\]  
+Since \(f(a)>f(b)\), we have \(\sqrt{f(b)f(a)}>f(b)\).  The left side of the second inequality is \(f(b)-\frac{b-a}{2}<f(b)\), which would imply \(f(b)-\frac{b-a}{2}\ge\sqrt{f(b)f(a)}>f(b)\), a contradiction.  Therefore \(f\) is strictly increasing.
+
+**Form of iterates.**  From the functional equation and strict monotonicity we prove by induction that for all \(n\ge0\)  
+\[
+f^{\,n}(x)=x+n\,g(x)\qquad(\forall x>0). \tag{4}
+\]  
+The cases \(n=0,1\) are trivial; assuming it holds for \(n\) and \(n-1\), we obtain  
+\[
+f^{\,n+1}(x)=f\bigl(f^{\,n}(x)\bigr)=2f^{\,n}(x)-f^{\,n-1}(x)=2(x+ng(x))-(x+(n-1)g(x))=x+(n+1)g(x).
+\]
+
+**Non‑decreasing nature of \(g\).**  For \(x<y\) we have \(f^{\,n}(x)<f^{\,n}(y)\) for all \(n\) (because \(f\) is strictly increasing).  By (4) this gives  
+\[
+x+ng(x)<y+ng(y)\quad\forall n\ge0.
+\]  
+If \(g(x)>g(y)\) then \((g(x)-g(y))n<y-x\) for all \(n\), which is impossible as \(n\to\infty\).  Hence \(g(x)\le g(y)\).  Thus \(g\) is non‑decreasing.
+
+---
+
+### 5.  Proving that \(g\) is constant  
+
+Assume, for contradiction, that \(g\) is not constant.  Then there exist \(a,b>0\) with \(g(a)<g(b)\).  Because \(g\) is non‑decreasing, we may assume \(a<b\).  Let \(p=g(a)\), \(q=g(b)\); then \(p<q\).
+
+We consider two cases.
+
+#### Case 1: \(p>0\) (both values are positive)  
+
+From (3) we have \(g(a+np)=p\) and \(g(b+mq)=q\) for all non‑negative integers \(n,m\).  
+Construct sequences \((x_m,y_m)\) as follows: for each positive integer \(m\), set  
+\[
+n_m=\bigl\lfloor\frac{mq}{p}\bigr\rfloor,\qquad x_m=a+n_mp,\qquad y_m=b+mq.
+\]  
+Then \(y_m\to\infty\) as \(m\to\infty\), and  
+\[
+|n_mp-mq| = mq-n_mp < p,
+\]  
+so  
+\[
+|x_m-y_m| \le |a-b|+p,
+\]  
+which is bounded.
+
+Apply the right inequality of \((*)\) to \((x_m,y_m)\):  
+\[
+\frac{f(x_m)+y_m}{2}\ge\sqrt{x_m\,f(y_m)}.
+\]  
+Since \(f(x_m)=x_m+p\) and \(f(y_m)=y_m+q\), squaring gives  
+\[
+(x_m+y_m+p)^2\ge4x_m(y_m+q). \tag{5}
+\]  
+Write \(\delta_m=x_m-y_m\); then \(|\delta_m|\) is bounded and \(x_m=y_m+\delta_m\).  Substituting into (5) and expanding:
+\[
+(2y_m+\delta_m+p)^2\ge4(y_m+\delta_m)(y_m+q)
+\]  
+\[
+\Longleftrightarrow\;4y_m^2+4y_m(\delta_m+p)+(\delta_m+p)^2\ge4y_m^2+4y_m(\delta_m+q)+4\delta_mq
+\]  
+\[
+\Longleftrightarrow\;4y_m(p-q)+(\delta_m+p)^2-4\delta_mq\ge0. \tag{6}
+\]  
+Because \(p<q\), the coefficient of \(y_m\) is negative.  The remaining terms are bounded (since \(|\delta_m|\) is bounded).  For sufficiently large \(y_m\) the left‑hand side of (6) becomes negative, contradicting the inequality.  Hence Case 1 is impossible.
+
+#### Case 2: \(p=0\) (one value is zero)  
+
+Then \(g(a)=0\) and \(g(b)=q>0\).  Because \(g\) is non‑decreasing, we have \(a<b\).  Define  
+\[
+t=\sup\{x>0: g(x)=0\}.
+\]  
+The set of zeros is bounded above by \(b\) (since \(g(b)=q>0\)), so \(t\) is finite and \(t>0\) (since \(a\) is a zero).  For every \(x>t\) we have \(g(x)>0\).  
+
+From Case 1 we know that all positive values of \(g\) are equal to some constant \(c>0\).  Consequently, for all \(x>t\), \(g(x)=c\).
+
+Because \(t\) is the supremum of zeros, there exists a sequence \((z_n)\) of zeros such that \(z_n\to t\) (if \(t\) itself is a zero we may take \(z_n=t\)).  Choose a positive sequence \(\varepsilon_n\to0\) (e.g. \(\varepsilon_n=1/n\)) and set \(y_n=t+\varepsilon_n\).  Then \(y_n>t\), so \(g(y_n)=c\).  Apply the right inequality of \((*)\) to \((z_n,y_n)\):
+\[
+\frac{f(z_n)+y_n}{2}\ge\sqrt{z_n\,f(y_n)}.
+\]  
+Since \(f(z_n)=z_n\) and \(f(y_n)=y_n+c\), this becomes  
+\[
+\frac{z_n+y_n}{2}\ge\sqrt{z_n(y_n+c)}.
+\]  
+Squaring yields  
+\[
+(z_n+y_n)^2\ge4z_n(y_n+c). \tag{7}
+\]  
+Letting \(n\to\infty\) and using \(z_n\to t\), \(y_n\to t\), we obtain  
+\[
+(2t)^2\ge4t(t+c)\;\Longrightarrow\;4t^2\ge4t^2+4tc\;\Longrightarrow\;0\ge4tc.
+\]  
+But \(t>0\) and \(c>0\), a contradiction.  Hence Case 2 is also impossible.
+
+Since both possibilities lead to a contradiction, the assumption that \(g\) is not constant is false.  Therefore \(g\) is constant: there exists a constant \(c\ge0\) such that  
+\[
+g(x)=c\quad\forall x>0\qquad\Longrightarrow\qquad f(x)=x+c.
+\]
+
+---
+
+### 6.  Verification  
+
+Let \(c\ge0\) and set \(f(x)=x+c\).  For any \(x,y>0\),
+\[
+\sqrt{\frac{x^2+(y+c)^2}{2}}\ge\frac{x+y+c}{2}
+\Longleftrightarrow 2\bigl(x^2+(y+c)^2\bigr)\ge(x+y+c)^2
+\Longleftrightarrow (x-y-c)^2\ge0,
+\]  
+\[
+\frac{x+y+c}{2}\ge\sqrt{x(y+c)}
+\Longleftrightarrow (x+y+c)^2\ge4x(y+c)
+\Longleftrightarrow (x-y-c)^2\ge0.
+\]  
+Both inequalities hold, so every function of the form \(f(x)=x+c\) with \(c\ge0\) satisfies the required conditions.
+
+---
+
+\[
+\boxed{f(x)=x+c\quad\text{with }c\ge0}
+\]

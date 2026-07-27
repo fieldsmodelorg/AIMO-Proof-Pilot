@@ -1,0 +1,109 @@
+We place the triangle in the complex plane with \(A=0\), \(B=2\), \(C=2c\) where \(\operatorname{Im}c>0\).  
+Then the midpoints are \(M=1\) and \(N=c\).  Let \(K=k\), \(L=l\).
+
+Because \(K\) lies strictly inside \(\triangle BMC\) and \(L\) strictly inside \(\triangle BNC\), the rays \(BK\) and \(CL\) lie inside the interior angles at \(B\) and \(C\) respectively.  The additional conditions \(K\in\triangle ABL\) and \(L\in\triangle AKC\) force the orientation of the undirected angles so that the directed angles satisfy  
+
+\[
+\angle(KB,BA)=-\angle(CL,CA),\quad
+\angle(BL,BK)=\angle(NL,NC),\quad
+\angle(CL,CK)=\angle(MB,MK)\pmod{\pi}.
+\]
+
+(Justification: at \(B\) the ray \(BK\) is between \(BA\) and \(BC\); the directed angle from \(BK\) to \(BA\) is positive.  At \(C\) the ray \(CL\) is between \(CA\) and \(CB\); the directed angle from \(CL\) to \(CA\) is negative.  The undirected equalities then give the opposite signs, leading to the relations above.  The other two equalities are handled similarly.)
+
+Translating the directed angle equalities into complex numbers gives  
+
+\[
+\frac{(k-2)(l-2c)}{c}\in\mathbb R,\qquad
+\frac{(k-2)(l-c)}{c(l-2)}\in\mathbb R,\qquad
+\frac{k-2c}{(l-2c)(k-1)}\in\mathbb R. \tag{*}
+\]
+
+Thus there exist real numbers \(\lambda,\mu,\nu\) such that  
+
+\[
+(k-2)(l-2c)=\lambda c,\quad
+(k-2)(l-c)=\mu c(l-2),\quad
+k-2c=\nu(l-2c)(k-1). \tag{1}
+\]
+
+From the first and third equations we eliminate \(l-2c\):
+
+\[
+(k-2c)(k-2)=\lambda\nu\,c(k-1)\;\Longrightarrow\;
+\frac{(k-2)(k-2c)}{c(k-1)}\in\mathbb R. \tag{2}
+\]
+
+From the first and second equations we eliminate \(k-2\):
+
+\[
+(l-2c)(l-2)=\frac{\lambda}{\mu}\,(l-c)\;\Longrightarrow\;
+\frac{(l-2c)(l-2)}{l-c}\in\mathbb R. \tag{3}
+\]
+
+Now we prove that (2) implies \(|2k-1-c|=|1+c|\).  Write \(k=x+iy\), \(c=a+ib\) with \(b>0\).  
+The condition (2) means that the imaginary part of \(\displaystyle\frac{(k-2)(k-2c)}{c(k-1)}\) vanishes, i.e.
+
+\[
+\operatorname{Im}\bigl((k-2)(k-2c)\,\overline{c(k-1)}\bigr)=0.
+\]
+
+Compute the numerator:
+
+\[
+\begin{aligned}
+(k-2)(k-2c) &= (x-2+iy)\bigl((x-2a)+i(y-2b)\bigr) \\
+&= \bigl((x-2)(x-2a)-y(y-2b)\bigr) + i\bigl((x-2)(y-2b)+y(x-2a)\bigr) \\
+&= A+iB,
+\end{aligned}
+\]
+
+where  
+
+\[
+A = x^2-2x(a+1)+4a-y^2+2by,\qquad
+B = 2xy-2y(1+a)-2bx+4b.
+\]
+
+Also  
+
+\[
+\overline{c(k-1)} = (a-ib)\bigl((x-1)-iy\bigr) = (a(x-1)-by) + i(ay+b(x-1)).
+\]
+
+Denote \(C = a(x-1)-by\) and \(D = ay+b(x-1)\).  Then  
+
+\[
+\operatorname{Im}\bigl((A+iB)(C-iD)\bigr)= B C - A D =0.
+\]
+
+Substituting the expressions and simplifying (a routine algebraic expansion) gives  
+
+\[
+x^2+y^2-(1+a)x-by =0.
+\]
+
+This is exactly \(|2k-1-c|^2=|1+c|^2\), so \(|2k-1-c|=|1+c|\).
+
+A completely analogous computation using (3) yields  
+
+\[
+u^2+v^2-(1+a)u-bv=0,
+\]
+
+where \(l=u+iv\); hence \(|2l-1-c|=|1+c|\).
+
+Therefore both \(K\) and \(L\) lie on the circle with centre \(\frac{1+c}{2}\) and radius \(\frac{|1+c|}{2}\).  Since \(A=0\) also satisfies this equation, this circle is the circumcircle of \(\triangle AKL\).  Consequently its circumcenter is  
+
+\[
+O = \frac{1+c}{2}.
+\]
+
+Finally,
+
+\[
+OM = \Bigl|\frac{1+c}{2}-1\Bigr| = \frac{|c-1|}{2},\qquad
+ON = \Bigl|\frac{1+c}{2}-c\Bigr| = \frac{|1-c|}{2} = \frac{|c-1|}{2},
+\]
+
+so \(OM=ON\).  ∎

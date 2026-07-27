@@ -1,0 +1,315 @@
+id,proof
+1,"Let the numbers on the board be \(x_1,\dots,x_{2026}\). In a move we choose two indices \(i\neq j\) with \(x_i>1,\;x_j>1\) and replace them by \(\gcd(x_i,x_j)\) and \(\frac{\operatorname{lcm}(x_i,x_j)}{\gcd(x_i,x_j)}\).
+
+(a) We prove that after finitely many moves exactly one integer greater than \(1\) remains.
+
+Define
+\[
+L = \bigl(\text{product of all numbers on the board}\bigr) \;+\; \bigl(\text{number of integers }>1\bigr).
+\]
+The product is a positive integer and the number of integers \(>1\) is an integer between \(0\) and \(2026\); hence \(L\) is a positive integer.
+
+We show that in every move \(L\) strictly decreases. Let the two chosen numbers be \(m,n>1\) and let \(g=\gcd(m,n)\). After the move they become \(g\) and \(\frac{\operatorname{lcm}(m,n)}{g}\). The product of the two numbers changes from \(mn\) to \(g\cdot\frac{\operatorname{lcm}(m,n)}{g}=\operatorname{lcm}(m,n)=\frac{mn}{g}\). Hence the total product is multiplied by \(\frac1g\).
+
+Consider three cases.
+
+* If \(g=1\): the product stays the same, the two numbers become \(1\) and \(mn\). Thus the number of integers \(>1\) decreases by exactly \(1\); \(L\) decreases by \(1\).
+
+* If \(g>1\) and \(m\neq n\): the product is divided by \(g\ge2\), so it decreases by at least \(1\) (in fact by at least half of its original value). The two new numbers are both \(>1\) (because \(g>1\) and \(\frac{\operatorname{lcm}(m,n)}{g}>1\) when \(m\neq n\)). Hence the number of integers \(>1\) does not change; \(L\) strictly decreases.
+
+* If \(g>1\) and \(m=n\): the two numbers become \(m\) and \(1\). The product decreases from \(m^2\) to \(m\) and the number of integers \(>1\) decreases by \(1\); \(L\) strictly decreases.
+
+In every move \(L\) decreases by at least \(1\). Since \(L\) is a positive integer, the process cannot continue indefinitely; it must stop after finitely many moves.
+
+When the process stops no further move is possible, so there are at most one integer greater than \(1\) (otherwise a move could be performed). We now show that there cannot be zero integers greater than \(1\).
+
+For each prime \(p\) consider the exponents of \(p\) in the prime factorizations of the numbers on the board. Let \(G_p\) be the greatest common divisor of all these exponents (if a number is \(1\) its exponent is \(0\); the gcd of a set containing zeros is the gcd of the non‑zero ones, and we set \(\gcd(0,\dots,0)=0\)). We claim that \(G_p\) is invariant under a move.
+
+Take two numbers whose exponents for \(p\) are \(a\) and \(b\). After the move they are replaced by numbers whose exponents for \(p\) are \(\min(a,b)\) and \(|a-b|\). Since \(\gcd(\min(a,b),|a-b|)=\gcd(a,b)\), the gcd of the two numbers’ exponents is unchanged. The gcd of the whole multiset of exponents is the gcd of the gcd of the two numbers and the exponents of the remaining numbers; therefore \(G_p\) does not change.
+
+Initially all numbers are \(>1\), so for at least one prime \(p\) we have \(G_p\ge1\). If at the moment the process stopped all numbers were \(1\), then every exponent would be \(0\) and consequently \(G_p=0\) for every prime \(p\), contradicting the invariance. Hence when the process stops there is at least one integer greater than \(1\). Together with the earlier observation that there are at most one such integer, we conclude that after finitely many moves exactly one integer \(M>1\) remains on the board.
+
+(b) Let \(M\) be the unique integer greater than \(1\) that appears when the process stops. For each prime \(p\) let \(e_p\) be the exponent of \(p\) in \(M\). All other numbers are \(1\), so their exponents for \(p\) are \(0\). The multiset of exponents for \(p\) consists of \(e_p\) and \(2025\) zeros; the gcd of this multiset is \(e_p\) (since \(\gcd(e_p,0)=e_p\)). Because \(G_p\) is invariant, we have
+\[
+e_p = G_p.
+\]
+Thus
+\[
+M = \prod_{p} p^{G_p},
+\]
+where the product runs over all primes \(p\). The right‑hand side depends only on the initial multiset of numbers (the initial exponents determine each \(G_p\)), not on the particular sequence of moves. Therefore the value of \(M\) is independent of the choices made during the process.
+
+This completes the proof of both parts."
+4,"We prove that Mulan can guarantee victory if and only if \(\theta = \frac{180^\circ}{n}\) for some integer \(n\ge 2\).
+
+---
+### 1.  Preliminary definitions
+
+A triangle is called **good** if it has an angle that is an integer multiple of \(\theta\).  
+If a triangle is good, Mulan can force a win.  Indeed, if it already has an angle \(\theta\) the game ends immediately.  Otherwise it contains an angle \(k\theta\) with \(k\ge 2\).  Mulan splits that angle into \(\theta\) and \((k-1)\theta\) by cutting from the side opposite that vertex.  The two resulting triangles have angles  
+\[
+(b,\theta,180^\circ-b-\theta)\quad\text{and}\quad(c,(k-1)\theta,180^\circ-c-(k-1)\theta)
+\]  
+(up to renaming).  The first triangle contains \(\theta\), the second contains \((k-1)\theta\); both are good.  By induction on \(k\) Mulan eventually forces a triangle with an angle \(\theta\) and wins.  Hence every good triangle is a winning position for Mulan.
+
+---
+### 2.  Sufficiency: \(\theta = 180^\circ/n\) with \(n\in\mathbb{N},\ n\ge 2\)
+
+Assume \(180^\circ/\theta = n\) is an integer.  We show that from any initial triangle Mulan can win.
+
+Let the triangle have angles \(a,b,c>0\) with \(a+b+c=180^\circ\).  If the triangle is already good we are done.  Otherwise none of \(a,b,c\) is a multiple of \(\theta\).
+
+* **Case \(n=2\) (\(\theta=90^\circ\)).**  
+  Let \(a\) be the largest angle.  
+  – If \(a\ge 90^\circ\), then \(b,c<90^\circ\).  Cut from the side opposite \(a\), splitting \(a\) into \(90^\circ-b\) and \(90^\circ-c\) (both positive because \(b,c<90^\circ\)).  The two children have angles  
+    \[
+    (b,\;90^\circ-b,\;90^\circ),\qquad (c,\;90^\circ-c,\;90^\circ),
+    \]  
+    both containing a right angle, hence good.  
+  – If \(a<90^\circ\), then all angles are \(<90^\circ\).  The same cut (using \(90^\circ-b\) and \(90^\circ-c\)) again yields two children with a right angle.  
+  In either subcase Mulan wins in one move.
+
+* **Case \(n=3\) (\(\theta=60^\circ\)).**  
+  If the triangle is not good, no angle is a multiple of \(60^\circ\).  If all angles were \(\le 60^\circ\) then the only possibility would be \(60^\circ,60^\circ,60^\circ\), which is good.  Hence the largest angle \(a>60^\circ\).  The interval \((b,\;b+a)\) has length \(a>60^\circ\); the multiples of \(60^\circ\) are \(60^\circ,120^\circ,\dots\), so there exists an integer \(m\) with \(1\le m\le 2\) such that \(b<m\cdot60^\circ<b+a\).  Set \(t=m\cdot60^\circ-b\) (\(0<t<a\)).  The two children are  
+  \[
+  (b,\;t,\;a+c-t),\qquad (c,\;a-t,\;b+t).
+  \]  
+  Now \(a+c-t=180^\circ-b-t=180^\circ-m\cdot60^\circ=(3-m)\cdot60^\circ\) and \(b+t=m\cdot60^\circ\); both are multiples of \(60^\circ\).  Thus both children are good.  Mulan cuts as above and then wins by the induction on multiples.
+
+* **Case \(n\ge 4\).**  
+  Because \(180^\circ=n\theta\) and all angles are positive, the largest angle \(a\) must satisfy \(a>\theta\) (if all angles were \(\le\theta\) then the sum would be \(\le 3\theta < n\theta\), contradiction).  The interval \((b,\;b+a)\) has length \(a>\theta\).  The multiples of \(\theta\) are spaced by \(\theta\), so there exists an integer \(m\) with \(1\le m\le n-1\) such that \(b<m\theta<b+a\).  Set \(t=m\theta-b\) (\(0<t<a\)).  The children are  
+  \[
+  (b,\;t,\;a+c-t),\qquad (c,\;a-t,\;b+t).
+  \]  
+  Compute  
+  \[
+  a+c-t = 180^\circ-b-t = 180^\circ-m\theta = (n-m)\theta,
+  \qquad
+  b+t = m\theta.
+  \]  
+  Both are multiples of \(\theta\); hence both children are good.  Mulan cuts as above, obtaining two good children, and then wins by induction on the multiple.
+
+Thus when \(180^\circ/\theta\) is an integer, Mulan can force a win from any initial triangle.
+
+---
+### 3.  Necessity: \(\theta\) must satisfy \(180^\circ/\theta\in\mathbb{N}\)
+
+Assume that \(180^\circ/\theta\) is **not** an integer.  Consider the equilateral triangle \(T_0\) with angles \(60^\circ,60^\circ,60^\circ\).  Because \(180^\circ/\theta\) is not an integer, \(60^\circ\) cannot be an integer multiple of \(\theta\) (otherwise \(180^\circ/\theta = 3\cdot(60^\circ/\theta)\) would be an integer).  Hence \(T_0\) is not good.
+
+We prove a key lemma.
+
+**Lemma.**  Let a triangle have angles \(a,b,c\) (positive, sum \(180^\circ\)) and assume that none of \(a,b,c\) is a multiple of \(\theta\).  Then for any cut (splitting one angle), at least one of the two resulting triangles has no angle that is a multiple of \(\theta\).
+
+*Proof.*  Without loss, suppose Mulan splits angle \(a\) into \(t\) and \(a-t\) (\(0<t<a\)).  The children are  
+\[
+T_1 = (b,\;t,\;a+c-t),\qquad
+T_2 = (c,\;a-t,\;b+t).
+\]  
+If both \(T_1\) and \(T_2\) had an angle that is a multiple of \(\theta\), then because \(b\) and \(c\) are not multiples, the only possibilities are:
+\[
+\begin{aligned}
+&\text{(i)}\ t = p\theta,\quad a-t = q\theta,\\
+&\text{(ii)}\ t = p\theta,\quad b+t = q\theta,\\
+&\text{(iii)}\ a+c-t = p\theta,\quad a-t = q\theta,\\
+&\text{(iv)}\ a+c-t = p\theta,\quad b+t = q\theta,
+\end{aligned}
+\]  
+for some integers \(p,q\ge 1\).
+
+- In (i) we obtain \(a = (p+q)\theta\), contradicting that \(a\) is not a multiple.
+- In (ii) we obtain \(b = (q-p)\theta\), contradicting that \(b\) is not a multiple.
+- In (iii) we obtain \(c = (p-q)\theta\), contradicting that \(c\) is not a multiple.
+- In (iv) adding the two equations gives \(a+b+c = (p+q)\theta\), i.e. \(180^\circ = (p+q)\theta\), which would mean \(\theta\) divides \(180^\circ\).
+
+Since we are in the case where \(\theta\) does **not** divide \(180^\circ\), (iv) cannot happen.  Hence it is impossible for both children to be good; therefore at least one child is not good.  ∎
+
+Now start the game from \(T_0\).  By the lemma, for any cut that Mulan makes, at least one of the two children is not good.  Shan‑Yu can choose that child.  The new triangle is also not good.  By repeating the argument, Shan‑Yu can always select a child that has no angle multiple of \(\theta\).  Consequently the game never produces a triangle that contains an angle equal to \(\theta\) (because such an angle is a multiple of \(\theta\)).  Thus Mulan never wins.  Therefore when \(180^\circ/\theta\) is not an integer, Mulan cannot guarantee victory.
+
+---
+### 4.  Conclusion
+
+Mulan can guarantee victory in finitely many steps, no matter how Shan‑Yu plays, **if and only if**  
+\[
+\boxed{\theta = \frac{180^\circ}{n}\quad\text{for some integer }n\ge 2}.
+\]  
+Equivalently, \(\theta\) is a divisor of a straight angle."
+5,"We determine all functions \(f:\mathbb{R}_{>0}\to\mathbb{R}_{>0}\) satisfying  
+
+\[
+\sqrt{\frac{x^2+f(y)^2}{2}}\ge\frac{f(x)+y}{2}\ge\sqrt{xf(y)}\qquad(\forall x,y>0). \tag{*}
+\]
+
+---
+
+### 1.  A functional equation  
+
+Put \(x=f(y)\) in \((*)\).  From the left inequality  
+\[
+\sqrt{\frac{f(y)^2+f(y)^2}{2}}=f(y)\ge\frac{f(f(y))+y}{2},
+\]  
+from the right inequality  
+\[
+\frac{f(f(y))+y}{2}\ge\sqrt{f(y)f(y)}=f(y).
+\]  
+Thus both inequalities become equalities, so  
+\[
+\frac{f(f(y))+y}{2}=f(y)\quad\Longrightarrow\quad f(f(y))=2f(y)-y\qquad(\forall y>0). \tag{1}
+\]
+
+---
+
+### 2.  A lower bound for \(f\)  
+
+Assume that for some \(x_0>0\) we have \(f(x_0)<x_0\).  Set \(x_1=f(x_0)\) and define inductively \(x_{n+1}=f(x_n)\).  From (1) we obtain  
+\[
+x_{n+2}=f(x_{n+1})=f(f(x_n))=2f(x_n)-x_n=2x_{n+1}-x_n.
+\]  
+This linear recurrence has the general solution \(x_n=x_0+n(x_1-x_0)\).  Because \(x_1-x_0<0\), there exists an integer \(N\) such that \(x_0+N(x_1-x_0)\le0\).  Then \(x_N\le0\), contradicting the positivity of all iterates.  Hence  
+\[
+f(x)\ge x\qquad(\forall x>0). \tag{2}
+\]
+
+---
+
+### 3.  Introducing \(g(x)=f(x)-x\)  
+
+Set \(g(x)=f(x)-x\).  By (2) we have \(g(x)\ge0\).  Substituting \(f(x)=x+g(x)\) into (1) gives  
+\[
+f\bigl(x+g(x)\bigr)=x+2g(x)\quad\Longrightarrow\quad x+g(x)+g\bigl(x+g(x)\bigr)=x+2g(x),
+\]  
+so  
+\[
+g\bigl(x+g(x)\bigr)=g(x)\qquad(\forall x>0). \tag{3}
+\]
+
+---
+
+### 4.  Basic properties of \(f\) and \(g\)  
+
+**Injectivity of \(f\).**  If \(f(a)=f(b)\) then applying (1) yields \(2f(a)-a=2f(b)-b\), hence \(a=b\).
+
+**Strict monotonicity of \(f\).**  Suppose \(a<b\) and \(f(a)\ge f(b)\).  By injectivity, \(f(a)>f(b)\).  Apply the right inequality of \((*)\) with \((b,a)\):  
+\[
+\frac{f(b)+a}{2}\ge\sqrt{b\,f(a)}.
+\]  
+Apply it with \((f(b),a)\) and use (1):  
+\[
+\frac{f(f(b))+a}{2}=\frac{2f(b)-b+a}{2}\ge\sqrt{f(b)\,f(a)}.
+\]  
+Since \(f(a)>f(b)\), we have \(\sqrt{f(b)f(a)}>f(b)\).  The left side of the second inequality is \(f(b)-\frac{b-a}{2}<f(b)\), which would imply \(f(b)-\frac{b-a}{2}\ge\sqrt{f(b)f(a)}>f(b)\), a contradiction.  Therefore \(f\) is strictly increasing.
+
+**Form of iterates.**  From the functional equation and strict monotonicity we prove by induction that for all \(n\ge0\)  
+\[
+f^{\,n}(x)=x+n\,g(x)\qquad(\forall x>0). \tag{4}
+\]  
+The cases \(n=0,1\) are trivial; assuming it holds for \(n\) and \(n-1\), we obtain  
+\[
+f^{\,n+1}(x)=f\bigl(f^{\,n}(x)\bigr)=2f^{\,n}(x)-f^{\,n-1}(x)=2(x+ng(x))-(x+(n-1)g(x))=x+(n+1)g(x).
+\]
+
+**Non‑decreasing nature of \(g\).**  For \(x<y\) we have \(f^{\,n}(x)<f^{\,n}(y)\) for all \(n\) (because \(f\) is strictly increasing).  By (4) this gives  
+\[
+x+ng(x)<y+ng(y)\quad\forall n\ge0.
+\]  
+If \(g(x)>g(y)\) then \((g(x)-g(y))n<y-x\) for all \(n\), which is impossible as \(n\to\infty\).  Hence \(g(x)\le g(y)\).  Thus \(g\) is non‑decreasing.
+
+---
+
+### 5.  Proving that \(g\) is constant  
+
+Assume, for contradiction, that \(g\) is not constant.  Then there exist \(a,b>0\) with \(g(a)<g(b)\).  Because \(g\) is non‑decreasing, we may assume \(a<b\).  Let \(p=g(a)\), \(q=g(b)\); then \(p<q\).
+
+We consider two cases.
+
+#### Case 1: \(p>0\) (both values are positive)  
+
+From (3) we have \(g(a+np)=p\) and \(g(b+mq)=q\) for all non‑negative integers \(n,m\).  
+Construct sequences \((x_m,y_m)\) as follows: for each positive integer \(m\), set  
+\[
+n_m=\bigl\lfloor\frac{mq}{p}\bigr\rfloor,\qquad x_m=a+n_mp,\qquad y_m=b+mq.
+\]  
+Then \(y_m\to\infty\) as \(m\to\infty\), and  
+\[
+|n_mp-mq| = mq-n_mp < p,
+\]  
+so  
+\[
+|x_m-y_m| \le |a-b|+p,
+\]  
+which is bounded.
+
+Apply the right inequality of \((*)\) to \((x_m,y_m)\):  
+\[
+\frac{f(x_m)+y_m}{2}\ge\sqrt{x_m\,f(y_m)}.
+\]  
+Since \(f(x_m)=x_m+p\) and \(f(y_m)=y_m+q\), squaring gives  
+\[
+(x_m+y_m+p)^2\ge4x_m(y_m+q). \tag{5}
+\]  
+Write \(\delta_m=x_m-y_m\); then \(|\delta_m|\) is bounded and \(x_m=y_m+\delta_m\).  Substituting into (5) and expanding:
+\[
+(2y_m+\delta_m+p)^2\ge4(y_m+\delta_m)(y_m+q)
+\]  
+\[
+\Longleftrightarrow\;4y_m^2+4y_m(\delta_m+p)+(\delta_m+p)^2\ge4y_m^2+4y_m(\delta_m+q)+4\delta_mq
+\]  
+\[
+\Longleftrightarrow\;4y_m(p-q)+(\delta_m+p)^2-4\delta_mq\ge0. \tag{6}
+\]  
+Because \(p<q\), the coefficient of \(y_m\) is negative.  The remaining terms are bounded (since \(|\delta_m|\) is bounded).  For sufficiently large \(y_m\) the left‑hand side of (6) becomes negative, contradicting the inequality.  Hence Case 1 is impossible.
+
+#### Case 2: \(p=0\) (one value is zero)  
+
+Then \(g(a)=0\) and \(g(b)=q>0\).  Because \(g\) is non‑decreasing, we have \(a<b\).  Define  
+\[
+t=\sup\{x>0: g(x)=0\}.
+\]  
+The set of zeros is bounded above by \(b\) (since \(g(b)=q>0\)), so \(t\) is finite and \(t>0\) (since \(a\) is a zero).  For every \(x>t\) we have \(g(x)>0\).  
+
+From Case 1 we know that all positive values of \(g\) are equal to some constant \(c>0\).  Consequently, for all \(x>t\), \(g(x)=c\).
+
+Because \(t\) is the supremum of zeros, there exists a sequence \((z_n)\) of zeros such that \(z_n\to t\) (if \(t\) itself is a zero we may take \(z_n=t\)).  Choose a positive sequence \(\varepsilon_n\to0\) (e.g. \(\varepsilon_n=1/n\)) and set \(y_n=t+\varepsilon_n\).  Then \(y_n>t\), so \(g(y_n)=c\).  Apply the right inequality of \((*)\) to \((z_n,y_n)\):
+\[
+\frac{f(z_n)+y_n}{2}\ge\sqrt{z_n\,f(y_n)}.
+\]  
+Since \(f(z_n)=z_n\) and \(f(y_n)=y_n+c\), this becomes  
+\[
+\frac{z_n+y_n}{2}\ge\sqrt{z_n(y_n+c)}.
+\]  
+Squaring yields  
+\[
+(z_n+y_n)^2\ge4z_n(y_n+c). \tag{7}
+\]  
+Letting \(n\to\infty\) and using \(z_n\to t\), \(y_n\to t\), we obtain  
+\[
+(2t)^2\ge4t(t+c)\;\Longrightarrow\;4t^2\ge4t^2+4tc\;\Longrightarrow\;0\ge4tc.
+\]  
+But \(t>0\) and \(c>0\), a contradiction.  Hence Case 2 is also impossible.
+
+Since both possibilities lead to a contradiction, the assumption that \(g\) is not constant is false.  Therefore \(g\) is constant: there exists a constant \(c\ge0\) such that  
+\[
+g(x)=c\quad\forall x>0\qquad\Longrightarrow\qquad f(x)=x+c.
+\]
+
+---
+
+### 6.  Verification  
+
+Let \(c\ge0\) and set \(f(x)=x+c\).  For any \(x,y>0\),
+\[
+\sqrt{\frac{x^2+(y+c)^2}{2}}\ge\frac{x+y+c}{2}
+\Longleftrightarrow 2\bigl(x^2+(y+c)^2\bigr)\ge(x+y+c)^2
+\Longleftrightarrow (x-y-c)^2\ge0,
+\]  
+\[
+\frac{x+y+c}{2}\ge\sqrt{x(y+c)}
+\Longleftrightarrow (x+y+c)^2\ge4x(y+c)
+\Longleftrightarrow (x-y-c)^2\ge0.
+\]  
+Both inequalities hold, so every function of the form \(f(x)=x+c\) with \(c\ge0\) satisfies the required conditions.
+
+---
+
+\[
+\boxed{f(x)=x+c\quad\text{with }c\ge0}
+\]"
