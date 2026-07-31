@@ -16,12 +16,12 @@ README.md    # this file
 
 ## Submissions
 
-| Submission | Model / setting | Problems | Source |
-| --- | --- | --- | --- |
-| `imo2026-deploy-budget-high-tournament` | Proof Pilot (high budget) | 1–6 | <https://huggingface.co/datasets/imo2026-challenge/chankhavu-imo-reasoning-traces/blob/main/imo2026-deploy-budget-high-tournament/submission.csv> |
-| `imo2026-step225-budget-high-tournament` | IMO step225 (high budget) | 1–6 | <https://huggingface.co/datasets/imo2026-challenge/chankhavu-imo-reasoning-traces/blob/main/imo2026-step225-budget-high-tournament/submission.csv> |
-| `step225_run2` | IMO step225 (xhigh budget, rerun) | 1, 4, 5 | <https://huggingface.co/datasets/imo2026-challenge/chankhavu-imo-reasoning-traces/blob/main/imo2026-step225-budget-xhigh-P1P4P5/submission.csv> |
-| `step225_run3` | IMO step225 (xhigh budget, rerun) | 5 | <https://huggingface.co/datasets/imo2026-challenge/chankhavu-imo-reasoning-traces/blob/main/imo2026-step225-budget-xhigh-P5/submission.csv> |
+| Submission | Model / setting | Problems | Config | Source |
+| --- | --- | --- | --- | --- |
+| `imo2026-deploy-budget-high-tournament` | Proof Pilot (high budget) | 1–6 | [deploy high](../config-model-deploy-budget-high.yaml) | [submission.csv](https://huggingface.co/datasets/imo2026-challenge/chankhavu-imo-reasoning-traces/blob/main/imo2026-deploy-budget-high-tournament/submission.csv) |
+| `imo2026-step225-budget-high-tournament` | IMO step225 (high budget) | 1–6 | [step225 high](../config-model-step225-budget-high.yaml) | [submission.csv](https://huggingface.co/datasets/imo2026-challenge/chankhavu-imo-reasoning-traces/blob/main/imo2026-step225-budget-high-tournament/submission.csv) |
+| `step225_run2` | IMO step225 (xhigh budget, rerun) | 1, 4, 5 | [step225 xhigh](../config-model-step225-budget-xhigh.yaml) | [submission.csv](https://huggingface.co/datasets/imo2026-challenge/chankhavu-imo-reasoning-traces/blob/main/imo2026-step225-budget-xhigh-P1P4P5/submission.csv) |
+| `step225_run3` | IMO step225 (xhigh budget, rerun) | 5 | [step225 xhigh](../config-model-step225-budget-xhigh.yaml) | [submission.csv](https://huggingface.co/datasets/imo2026-challenge/chankhavu-imo-reasoning-traces/blob/main/imo2026-step225-budget-xhigh-P5/submission.csv) |
 
 ## Grading methodology
 
