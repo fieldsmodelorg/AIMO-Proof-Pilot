@@ -1,0 +1,1056 @@
+Problem ID,score_majority,score_mean_8,proof
+1,4,3.75,"Let  
+
+\[
+T_n=\{(a,b)\in\mathbb N^2\mid a,b\ge 1,\;a+b\le n+1\},\qquad \mathbb N=\{1,2,3,\dots\}.
+\]
+
+A line is called *sunny* if it is not parallel to the \(x\)-axis, the \(y\)-axis or the line \(x+y=0\).  
+We determine all non‑negative integers \(k\) for which there exist \(n\) distinct lines covering every point of \(T_n\) and exactly \(k\) of them are sunny.
+
+---
+### 1.  Constructions  
+
+**\(k=0\).**  
+Take the \(n\) horizontal lines \(y=1,2,\dots ,n\).  All are non‑sunny and together cover \(T_n\) because every point has a \(y\)-coordinate \(\le n\).
+
+**\(k=1\).**  
+Take the \(n-1\) horizontal lines \(y=1,2,\dots ,y=n-1\).  They cover all points with \(b\le n-1\).  Add the sunny line \(y=2x+(n-2)\) (slope \(2\)).  It passes through \((1,n)\) and no other point of \(T_n\) (for \(a\ge2\) we have \(2a+(n-2)\ge n+2>n\)).  Thus we have \(n\) distinct lines, exactly one of which is sunny, and all points are covered.
+
+**\(k=3\).**  
+For \(n=3\) the three sunny lines  
+
+\[
+y=x,\qquad y=-2x+5,\qquad y=-\tfrac12x+\tfrac52
+\]
+
+are distinct and together contain all six points of \(T_3\).  
+
+For \(n\ge4\) we use induction.  Assume a covering of \(T_{n-1}\) with \(n-1\) lines and exactly three sunny lines exists.  Add the non‑sunny line \(x+y=n+1\) (the anti‑diagonal).  This line covers all points of \(T_n\) with \(a+b=n+1\) (the points not already in \(T_{n-1}\)).  The original \(n-1\) lines cover \(T_{n-1}\).  Hence we obtain a covering of \(T_n\) with \(n\) lines and exactly three sunny lines.  Therefore \(k=3\) is attainable for every \(n\ge3\).
+
+---
+### 2.  A useful lemma  
+
+**Lemma 1.**  For \(n\ge3\), if a covering of \(T_n\) by \(n\) distinct lines has \(k<n\) (i.e. not all lines are sunny), then at least one of the lines  
+
+\[
+x=1,\qquad y=1,\qquad x+y=n+1
+\]
+
+is present.
+
+*Proof.*  Let  
+
+\[
+A=\{(1,b)\mid 1\le b\le n\},\quad 
+B=\{(a,1)\mid 1\le a\le n\},\quad 
+C=\{(a,b)\mid a+b=n+1,\;a,b\ge1\}.
+\]
+
+Each of these sets contains exactly \(n\) points.  A line that is not equal to \(x=1\) can intersect the vertical line \(x=1\) in at most one point; similarly a line not equal to \(y=1\) meets \(y=1\) in at most one point, and a line not equal to \(x+y=n+1\) meets \(x+y=n+1\) in at most one point.  
+
+If none of the three special lines is present, then each of the \(n\) lines can contain at most one point from \(A\), at most one from \(B\) and at most one from \(C\).  Because there are \(n\) lines and \(n\) points in each set, each line must contain exactly one point from each set.  Consequently a line cannot be horizontal (it would miss \(B\) unless it is \(y=1\)), vertical (it would miss \(A\) unless it is \(x=1\)), or have slope \(-1\) (it would miss \(C\) unless it is \(x+y=n+1\)).  Thus every line would be sunny, contradicting \(k<n\).  Hence at least one of the three lines must be present.  ∎
+
+---
+### 3.  No covering with all sunny lines  
+
+**Lemma 2.**  For every \(n\ge4\) there is **no** set of \(n\) sunny lines that covers all points of \(T_n\).
+
+*Proof.*  Let \(M=\left\lfloor\frac{n+1}{2}\right\rfloor\).  We first prove that a sunny line contains at most \(M\) points of \(T_n\).  Write a sunny line \(L\) in parametric form with a primitive integer direction vector \((a,b)\) (gcd\(=1\), \(a,b\neq0\), \(a+b\neq0\) because \(L\) is not parallel to the axes or the line \(x+y=0\)).  The integer points on \(L\) are \((x_0+at,\;y_0+bt)\), \(t\in\mathbb Z\).  The inequalities \(1\le x,y\) and \(x+y\le n+1\) give  
+
+\[
+1\le x_0+at\le n,\qquad 1\le y_0+bt\le n,\qquad 2\le x_0+y_0+(a+b)t\le n+1.
+\]
+
+The number of admissible \(t\) is at most  
+
+\[
+\min\!\left(\Bigl\lfloor\frac{n-1}{|a|}\Bigr\rfloor+1,\;
+\Bigl\lfloor\frac{n-1}{|b|}\Bigr\rfloor+1,\;
+\Bigl\lfloor\frac{n-1}{|a+b|}\Bigr\rfloor+1\right).
+\]
+
+If any of \(|a|,|b|,|a+b|\) is at least \(3\), the minimum is at most \(\bigl\lfloor\frac{n-1}{3}\bigr\rfloor+1\).  For \(n\ge4\) this is \(\le M\) (for \(n=4\) it equals \(M=2\); for \(n\ge5\) it is strictly smaller).  If all three are \(\le2\), then the only possibilities are \((|a|,|b|,|a+b|)=(1,1,2),(1,2,1),(2,1,1)\) (up to sign).  In each case the minimum equals \(M\).  Hence \(|L\cap T_n|\le M\).
+
+Now consider the parity of \(n\).
+
+*Even \(n\).*  Write \(n=2m\) with \(m\ge2\).  Then \(M=m\).  If all \(n\) lines were sunny, the total number of points covered would be at most \(n\cdot M=2m^2\).  But \(|T_n|=\frac{n(n+1)}2=2m^2+m>2m^2\), so covering is impossible.
+
+*Odd \(n\).*  Write \(n=2m+1\) with \(m\ge2\) (since \(n\ge5\)).  Then \(M=m+1\).  If all \(n\) lines were sunny, each must contain exactly \(M\) points because the total number of points is \(n\cdot M=|T_n|\).  We now show that at most three sunny lines can contain \(M\) points.
+
+Suppose a sunny line \(L\) satisfies \(|L\cap T_n|=M\).  From the proof above, equality forces \(|a|,|b|,|a+b|\le2\).  The only possibilities are:
+
+* \(|a+b|=2\): then \((a,b)=(1,1)\) or \((-1,-1)\).  The line is \(y=x+c\).  To have \(M\) points we need the points to be \((1,1),(2,2),\dots,(M,M)\); this forces \(c=0\) and \(L\) is \(y=x\).
+* \(|a+b|=1\): then \((a,b)=(1,-2)\) or \((2,-1)\) up to sign.  The first gives slope \(-2\), the second slope \(-\frac12\).  
+  - For slope \(-2\): the line is \(y=-2x+c\).  To have \(M\) points we must have the points \((1,n),(2,n-2),\dots,(M,1)\); this forces \(c=n+2\) and \(L\) is \(y=-2x+(n+2)\).  
+  - For slope \(-\frac12\): the line is \(y=-\frac12x+c\).  To have \(M\) points we need the points with odd \(x\): \((1,\frac{n+1}{2}),(3,\frac{n-1}{2}),\dots,(n,1)\); this forces \(c=\frac{n+2}{2}\) and \(L\) is \(y=-\frac12x+\frac{n+2}{2}\).
+
+These three lines are distinct.  Therefore at most three sunny lines can contain \(M\) points.  The remaining \(n-3\) sunny lines contain at most \(M-1\) points each.  Hence the total number of points that can be covered by \(n\) sunny lines is at most  
+
+\[
+3M+(n-3)(M-1)=3(m+1)+(2m-2)m=2m^2+m+3.
+\]
+
+But \(|T_n|=(2m+1)(m+1)=2m^2+3m+1\).  For \(m\ge2\) we have  
+
+\[
+2m^2+3m+1-(2m^2+m+3)=2m-2\ge2>0,
+\]
+
+so covering is impossible.  ∎
+
+---
+### 4.  Induction  
+
+We prove by induction on \(n\ge3\) that the only possible values of \(k\) are \(0,1,3\).
+
+**Base case \(n=3\).**  Constructions already give configurations with \(k=0,1,3\).  We show that \(k=2\) is impossible.  Assume a covering of \(T_3\) by three lines has exactly two sunny lines.  Then \(k=2<3\), so by Lemma 1 at least one of the lines \(x=1,\;y=1,\;x+y=4\) is present.  Remove that line.  The remaining two lines cover all points of \(T_3\) not on the removed line.  After a suitable translation (by \((-1,0)\) if the removed line is \(x=1\), by \((0,-1)\) if it is \(y=1\), or no translation if it is \(x+y=4\)) we obtain a covering of  
+
+\[
+T_2=\{(a,b)\in\mathbb N^2\mid a,b\ge1,\;a+b\le3\}
+\]
+
+by two lines, both sunny.  The set \(T_2\) has three points: \((1,1),(1,2),(2,1)\).  Any line that contains two of these points is either \(x=1\) (vertical), \(y=1\) (horizontal) or \(x+y=3\) (slope \(-1\)), all of which are non‑sunny.  Hence a sunny line can contain at most one point of \(T_2\).  Therefore two sunny lines can cover at most two points, contradicting the fact that they must cover all three points.  Thus \(k=2\) is impossible.  Consequently the only attainable values for \(n=3\) are \(0,1,3\).
+
+**Inductive step.**  Assume the statement holds for all integers \(m\) with \(3\le m<n\) (\(n\ge4\)).  Consider a covering of \(T_n\) by \(n\) distinct lines that contains exactly \(k\) sunny lines.
+
+*If \(k=n\)*, then all lines are sunny.  By Lemma 2 this is impossible for \(n\ge4\).  Hence \(k<n\).
+
+*If \(k<n\)*, then by Lemma 1 at least one of the lines \(x=1,\;y=1,\;x+y=n+1\) is present.  Remove that line.  The remaining \(n-1\) lines cover all points of \(T_n\) that are not on the removed line.  After a suitable translation (by \((-1,0)\) for \(x=1\), by \((0,-1)\) for \(y=1\), or simply discarding the line for \(x+y=n+1\)) we obtain a covering of \(T_{n-1}\) by \(n-1\) distinct lines.  The removed line is non‑sunny, so the number of sunny lines is unchanged.  By the induction hypothesis, \(k\in\{0,1,3\}\).
+
+Thus for every \(n\ge3\) the only possible values of \(k\) are \(0,1,3\).
+
+---
+### 5.  Conclusion  
+
+We have exhibited constructions for \(k=0,1,3\) for all \(n\ge3\), and proved that no other value of \(k\) can occur.  Therefore the set of all attainable non‑negative integers \(k\) is  
+
+\[
+\boxed{\{0,\;1,\;3\}}.
+\]"
+2,2,2.00,"We prove the statement using analytic geometry.  
+The configuration is invariant under similarity, so we may set \(MN=1\).  
+Place the circles with centres \(M=(0,0)\) and \(N=(1,0)\).  
+Let the radii be \(r\) and \(R\) with \(0<r<R\); the circles intersect in two points, hence  
+\[
+R-r<1<R+r.
+\]  
+The common chord is vertical; let  
+\[
+A=(x_0,y_0),\qquad B=(x_0,-y_0),\qquad y_0>0,
+\]  
+where  
+\[
+x_0=\frac{1+r^2-R^2}{2},\qquad 
+y_0^2=r^2-x_0^2.
+\]  
+Define  
+\[
+u=R-r,\qquad v=R+r.
+\]  
+Then \(R=\frac{v+u}{2},\; r=\frac{v-u}{2}\) and  
+\[
+x_0=\frac{1-uv}{2},\qquad 
+y_0^2=\frac{(v^2-1)(1-u^2)}{4}. \tag{1}
+\]  
+Note that \(0<u<1<v\).
+
+---
+
+### 1.  Circumcenter \(P\) of \(\triangle ACD\)
+
+The line \(MN\) is the \(x\)-axis; \(C=(-r,0)\) and \(D=(1+R,0)\).  
+The perpendicular bisector of \(CD\) is the vertical line  
+\[
+x=\frac{-r+1+R}{2}=\frac{1+R-r}{2}=\frac{1+u}{2}.
+\]  
+Hence  
+\[
+x_P=\frac{1+u}{2}.
+\]  
+From \(PA=PC\) we obtain  
+\[
+(x_P-x_0)^2+(y_P-y_0)^2=(x_P+r)^2+y_P^2,
+\]  
+which simplifies to \(x_Px_0+y_Py_0=-rx_P\).  Solving for \(y_P\) gives  
+\[
+y_P=-\frac{x_P(r+x_0)}{y_0}.
+\]  
+Now \(r+x_0 = r+\frac{1-uv}{2} = \frac{2r+1-uv}{2}\).  Using \(2r=v-u\) we get  
+\[
+2r+1-uv = v-u+1-uv = (1+v)-u(1+v) = (1+v)(1-u).
+\]  
+Thus  
+\[
+r+x_0 = \frac{(1+v)(1-u)}{2},
+\]  
+and consequently  
+\[
+y_P = -\frac{(1+u)}{2}\cdot\frac{(1+v)(1-u)}{2}\cdot\frac{1}{y_0}
+     = -\frac{(1-u^2)(1+v)}{4y_0}. \tag{2}
+\]
+
+---
+
+### 2.  The direction vector \(\mathbf v = P-A\)
+
+\[
+dx = x_P-x_0 = \frac{1+u}{2}-\frac{1-uv}{2}= \frac{u(1+v)}{2}, \tag{3}
+\]  
+\[
+dy = y_P-y_0 = -\frac{(1-u^2)(1+v)}{4y_0}-y_0
+     = -\frac{v(1+v)(1-u^2)}{4y_0}. \tag{4}
+\]  
+(The last equality uses \(y_0^2=\frac{(v^2-1)(1-u^2)}{4}\) to combine the terms.)
+
+---
+
+### 3.  Dot products with \(\mathbf v\)
+
+\[
+\begin{aligned}
+A\cdot\mathbf v &= x_0\,dx + y_0\,dy \\
+&= \frac{1-uv}{2}\cdot\frac{u(1+v)}{2}
+   + y_0\left(-\frac{v(1+v)(1-u^2)}{4y_0}\right) \\
+&= \frac{u(1+v)(1-uv)}{4} - \frac{v(1+v)(1-u^2)}{4} \\
+&= \frac{1+v}{4}\bigl(u(1-uv)-v(1-u^2)\bigr) \\
+&= \frac{1+v}{4}\bigl(u - u^2v - v + u^2v\bigr) \\
+&= \frac{1+v}{4}(u-v) = -\frac{r(1+v)}{2}. \tag{5}
+\end{aligned}
+\]  
+Similarly,  
+\[
+\begin{aligned}
+(A-N)\cdot\mathbf v &= (x_0-1)\,dx + y_0\,dy \\
+&= \left(\frac{1-uv}{2}-1\right)\frac{u(1+v)}{2}
+   + y_0\left(-\frac{v(1+v)(1-u^2)}{4y_0}\right) \\
+&= \frac{-(1+uv)}{2}\cdot\frac{u(1+v)}{2}
+   - \frac{v(1+v)(1-u^2)}{4} \\
+&= -\frac{u(1+v)(1+uv)}{4} - \frac{v(1+v)(1-u^2)}{4} \\
+&= -\frac{1+v}{4}\bigl(u(1+uv)+v(1-u^2)\bigr) \\
+&= -\frac{1+v}{4}\bigl(u + u^2v + v - u^2v\bigr) \\
+&= -\frac{1+v}{4}(u+v) = -\frac{R(1+v)}{2}. \tag{6}
+\end{aligned}
+\]
+
+---
+
+### 4.  The squared length of \(\mathbf v\)
+
+\[
+\begin{aligned}
+|\mathbf v|^2 &= dx^2+dy^2 \\
+&= \frac{u^2(1+v)^2}{4} + \frac{v^2(1+v)^2(1-u^2)^2}{16y_0^2} \\
+&= \frac{u^2(1+v)^2}{4} + \frac{v^2(1+v)^2(1-u^2)}{4(v^2-1)} \qquad(\text{using } y_0^2=\frac{(v^2-1)(1-u^2)}{4}) \\
+&= \frac{(1+v)^2}{4}\left(u^2 + \frac{v^2(1-u^2)}{v^2-1}\right) \\
+&= \frac{(1+v)^2}{4}\cdot\frac{u^2(v^2-1)+v^2(1-u^2)}{v^2-1} \\
+&= \frac{(1+v)^2}{4}\cdot\frac{v^2-u^2}{v^2-1}
+   = \frac{(1+v)(v^2-u^2)}{4(v-1)}. \tag{7}
+\end{aligned}
+\]  
+Since \(v^2-u^2 = (R+r)^2-(R-r)^2 = 4Rr\), we obtain  
+\[
+|\mathbf v|^2 = \frac{Rr(1+v)}{v-1}. \tag{8}
+\]
+
+---
+
+### 5.  Points \(E\) and \(F\)
+
+The line \(AP\) is \(A+\lambda\mathbf v\).  For a circle with centre \(O\) and radius \(\rho\), the second intersection is obtained from the quadratic in \(\lambda\):  
+\(|A+\lambda\mathbf v-O|^2=\rho^2\).  Because \(A\) lies on the circle, the other root is  
+\(\lambda = -2(A-O)\cdot\mathbf v/|\mathbf v|^2\).  Hence  
+
+\[
+t_E = -\frac{2A\cdot\mathbf v}{|\mathbf v|^2}= \frac{r(1+v)}{|\mathbf v|^2},\qquad
+t_F = -\frac{2(A-N)\cdot\mathbf v}{|\mathbf v|^2}= \frac{R(1+v)}{|\mathbf v|^2}.
+\]  
+Using (8),  
+\[
+t_E = \frac{r(1+v)}{\frac{Rr(1+v)}{v-1}} = \frac{v-1}{R},\qquad
+t_F = \frac{v-1}{r}. \tag{9}
+\]  
+Thus  
+\[
+E = A + \frac{v-1}{R}\,\mathbf v,\qquad
+F = A + \frac{v-1}{r}\,\mathbf v. \tag{10}
+\]
+
+---
+
+### 6.  Orthocenter \(H\) of \(\triangle PMN\)
+
+\(M=(0,0)\), \(N=(1,0)\), \(P=(x_P,y_P)\).  The altitude from \(P\) is the vertical line \(x=x_P\).  
+The altitude from \(M\) is perpendicular to \(PN\); a direction vector of \(PN\) is \((1-x_P,-y_P)\), so a perpendicular direction is \((y_P,1-x_P)\).  The altitude from \(M\) is therefore \(t\,(y_P,1-x_P)\).  Intersecting with \(x=x_P\) gives  
+\[
+t\,y_P = x_P \quad\Longrightarrow\quad t = \frac{x_P}{y_P},
+\]  
+so  
+\[
+H = \Bigl(x_P,\; \frac{x_P(1-x_P)}{y_P}\Bigr). \tag{11}
+\]  
+Now \(x_P = \frac{1+u}{2}\), \(1-x_P = \frac{1-u}{2}\), hence \(x_P(1-x_P) = \frac{1-u^2}{4}\).  Using (2),  
+\[
+\frac{x_P(1-x_P)}{y_P} = \frac{(1-u^2)/4}{-\frac{(1-u^2)(1+v)}{4y_0}} = -\frac{y_0}{1+v}.
+\]  
+Therefore  
+\[
+H = \Bigl(\frac{1+u}{2},\; -\frac{y_0}{1+v}\Bigr). \tag{12}
+\]
+
+---
+
+### 7.  Circumcenter \(O\) of \(\triangle BEF\)
+
+The points \(E\) and \(F\) lie on the line \(AP\); the perpendicular bisector of \(EF\) is the line through the midpoint of \(EF\) perpendicular to \(\mathbf v\).  Hence \(O\) satisfies  
+\[
+O\cdot\mathbf v = A\cdot\mathbf v + \frac{t_E+t_F}{2}|\mathbf v|^2. \tag{13}
+\]  
+From (9) and (8),  
+\[
+t_E+t_F = (v-1)\Bigl(\frac1R+\frac1r\Bigr) = (v-1)\frac{R+r}{Rr} = \frac{(v-1)(R+r)}{Rr},
+\]  
+and \(\frac{t_E+t_F}{2}|\mathbf v|^2 = \frac{(v-1)(R+r)}{2Rr}\cdot\frac{Rr(1+v)}{v-1} = \frac{(R+r)(1+v)}{2}\).  
+Using (5) we obtain  
+\[
+O\cdot\mathbf v = -\frac{r(1+v)}{2} + \frac{(R+r)(1+v)}{2} = \frac{R(1+v)}{2}. \tag{14}
+\]
+
+Now use \(|O-B|^2=|O-E|^2\).  Because \(B\) and \(E\) lie on \(\Omega\), we have \(|B|=|E|=r\).  Expanding the equality gives  
+\[
+2O\cdot(E-B) = |E|^2 - |B|^2 = 0 \quad\Longrightarrow\quad O\cdot(E-B)=0. \tag{15}
+\]  
+Write \(E-B = (A-B) + t_E\mathbf v\).  Since \(A-B=(0,2y_0)\),  
+\[
+E-B = \Bigl(t_E\,dx,\; t_E\,dy+2y_0\Bigr). \tag{16}
+\]  
+Using \(t_E = \frac{v-1}{R}\) and (3),(4) we compute  
+\[
+t_E\,dx = \frac{v-1}{R}\cdot\frac{u(1+v)}{2} = \frac{u(v^2-1)}{2R},
+\]  
+\[
+t_E\,dy = \frac{v-1}{R}\cdot\Bigl(-\frac{v(1+v)(1-u^2)}{4y_0}\Bigr) = -\frac{v(v-1)(1+v)(1-u^2)}{4R\,y_0},
+\]  
+so  
+\[
+t_E\,dy+2y_0 = \frac{-\frac{v(v-1)(1+v)(1-u^2)}{4R\,y_0}+2y_0}{1}
+= \frac{-\frac{v(v-1)(1+v)(1-u^2)}{4R\,y_0}+\frac{8R\,y_0^2}{4R\,y_0}}{1}.
+\]  
+Substituting \(y_0^2 = \frac{(v^2-1)(1-u^2)}{4} = \frac{(v-1)(v+1)(1-u^2)}{4}\) gives  
+\[
+8R\,y_0^2 = 2R(v-1)(v+1)(1-u^2),
+\]  
+hence  
+\[
+t_E\,dy+2y_0 = \frac{(v-1)(v+1)(1-u^2)(-v+2R)}{4R\,y_0}.
+\]  
+Since \(2R-v = R-r = u\), we obtain  
+\[
+t_E\,dy+2y_0 = \frac{u(v^2-1)(1-u^2)}{4R\,y_0}. \tag{17}
+\]
+
+Now we claim that  
+\[
+O = \Bigl(\frac12,\; -\frac{v^2-1}{4y_0}\Bigr) \tag{18}
+\]  
+satisfies both (14) and (15).  
+
+First, verify (14):  
+\[
+O\cdot\mathbf v = \frac12\,dx + \Bigl(-\frac{v^2-1}{4y_0}\Bigr)dy.
+\]  
+Using (3),(4) and (1),  
+\[
+\frac12\,dx = \frac{u(1+v)}{4},
+\]  
+\[
+-\frac{v^2-1}{4y_0}\,dy = -\frac{v^2-1}{4y_0}\cdot\Bigl(-\frac{v(1+v)(1-u^2)}{4y_0}\Bigr)
+= \frac{(v^2-1)v(1+v)(1-u^2)}{16y_0^2}
+= \frac{v(1+v)}{4} \qquad(\text{since } y_0^2=\frac{(v^2-1)(1-u^2)}{4}).
+\]  
+Thus \(O\cdot\mathbf v = \frac{u(1+v)}{4} + \frac{v(1+v)}{4} = \frac{(u+v)(1+v)}{4} = \frac{2R(1+v)}{4} = \frac{R(1+v)}{2}\).  
+
+Second, verify (15):  
+\[
+O\cdot(E-B) = \frac12\cdot\frac{u(v^2-1)}{2R} + \Bigl(-\frac{v^2-1}{4y_0}\Bigr)\cdot\frac{u(v^2-1)(1-u^2)}{4R\,y_0}
+= \frac{u(v^2-1)}{4R} - \frac{u(v^2-1)^2(1-u^2)}{16R\,y_0^2}.
+\]  
+Substituting \(y_0^2 = \frac{(v^2-1)(1-u^2)}{4}\) gives  
+\[
+\frac{u(v^2-1)^2(1-u^2)}{16R\,y_0^2} = \frac{u(v^2-1)^2(1-u^2)}{16R\cdot\frac{(v^2-1)(1-u^2)}{4}} = \frac{u(v^2-1)}{4R}.
+\]  
+Hence \(O\cdot(E-B)=0\).  Therefore (18) is indeed the circumcenter of \(\triangle BEF\).
+
+---
+
+### 8.  Tangency condition
+
+The line through \(H\) parallel to \(AP\) has direction \(\mathbf v\).  Its distance from \(O\) is  
+\[
+d = \frac{|(O-H)\times\mathbf v|}{|\mathbf v|},
+\]  
+where \(\times\) denotes the scalar cross product (determinant).  
+
+Compute  
+\[
+O-H = \Bigl(\frac12-\frac{1+u}{2},\; -\frac{v^2-1}{4y_0}+\frac{y_0}{1+v}\Bigr)
+= \Bigl(-\frac{u}{2},\; -\frac{v^2-1}{4y_0}+\frac{y_0}{1+v}\Bigr).
+\]  
+Simplify the \(y\)-coordinate:  
+\[
+-\frac{v^2-1}{4y_0}+\frac{y_0}{1+v}
+= \frac{-(v^2-1)(1+v)+4y_0^2}{4y_0(1+v)}.
+\]  
+Using \(4y_0^2 = (v^2-1)(1-u^2)\), the numerator becomes  
+\[
+-(v^2-1)(1+v)+(v^2-1)(1-u^2) = (v^2-1)\bigl(-1-v+1-u^2\bigr) = -(v^2-1)(v+u^2).
+\]  
+Thus  
+\[
+O-H = \Bigl(-\frac{u}{2},\; -\frac{(v^2-1)(v+u^2)}{4y_0(1+v)}\Bigr). \tag{19}
+\]
+
+Now  
+\[
+\begin{aligned}
+(O-H)\times\mathbf v
+&= \Bigl(-\frac{u}{2}\Bigr)\,dy - \Bigl(-\frac{(v^2-1)(v+u^2)}{4y_0(1+v)}\Bigr)\,dx \\
+&= -\frac{u}{2}\,dy + \frac{(v^2-1)(v+u^2)}{4y_0(1+v)}\,dx.
+\end{aligned}
+\]  
+Substitute \(dx = \frac{u(1+v)}{2}\) and \(dy = -\frac{v(1+v)(1-u^2)}{4y_0}\):  
+\[
+-\frac{u}{2}\,dy = -\frac{u}{2}\cdot\Bigl(-\frac{v(1+v)(1-u^2)}{4y_0}\Bigr) = \frac{u v(1+v)(1-u^2)}{8y_0},
+\]  
+\[
+\frac{(v^2-1)(v+u^2)}{4y_0(1+v)}\,dx
+= \frac{(v^2-1)(v+u^2)}{4y_0(1+v)}\cdot\frac{u(1+v)}{2}
+= \frac{u(v^2-1)(v+u^2)}{8y_0}.
+\]  
+Hence  
+\[
+(O-H)\times\mathbf v = \frac{u}{8y_0}\Bigl[v(1+v)(1-u^2)+(v^2-1)(v+u^2)\Bigr].
+\]  
+Factor \((v+1)\):  
+\[
+v(1+v)(1-u^2)+(v^2-1)(v+u^2) = (v+1)\Bigl[v(1-u^2)+(v-1)(v+u^2)\Bigr].
+\]  
+The bracket simplifies:  
+\[
+v(1-u^2)+(v-1)(v+u^2) = v - v u^2 + v^2 + v u^2 - v - u^2 = v^2 - u^2.
+\]  
+Thus  
+\[
+(O-H)\times\mathbf v = \frac{u(v+1)(v^2-u^2)}{8y_0}. \tag{20}
+\]
+
+Now use (8): \(|\mathbf v|^2 = \frac{Rr(1+v)}{v-1}\).  Therefore  
+\[
+d^2 = \frac{(O-H)^2\times\mathbf v^2}{|\mathbf v|^2}
+= \frac{u^2(v+1)^2(v^2-u^2)^2}{64y_0^2}\cdot\frac{v-1}{Rr(1+v)}.
+\]  
+Since \(v^2-u^2 = 4Rr\), we obtain  
+\[
+d^2 = \frac{u^2(v+1)^2\cdot 16R^2r^2}{64y_0^2}\cdot\frac{v-1}{Rr(1+v)}
+= \frac{u^2(v+1)Rr(v-1)}{4y_0^2}. \tag{21}
+\]
+
+Now compute \(|O-B|^2\).  From (18) and \(B=(x_0,-y_0)\):  
+\[
+O-B = \Bigl(\frac12-x_0,\; -\frac{v^2-1}{4y_0}+y_0\Bigr).
+\]  
+Using \(x_0 = \frac{1-uv}{2}\),  
+\[
+\frac12-x_0 = \frac12-\frac{1-uv}{2} = \frac{uv}{2}.
+\]  
+Also  
+\[
+y_0-\frac{v^2-1}{4y_0} = \frac{4y_0^2-(v^2-1)}{4y_0}
+= \frac{(v^2-1)(1-u^2)-(v^2-1)}{4y_0}
+= -\frac{u^2(v^2-1)}{4y_0}.
+\]  
+Hence  
+\[
+O-B = \Bigl(\frac{uv}{2},\; -\frac{u^2(v^2-1)}{4y_0}\Bigr). \tag{22}
+\]  
+Then  
+\[
+|O-B|^2 = \frac{u^2v^2}{4} + \frac{u^4(v^2-1)^2}{16y_0^2}.
+\]  
+Substitute \(y_0^2 = \frac{(v^2-1)(1-u^2)}{4}\):  
+\[
+|O-B|^2 = \frac{u^2v^2}{4} + \frac{u^4(v^2-1)^2}{16\cdot\frac{(v^2-1)(1-u^2)}{4}}
+= \frac{u^2v^2}{4} + \frac{u^4(v^2-1)}{4(1-u^2)}.
+\]  
+Factor \(\frac{u^2}{4}\):  
+\[
+|O-B|^2 = \frac{u^2}{4}\Bigl(v^2 + \frac{u^2(v^2-1)}{1-u^2}\Bigr)
+= \frac{u^2}{4}\cdot\frac{v^2(1-u^2)+u^2(v^2-1)}{1-u^2}
+= \frac{u^2}{4}\cdot\frac{v^2-u^2}{1-u^2}.
+\]  
+Since \(v^2-u^2 = 4Rr\),  
+\[
+|O-B|^2 = \frac{u^2\cdot 4Rr}{4(1-u^2)} = \frac{u^2Rr}{1-u^2}. \tag{23}
+\]
+
+Now compare (21) and (23).  Using \(y_0^2 = \frac{(v^2-1)(1-u^2)}{4}\), we have  
+\[
+d^2 = \frac{u^2(v+1)Rr(v-1)}{4y_0^2}
+= \frac{u^2(v+1)Rr(v-1)}{4}\cdot\frac{4}{(v^2-1)(1-u^2)}
+= \frac{u^2Rr(v+1)(v-1)}{(v^2-1)(1-u^2)}
+= \frac{u^2Rr}{(1-u^2)}.
+\]  
+Thus \(d^2 = |O-B|^2\), so \(d = |O-B|\).  
+
+The distance from the circumcenter \(O\) of \(\triangle BEF\) to the line through \(H\) parallel to \(AP\) equals the circumradius of \(\triangle BEF\); therefore this line is tangent to the circumcircle of \(\triangle BEF\).
+
+∎"
+3,2,2.00,"We prove that the smallest constant \(c\) is \(4\).
+
+Let \(f:\mathbb{N}\to\mathbb{N}\) be a bonza function, i.e. for all \(a,b\in\mathbb{N}\),
+
+\[
+f(a)\mid b^{a}-f(b)^{\,f(a)}. \tag{1}
+\]
+
+---
+### 1.  Basic values
+
+Put \(a=b=1\) in (1): \(f(1)\mid 1-f(1)^{f(1)}\). Since \(f(1)\mid f(1)^{f(1)}\), we obtain \(f(1)\mid1\); hence  
+
+\[
+f(1)=1.
+\]
+
+Put \(a=b=2\): \(f(2)\mid4-f(2)^{f(2)}\). Because \(f(2)\mid f(2)^{f(2)}\), we get \(f(2)\mid4\); therefore  
+
+\[
+f(2)\in\{1,2,4\}. \tag{2}
+\]
+
+We eliminate \(f(2)=2\).  Choose \(a=2,\;b=5\) in (1): \(f(2)\mid5^{2}-f(2)^{f(2)}=25-f(2)^{f(2)}\).  
+If \(f(2)=2\) then \(2\mid25-2^{2}=21\), impossible.  Hence  
+
+\[
+f(2)\in\{1,4\}. \tag{3}
+\]
+
+---
+### 2.  Determination of \(f(3)\)
+
+From (1) with \(a=3,b=3\) we have \(f(3)\mid27-f(3)^{f(3)}\); thus \(f(3)\mid27\), so  
+
+\[
+f(3)\in\{1,3,9,27\}. \tag{4}
+\]
+
+From (1) with \(a=3,b=2\) we have  
+
+\[
+f(3)\mid 2^{3}-f(2)^{f(3)} = 8-f(2)^{f(3)}. \tag{5}
+\]
+
+We examine the two possibilities for \(f(2)\).
+
+* **If \(f(2)=1\):** then (5) gives \(f(3)\mid 8-1=7\); together with (4) we obtain \(f(3)=1\).
+
+* **If \(f(2)=4\):** we test the possible values of \(f(3)\):
+  - \(f(3)=3\): \(8-4^{3}=8-64=-56\) is not divisible by \(3\).
+  - \(f(3)=9\): \(4^{9}\equiv1\pmod9\) (since \(4^{3}\equiv1\)), so \(8-1=7\) is not divisible by \(9\).
+  - \(f(3)=27\): \(4^{27}\equiv1\pmod{27}\) (since \(4^{9}\equiv1\)), so \(8-1=7\) is not divisible by \(27\).
+  Thus only \(f(3)=1\) works.
+
+Hence in every case  
+
+\[
+f(3)=1. \tag{6}
+\]
+
+---
+### 3.  Odd primes are fixed
+
+Let \(p\) be an odd prime.  Using (1) with \(a=p,\;b=3\) and (6),
+
+\[
+f(p)\mid 3^{p}-1.
+\]
+
+Using (1) with \(a=p,\;b=p\),
+
+\[
+f(p)\mid p^{p}-f(p)^{f(p)}\;\Longrightarrow\; f(p)\mid p^{p}.
+\]
+
+Thus \(f(p)\mid\gcd(p^{p},\,3^{p}-1)\).  By Fermat’s little theorem, \(3^{p}\equiv3\pmod p\); therefore \(p\nmid3^{p}-1\), and the gcd is \(1\).  Consequently  
+
+\[
+f(p)=1\qquad\text{for every odd prime }p. \tag{7}
+\]
+
+---
+### 4.  No odd prime divides any value of \(f\)
+
+Assume an odd prime \(q\) divides \(f(n)\).  From (1) with \(a=n,\;b=q\) and using (7),
+
+\[
+f(n)\mid q^{n}-1.
+\]
+
+Since \(q\mid f(n)\), we have \(q\mid q^{n}-1\), which is impossible because \(q\mid q^{n}\).  Hence no odd prime divides \(f(n)\); therefore every prime factor of \(f(n)\) is \(2\).  Thus  
+
+\[
+f(n)=2^{\,e(n)}\quad\text{for some }e(n)\ge0. \tag{8}
+\]
+
+---
+### 5.  Odd numbers map to \(1\)
+
+Let \(n>1\) be odd.  Then \(f(n)\) is a power of \(2\) and, from (1) with \(a=b=n\), \(f(n)\mid n^{n}\).  Since \(n^{n}\) is odd, the only power of \(2\) dividing it is \(1\); hence \(f(n)=1\).  Together with \(f(1)=1\) we obtain  
+
+\[
+f(n)=1\qquad\text{for all odd }n. \tag{9}
+\]
+
+---
+### 6.  Upper bound \(f(n)\le 4n\)
+
+For any \(n\) we use (1) with \(a=n,\;b=3\) and (6):
+
+\[
+f(n)\mid 3^{n}-1. \tag{10}
+\]
+
+Since \(f(n)\) is a power of two, we have \(f(n)\le 2^{\,v_{2}(3^{n}-1)}\).
+
+Write \(n=2^{k}m\) with \(m\) odd and \(k\ge0\).  If \(n\) is odd (\(k=0\)), then by (9) \(f(n)=1\le4n\).  For even \(n\) we have \(k\ge1\).  By the Lifting‑the‑Exponent lemma (LTE) for the prime \(2\),
+
+\[
+v_{2}(3^{n}-1)=v_{2}(3-1)+v_{2}(3+1)+v_{2}(n)-1 = 1+2+k-1 = k+2.
+\]
+
+Hence  
+
+\[
+f(n)\le 2^{\,k+2}=4\cdot2^{k}\le 4n,
+\]
+
+because \(2^{k}\le n\).  Therefore every bonza function satisfies  
+
+\[
+f(n)\le 4n\qquad\text{for all }n\in\mathbb{N}. \tag{11}
+\]
+
+---
+### 7.  Sharpness of the constant \(4\)
+
+We construct a bonza function with \(f(4)=16=4\cdot4\).  Define  
+
+\[
+f(1)=1,\qquad f(2)=4,
+\]
+and for every integer \(n\ge3\)
+
+\[
+f(n)=\begin{cases}
+1, & \text{if }n\text{ is odd},\\[2mm]
+2^{\,v_{2}(n)+2}, & \text{if }n\text{ is even},
+\end{cases}
+\]
+
+where \(v_{2}(n)\) denotes the exponent of the highest power of \(2\) dividing \(n\).  In particular \(f(4)=2^{2+2}=16\).
+
+We verify that this function is bonza.  All values of \(f\) are powers of two; let \(E=v_{2}(f(a))\) and \(F=v_{2}(f(b))\).  Condition (1) becomes  
+
+\[
+2^{E}\mid b^{a}-2^{F\cdot2^{E}}. \tag{12}
+\]
+
+We consider several cases.
+
+**Case 1: \(a\) is odd.**  Then \(f(a)=1\) by (9), so \(E=0\) and (12) holds trivially.
+
+**Case 2: \(a=2\).**  Then \(f(2)=4\) and \(E=2\).  We need \(4\mid b^{2}-f(b)^{4}\).
+
+* \(b\) odd: \(f(b)=1\) and \(b^{2}\equiv1\pmod8\) (since \(b\) is odd), so \(b^{2}-1\) is divisible by \(8\), hence by \(4\).
+* \(b=2\): \(2^{2}-4^{4}=4-256=-252\) is divisible by \(4\).
+* \(b\) even and \(b\ge4\): write \(b=2^{r}s\) with \(s\) odd, \(r\ge1\).  Then \(f(b)=2^{r+2}\) and  
+  \[
+  b^{2}-f(b)^{4}=2^{2r}s^{2}-2^{4r+8}=2^{2r}\bigl(s^{2}-2^{2r+8}\bigr).
+  \]  
+  Since \(r\ge1\), the factor \(2^{2r}\) is divisible by \(4\); therefore the whole expression is divisible by \(4\).
+
+Thus (12) holds for \(a=2\).
+
+**Case 3: \(a\) is even and \(a\ge4\).**  Write \(a=2^{k}m\) with \(m\) odd, \(k\ge1\).  Then \(f(a)=2^{k+2}\) and \(E=k+2\).  We must prove  
+
+\[
+2^{k+2}\mid b^{a}-f(b)^{2^{k+2}}. \tag{13}
+\]
+
+We split according to the parity of \(b\).
+
+*Subcase 3a: \(b\) is odd.*  Then \(f(b)=1\) and we need \(2^{k+2}\mid b^{a}-1\).  For any odd \(b\), LTE for the prime \(2\) gives  
+
+\[
+v_{2}(b^{a}-1)=v_{2}(b-1)+v_{2}(b+1)+v_{2}(a)-1.
+\]
+
+Since \(b\) is odd, one of \(b-1,b+1\) is divisible by \(2\) but not \(4\), the other by \(4\); hence \(v_{2}(b-1)+v_{2}(b+1)\ge3\).  With \(v_{2}(a)=k\) we obtain  
+
+\[
+v_{2}(b^{a}-1)\ge 3+k-1 = k+2.
+\]
+
+Thus (13) holds.
+
+*Subcase 3b: \(b\) is even.*  Write \(b=2^{r}s\) with \(s\) odd, \(r\ge1\).  We treat the possibility \(b=2\) separately, because \(f(2)=4\) while the formula \(2^{r+2}\) would give \(8\).
+
+- **If \(b=2\):** then \(f(b)=4\) and \(F=2\).  We need \(2^{k+2}\mid 2^{a}-4^{2^{k+2}}=2^{a}-2^{2^{k+3}}\).  The valuations are  
+  \[
+  v_{2}(2^{a})=a,\qquad v_{2}\bigl(2^{2^{k+3}}\bigr)=2^{k+3}.
+  \]  
+  Since \(a=2^{k}m\) with \(m\) odd and \(a\ge4\), we have \(a\ge2^{k}\).  
+  * For \(k=1\): \(a\ge4\) and \(2^{k+3}=16\); the minimum of the two valuations is at least \(4\ge3=k+2\).  
+  * For \(k\ge2\): \(2^{k}\ge k+2\) and \(2^{k+3}\ge k+2\).  
+  Hence the minimum is at least \(k+2\), so the difference is divisible by \(2^{k+2}\).
+
+- **If \(b\ge4\):** then \(r\ge1\) and \(f(b)=2^{r+2}\).  The valuations are  
+  \[
+  v_{2}(b^{a})=a r,\qquad v_{2}\bigl(f(b)^{2^{k+2}}\bigr)=(r+2)2^{k+2}.
+  \]  
+  We show that both are at least \(k+2\).  
+  * If \(k=1\): then \(a=2m\) with \(m\) odd and \(m\ge3\) (because \(a\ge4\)), so \(a r\ge 2\cdot3\cdot1=6\ge3=k+2\); also \((r+2)2^{3}=8(r+2)\ge24\ge3\).  
+  * If \(k\ge2\): we have \(a\ge2^{k}\ge k+2\) (easily checked by induction) and \(r\ge1\) gives \(a r\ge2^{k}\ge k+2\); also \((r+2)2^{k+2}\ge 2^{k+2}\ge k+2\).  
+  Consequently \(\min(ar,\,(r+2)2^{k+2})\ge k+2\), so the difference is divisible by \(2^{k+2}\).
+
+Thus (13) holds in all subcases.
+
+All possibilities are covered, so the constructed function is bonza.  In particular, \(f(4)=16=4\cdot4\), showing that the constant \(4\) cannot be reduced.
+
+---
+### 8.  Conclusion
+
+We have proved that every bonza function satisfies \(f(n)\le4n\) for all positive integers \(n\), and that the constant \(4\) is attained.  Therefore the smallest real constant \(c\) with the required property is  
+
+\[
+\boxed{4}.
+\]"
+4,7,7.00,"Let $f(N)$ denote the sum of the three largest proper divisors of a positive integer $N$ that has at least three proper divisors. The sequence satisfies $a_{n+1}=f(a_n)$ and every term must have at least three proper divisors.
+
+---
+### 1.  A necessary condition: every term must be a multiple of $6$
+
+**Lemma 1.**  If $N$ has at least three proper divisors and $N$ is **not** a multiple of $6$, then  
+\[
+f(N)<N \qquad\text{and}\qquad f(N)\text{ is not a multiple of }6.
+\]
+
+*Proof.*  We consider two main cases.
+
+**Case 1: $N$ is odd.**  
+All divisors of an odd number are odd.  Hence $f(N)$ is odd, so it is not a multiple of $2$ and consequently not a multiple of $6$.
+
+- If $N$ has at least four proper divisors, let $d_1<d_2<d_3$ be the three smallest proper divisors larger than $1$.  Because every divisor is odd, we have $d_1\ge3$, $d_2\ge5$, $d_3\ge7$.  Thus  
+  \[
+  f(N)=N\!\left(\frac1{d_1}+\frac1{d_2}+\frac1{d_3}\right)
+       \le N\!\left(\frac13+\frac15+\frac17\right)=\frac{71}{105}N<N.
+  \]
+- If $N$ has exactly three proper divisors, then $N$ is either $p^3$ or $pq$ with distinct odd primes $p,q$.  
+  For $N=p^3$ the three largest proper divisors are $p^2,p,1$; $f(N)=p^2+p+1<p^3$.  
+  For $N=pq$ they are $q,p,1$; $f(N)=p+q+1$.  Since $p,q\ge3$ and $(p-1)(q-1)\ge4$, we have $pq-p-q\ge3$, so $p+q+1\le pq-2<pq$.  
+  In both subcases $f(N)<N$.
+
+Thus in Case 1 we have $f(N)<N$ and $f(N)$ is not a multiple of $6$.
+
+**Case 2: $N$ is even but not divisible by $3$.**  
+Write $N=2^a M$ with $a\ge1$, $M$ odd, and $3\nmid M$.
+
+*Subcase 2a: $a\ge2$ (so $4\mid N$).*  
+The three smallest proper divisors larger than $1$ are $2$, $4$, and a divisor $d$ (the next smallest).  Because $3\nmid N$, $d$ is not a multiple of $3$; the smallest possible value is $5$.  Hence  
+\[
+f(N)=N\!\left(\frac12+\frac14+\frac1d\right)
+     =N\!\left(\frac34+\frac1d\right)
+     \le N\!\left(\frac12+\frac14+\frac15\right)=\frac{19}{20}N<N.
+\]  
+Modulo $3$ we have $N\equiv\pm1$, $2^{-1}\equiv2$, $4^{-1}\equiv1$, and $d^{-1}\not\equiv0$; therefore  
+\[
+f(N)\equiv N\!\left(2+1+\frac1d\right)\equiv N\!\left(3+\frac1d\right)\equiv \frac{N}{d}\pmod3,
+\]  
+which is not $0$ because $3\nmid N$ and $3\nmid d$.  Thus $f(N)$ is not divisible by $3$.  Together with the fact that $f(N)$ is even (since $N/2$ and $N/4$ are integers), $f(N)$ is not a multiple of $6$.
+
+If $N$ has exactly three proper divisors, the only possibility is $N=8$.  For $N=8$, $f(8)=7<8$ and $7$ is not a multiple of $6$.
+
+*Subcase 2b: $a=1$ (so $N=2M$ with $M$ odd, $3\nmid M$).*  
+Let $p$ be the smallest odd prime divisor of $M$ (so $p\ge5$).  The divisors of $N$ are $1,2$, and for each divisor $d$ of $M$ we have $d$ and $2d$ (with $2M=N$ excluded).  The proper divisors larger than $1$ are therefore $2$, $p$, and then either the next odd divisor $q$ (if $q<2p$) or $2p$ (if $2p<q$).  We treat the two possibilities.
+
+- **If $d_3$ is odd:** then the three smallest are $2,p,d_3$ with $d_3\ge7$ (the smallest possible odd divisor after $p$ is at least $7$ because $p\ge5$ and $p\neq3$).  Then  
+  \[
+  f(N)=N\!\left(\frac12+\frac1p+\frac1{d_3}\right)
+       \le N\!\left(\frac12+\frac15+\frac17\right)=\frac{59}{70}N<N.
+  \]  
+  Since $N/2=M$ is odd and $N/p,N/d_3$ are even, $f(N)$ is odd, hence not a multiple of $6$.
+
+- **If $d_3=2p$:** then the three smallest are $2,p,2p$.  Then  
+  \[
+  f(N)=N\!\left(\frac12+\frac1p+\frac1{2p}\right)
+       =N\!\left(\frac12+\frac3{2p}\right)
+       =M+\frac{3M}{p}.
+  \]  
+  Because $p\mid M$, $M/p$ is an integer.  $M$ is odd, $M/p$ is odd, so $3M/p$ is odd; hence $f(N)$ is even.  Modulo $3$, $f(N)\equiv M\pmod3$ (since $3M/p$ is divisible by $3$), and $3\nmid M$, so $f(N)$ is not divisible by $3$.  Thus $f(N)$ is not a multiple of $6$.  Also $f(N)<N$ because $p\ge5$ gives $1+\frac{3}{p}\le\frac85<2$.
+
+If $N$ has exactly three proper divisors, then $N=2p$ with $p$ an odd prime $\neq3$.  Then $f(N)=p+3$.  Since $p$ is odd, $p+3$ is even; and $p\not\equiv0\pmod3$ implies $p+3\not\equiv0\pmod3$.  Hence $p+3$ is not a multiple of $6$, and $p+3<2p$ for $p\ge5$.  So $f(N)<N$.
+
+Thus in every subcase of Case 2 we have $f(N)<N$ and $f(N)$ is not a multiple of $6$.
+
+∎
+
+**Corollary.**  If some term $a_n$ of the sequence is not a multiple of $6$, then by Lemma 1 all subsequent terms are also not multiples of $6$ and the sequence is strictly decreasing.  A strictly decreasing infinite sequence of positive integers cannot exist; it would eventually reach a number with fewer than three proper divisors, contradicting the hypothesis that every term has at least three proper divisors.  Therefore **every term of an infinite sequence must be a multiple of $6$**.  In particular, $a_1$ is a multiple of $6$.
+
+---
+### 2.  Behaviour when all terms are multiples of $6$
+
+Assume $a_1$ is a multiple of $6$.  Write its prime factorisation as  
+\[
+a_1 = 2^{a}\,3^{b}\,M,\qquad a\ge1,\;b\ge1,\;\gcd(M,6)=1.
+\]
+
+For $N>6$ the number has at least four proper divisors.  The three smallest proper divisors larger than $1$ are $2,3$ and the next smallest divisor $d$.  The value of $d$ is determined as follows:
+
+- If $a\ge2$, then $4\mid N$ and $4<6$, so $d=4$.
+- If $a=1$ and $5\mid N$, then $5$ is a divisor and $5<6$, so $d=5$.
+- If $a=1$ and $5\nmid N$, then the next divisor after $3$ is $6$, so $d=6$.
+
+For $N=6$ the same formulas hold (the case $a=1,5\nmid N$ gives $d=6$ and $f(6)=6$).  Hence for any multiple of $6$,
+\[
+f(N)=N\!\left(\frac12+\frac13+\frac1d\right)=N\!\left(\frac56+\frac1d\right),
+\]
+and we obtain the three cases
+\[
+f(N)=
+\begin{cases}
+\displaystyle\frac{13}{12}\,N, & a\ge2,\\[6pt]
+\displaystyle\frac{31}{30}\,N, & a=1,\;5\mid N,\\[6pt]
+N, & a=1,\;5\nmid N.
+\end{cases}\tag{1}
+\]
+
+---
+### 3.  Determining the possible $a_1$
+
+Assume the sequence is infinite.  By the corollary every term is a multiple of $6$.  We analyse the possibilities.
+
+*If a term has $a=1$ and $5\mid N$*, then (1) gives $f(N)=\frac{31}{30}N$.  Because $N$ has exactly one factor $2$, $\frac{31}{30}N$ is odd and not divisible by $3$; hence it is not a multiple of $6$.  By the corollary such a term would lead to a strictly decreasing sequence that cannot be infinite.  Therefore in an infinite sequence a term with $a=1$ must satisfy $5\nmid N$, and then $f(N)=N$ (a fixed point).
+
+*If a term has $a\ge2$*, then (1) gives $f(N)=\frac{13}{12}N$.  Write $N=2^{a}3^{b}M$ with $\gcd(M,6)=1$.  Then  
+\[
+f(N)=2^{a-2}\,3^{b-1}\,13\,M.
+\]  
+For this to be a multiple of $6$ we need $a-2\ge1$ and $b-1\ge1$, i.e. $a\ge3$ and $b\ge2$.  If $a=2$ or $b=1$, then $f(N)$ is not a multiple of $6$ and the sequence would terminate.  Hence for an infinite sequence, whenever a term has $a\ge2$ we must have $a\ge3$ and $b\ge2$.
+
+Now start from $a_1=2^{a}3^{b}M$ with $a,b\ge1$ and $\gcd(M,6)=1$.  We examine the iteration.
+
+- **If $a=1$ and $5\nmid M$**, then $a_1$ is a fixed point and the sequence is infinite.  This case is allowed.
+- **If $a=1$ and $5\mid M$**, then $a_1$ leads to $a_2$ odd, not a multiple of $6$, so the sequence terminates.
+- **If $a\ge2$**, then for the sequence to be infinite we must have $a\ge3,\;b\ge2$ (otherwise the second term is not a multiple of $6$).  Then  
+  \[
+  a_2 = f(a_1) = 2^{a-2}\,3^{b-1}\,13\,M,
+  \]  
+  and the process continues as long as the current term has $a\ge2$ and $b\ge1$ (but when $a$ becomes $1$ we must also have $5\nmid M$ to avoid termination).  The exponents evolve as  
+  \[
+  a\;\mapsto\;a-2,\qquad b\;\mapsto\;b-1,\qquad M\;\mapsto\;13M.
+  \]
+
+Thus after $k$ steps we obtain  
+\[
+a_{1+k}=2^{a-2k}\,3^{b-k}\,13^{k}M.
+\]
+
+For the sequence to be infinite we must eventually reach a term with $a=1$ and $5\nmid M$ (a fixed point).  This requires that the exponent $a$ be odd; otherwise after $a/2$ steps we would obtain an odd term (not a multiple of $6$).  Write $a=2k+1$ with $k\ge0$.  After $k$ steps we have  
+\[
+a_{1+k}=2^{1}\,3^{b-k}\,13^{k}M.
+\]  
+For this term to be a fixed point we need $b-k\ge1$ (so that it is still divisible by $3$) and $5\nmid M$ (which holds because $M$ is not divisible by $5$ and $13$ is not).  The condition $b-k\ge1$ is equivalent to $b\ge k+1=\frac{a+1}{2}$.
+
+Therefore the necessary conditions for an infinite sequence are:
+
+- $a_1$ is a multiple of $6$;
+- the exponent of $2$ in $a_1$ is odd;
+- the exponent of $3$ in $a_1$ satisfies $\nu_3(a_1)\ge\frac{\nu_2(a_1)+1}{2}$;
+- $5$ does not divide $a_1$.
+
+---
+### 4.  Sufficiency of the conditions
+
+Conversely, suppose $a_1$ satisfies these four conditions.  Write  
+\[
+a_1 = 2^{a}\,3^{b}\,M,\qquad a=2k+1\;(k\ge0),\quad b\ge k+1,\quad \gcd(M,6)=1,\quad 5\nmid M.
+\]
+
+- **If $k=0$ (i.e. $a=1$)**, then $a_1$ is a fixed point because $5\nmid a_1$; the sequence is constant and infinite.
+- **If $k\ge1$**, then for $i=0,1,\dots,k-1$ the term $a_{1+i}$ has $a-2i\ge3$ and $b-i\ge2$ (since $b\ge k+1$ and the exponents decrease).  Hence for these $i$ we have $f(a_{1+i})=\frac{13}{12}\,a_{1+i}$, and each $a_{1+i}$ is a multiple of $6$.  After $k$ steps we obtain  
+  \[
+  a_{1+k}=2^{1}\,3^{b-k}\,13^{k}M,
+  \]  
+  with $b-k\ge1$ and $5\nmid a_{1+k}$.  By the case $a=1,\;5\nmid N$ of (1), we have $f(a_{1+k})=a_{1+k}$; the sequence becomes constant from that point onward.  All terms are multiples of $6$ and have at least three proper divisors (the constant term is at least $6$, and $6$ itself has three proper divisors).  Hence the sequence is infinite.
+
+Thus the conditions are both necessary and sufficient.
+
+---
+### 5.  Final description
+
+The possible values of $a_1$ are exactly the positive integers that are multiples of $6$, have an odd exponent of $2$, satisfy $\nu_3(a_1)\ge\frac{\nu_2(a_1)+1}{2}$, and are not divisible by $5$.  Equivalently,
+
+\[
+\boxed{\;a_1 = 2^{2k+1}\,3^{b}\,m,\quad k\ge0,\; b\ge k+1,\; \gcd(m,6)=1,\; 5\nmid m\;}.
+\]
+
+This description covers all initial values for which the infinite sequence exists."
+5,7,7.00,"Let \(S_n = \sum_{i=1}^n x_i\) and \(Q_n = \sum_{i=1}^n x_i^2\).  
+The rules are:
+
+* On odd turns \(n=2k-1\), Alice chooses \(x_{2k-1}\ge0\) with \(S_{2k-1}\le \lambda(2k-1)\).
+* On even turns \(n=2k\), Bazza chooses \(x_{2k}\ge0\) with \(Q_{2k}\le 2k\).
+
+If a player cannot make a legal move, the opponent wins; if the game continues forever, neither wins.
+
+Define \(\alpha = \frac{\sqrt2}{2}\).
+
+---
+
+### 1.  A useful bound
+
+For any \(k\ge1\), by Cauchy–Schwarz,
+\[
+\biggl(\sum_{i=1}^k x_{2i}\biggr)^2 \le k\sum_{i=1}^k x_{2i}^2 \le k\,Q_{2k}\le k\cdot2k = 2k^2,
+\]
+hence
+\[
+\sum_{i=1}^k x_{2i} \le k\sqrt2. \tag{1}
+\]
+This bound holds for any play because the even‑turn constraint gives \(Q_{2k}\le 2k\).
+
+---
+
+### 2.  Alice wins for \(\lambda>\alpha\)
+
+Alice uses the following strategy:
+
+* She plays \(x_1=0\) and continues with \(x_{2k+1}=0\) for all \(k\) until a certain index \(K\).
+* At the turn \(2K+1\) she chooses \(x_{2K+1}= \sqrt{2K+2}+\varepsilon\) with a sufficiently small \(\varepsilon>0\).
+
+We first show that such a \(K\) exists.  By her strategy, the odd terms are zero, so \(S_{2k}= \sum_{i=1}^k x_{2i}\).  From (1) we have \(S_{2k}\le k\sqrt2\).  Therefore the slack at turn \(2K+1\) satisfies
+\[
+d_K = \lambda(2K+1)-S_{2K} \ge \lambda(2K+1)-K\sqrt2.
+\]
+Because \(\lambda>\alpha\), we have \(2\lambda-\sqrt2>0\); hence \(\lambda(2K+1)-K\sqrt2 = K(2\lambda-\sqrt2)+\lambda\) tends to \(+\infty\) as \(K\to\infty\).  Consequently there exists an integer \(K\) such that
+\[
+\lambda(2K+1)-K\sqrt2 > \sqrt{2K+2}.
+\]
+Now choose \(\varepsilon>0\) so small that \(\sqrt{2K+2}+\varepsilon \le d_K\) (possible because the left‑hand side is positive and \(d_K > \sqrt{2K+2}\)).  Then \(x_{2K+1}= \sqrt{2K+2}+\varepsilon\) is legal because
+\[
+S_{2K+1}=S_{2K}+x_{2K+1}\le S_{2K}+d_K = \lambda(2K+1).
+\]
+
+After Alice’s move,
+\[
+Q_{2K+1}=Q_{2K}+x_{2K+1}^2 \ge (\sqrt{2K+2}+\varepsilon)^2 > 2K+2.
+\]
+At the next even turn \(2K+2\) Bazza would need \(Q_{2K+2}\le 2K+2\), which is impossible because \(Q_{2K+1}\) already exceeds that bound.  Hence Bazza cannot move and Alice wins.
+
+Thus Alice has a winning strategy for every \(\lambda>\frac{\sqrt2}{2}\).
+
+---
+
+### 3.  Bazza wins for \(0<\lambda<\alpha\)
+
+Bazza uses the following strategy: at each even turn he chooses the maximal allowed number,
+\[
+x_{2k}= \sqrt{2k-Q_{2k-1}} \qquad(k\ge1).
+\]
+We prove by induction that after each even turn \(Q_{2k}=2k\) and \(S_{2k}\ge k\sqrt2\).
+
+*Base \(k=0\)*: trivial.
+
+*Inductive step*: Assume \(Q_{2k}=2k\) and \(S_{2k}\ge k\sqrt2\).  Alice chooses \(x_{2k+1}\ge0\) with \(S_{2k+1}=S_{2k}+x_{2k+1}\le \lambda(2k+1)\).  Because \(\lambda<\alpha\), we have
+\[
+\lambda(2k+1)-S_{2k} \le \lambda(2k+1)-k\sqrt2 = k(2\lambda-\sqrt2)+\lambda.
+\]
+Since \(2\lambda-\sqrt2<0\), the right‑hand side is strictly less than \(\lambda\) (and \(\lambda<\sqrt2/2<\sqrt2\)), so \(x_{2k+1}\le \lambda(2k+1)-S_{2k}<\sqrt2\).  Hence the radicand \(2k+2-Q_{2k+1}=2k+2-(2k+x_{2k+1}^2)=2-x_{2k+1}^2\) is positive, and Bazza’s move is legal:
+\[
+x_{2k+2}= \sqrt{2-x_{2k+1}^2}.
+\]
+Then
+\[
+Q_{2k+2}=Q_{2k}+x_{2k+1}^2+x_{2k+2}^2=2k+2,
+\]
+and
+\[
+S_{2k+2}=S_{2k}+x_{2k+1}+\sqrt{2-x_{2k+1}^2}.
+\]
+For every \(t\in[0,\sqrt2]\) we have \((t+\sqrt{2-t^2})^2 = 2+2t\sqrt{2-t^2}\ge 2\), so \(t+\sqrt{2-t^2}\ge \sqrt2\).  Consequently
+\[
+S_{2k+2}\ge S_{2k}+\sqrt2\ge (k+1)\sqrt2.
+\]
+This completes the induction.
+
+Now because \(\lambda<\alpha\), we have \(2\lambda-\sqrt2<0\); thus for sufficiently large \(k\),
+\[
+k\sqrt2 > \lambda(2k+1).
+\]
+Choose such an integer \(K\).  At the beginning of turn \(2K+1\) we have \(S_{2K}\ge K\sqrt2 > \lambda(2K+1)\).  No non‑negative \(x_{2K+1}\) can satisfy the required inequality, so Alice cannot move and Bazza wins.
+
+Hence Bazza has a winning strategy for every \(0<\lambda<\frac{\sqrt2}{2}\).
+
+---
+
+### 4.  The case \(\lambda=\frac{\sqrt2}{2}\) – draw
+
+We show that neither player has a winning strategy.
+
+*Alice can avoid losing.*  She always chooses \(x_n=0\).  Then \(S_{2k}= \sum_{i=1}^k x_{2i}\) (odd terms are zero).  By (1) we have \(S_{2k}\le k\sqrt2\).  Since
+\[
+\lambda(2k+1)=\frac{\sqrt2}{2}(2k+1)=k\sqrt2+\frac{\sqrt2}{2} > k\sqrt2\ge S_{2k},
+\]
+the slack is always positive, so Alice can always play \(0\).  Hence the game never ends with Alice losing.  Moreover, regardless of Bazza’s moves, the even‑turn constraints guarantee \(Q_{2k}\le 2k\), so the bound (1) holds and Alice can always play zero.  Thus Bazza cannot force a win.
+
+*Bazza can avoid losing.*  He plays the maximal strategy from Section 3.  We verify that this strategy prevents Alice from ever winning.  By the induction of Section 3 (with \(\lambda=\alpha\)), we obtain \(Q_{2k}=2k\) and \(S_{2k}\ge k\sqrt2\).  Consequently
+\[
+\lambda(2k+1)-S_{2k}\le \frac{\sqrt2}{2}(2k+1)-k\sqrt2 = \frac{\sqrt2}{2} < \sqrt2,
+\]
+so Alice’s move satisfies \(x_{2k+1}\le \frac{\sqrt2}{2}<\sqrt2\).  Then
+\[
+Q_{2k+1}=Q_{2k}+x_{2k+1}^2 \le 2k+\Bigl(\frac{\sqrt2}{2}\Bigr)^2 = 2k+\frac12 < 2k+2,
+\]
+so Bazza’s move at turn \(2k+2\) is always legal (the radicand is positive).  The game can therefore continue indefinitely; Bazza never loses.
+
+Since both players have strategies that prevent the opponent from winning, neither has a winning strategy.  The game is a draw.
+
+---
+
+### 5.  Conclusion
+
+\[
+\boxed{\text{Alice has a winning strategy for }\lambda>\frac{\sqrt2}{2},\quad
+\text{Bazza has a winning strategy for }0<\lambda<\frac{\sqrt2}{2},\quad
+\text{for }\lambda=\frac{\sqrt2}{2}\text{ the game is a draw.}}
+\]"
+6,1,1.00,"Let \(n=2025\). The condition that each row and each column contains exactly one uncovered cell means that the uncovered cells form a permutation matrix.  
+By permuting rows and columns (which preserves the structure of the grid and the number of tiles) we may assume without loss of generality that the uncovered cells are exactly the main diagonal \((i,i)\) for \(i=1,\dots,n\). Hence we need to cover all cells with \(i\neq j\) using axis‑aligned rectangles that do not overlap.
+
+**Lower bound.**  
+Consider the \(n-1\) cells \((i,i+1)\) for \(i=1,\dots,n-1\) (the “step” cells above the diagonal). Suppose a rectangle \(R\) contains two such cells \((i,i+1)\) and \((j,j+1)\) with \(i<j\). Then the row interval of \(R\) contains \(i\) and \(j\), and the column interval contains \(i+1\) and \(j+1\). Because \(i+1\le j\), the column interval also contains \(j\). Thus \(R\) would contain the diagonal cell \((j,j)\), which is uncovered – a contradiction. Therefore each rectangle can contain at most one of these \(n-1\) cells. Since all of them must be covered, at least \(n-1\) rectangles are needed for the above‑diagonal region \(A=\{(i,j):i<j\}\).
+
+Similarly, for the below‑diagonal region \(B=\{(i,j):i>j\}\) the cells \((i+1,i)\) for \(i=1,\dots,n-1\) have the same property, so at least \(n-1\) rectangles are needed for \(B\).
+
+No rectangle can contain cells from both \(A\) and \(B\): if it did, its row and column intervals would overlap, forcing it to contain a diagonal cell. Hence the rectangles covering \(A\) and \(B\) are disjoint, and the total number of rectangles is at least \((n-1)+(n-1)=2n-2\).
+
+**Construction achieving \(2n-2\).**  
+For each \(i=1,\dots,n-1\) place a rectangle \(R_i\) consisting of row \(i\) and columns \(i+1,\dots,n\) (a \(1\times(n-i)\) rectangle).  
+For each \(i=1,\dots,n-1\) place a rectangle \(C_i\) consisting of column \(i\) and rows \(i+1,\dots,n\) (a \((n-i)\times1\) rectangle).  
+These \(2n-2\) rectangles are pairwise disjoint. Every cell with \(i<j\) is covered by \(R_i\); every cell with \(i>j\) is covered by \(C_j\). Thus they cover exactly the off‑diagonal cells.
+
+Hence the minimum number of tiles needed is \(2n-2 = 2\cdot2025-2 = 4048\).
+
+\[
+\boxed{4048}
+\]"
