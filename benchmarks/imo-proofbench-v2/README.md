@@ -5,6 +5,9 @@ Evaluation of the Proof-Pilot **step225** checkpoint (medium inference budget) o
 (Luong et al., 2025, [arXiv:2511.01846](https://arxiv.org/abs/2511.01846)) — 60
 olympiad problems (30 Basic + 30 Advanced), each graded 0–7.
 
+Inference was run with the **step225 medium** production config
+([`config-model-step225-budget-medium.yaml`](../../config-model-step225-budget-medium.yaml)).
+
 ## Headline
 
 | Subset | Problems | Mean / 7 | % of max |
