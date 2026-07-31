@@ -1,0 +1,67 @@
+{
+  "grader_model": "gpt-5.6-sol",
+  "reasoning": "high",
+  "graders_per_problem": 8,
+  "aggregation": "majority_vote",
+  "scheme_source": "MathArena/imo_2025",
+  "model": "step225",
+  "budget": "high",
+  "total": {
+    "majority": 23,
+    "mean": 22.75,
+    "out_of": 42,
+    "pct_majority": 54.76,
+    "pct_mean": 54.17
+  },
+  "per_problem": {
+    "1": {
+      "majority": 4,
+      "mean": 3.75,
+      "n_graders": 8,
+      "distribution": {
+        "3": 2,
+        "4": 6
+      }
+    },
+    "2": {
+      "majority": 2,
+      "mean": 2.0,
+      "n_graders": 8,
+      "distribution": {
+        "2": 8
+      }
+    },
+    "3": {
+      "majority": 2,
+      "mean": 2.0,
+      "n_graders": 8,
+      "distribution": {
+        "2": 8
+      }
+    },
+    "4": {
+      "majority": 7,
+      "mean": 7.0,
+      "n_graders": 8,
+      "distribution": {
+        "7": 8
+      }
+    },
+    "5": {
+      "majority": 7,
+      "mean": 7.0,
+      "n_graders": 8,
+      "distribution": {
+        "7": 8
+      }
+    },
+    "6": {
+      "majority": 1,
+      "mean": 1.0,
+      "n_graders": 8,
+      "distribution": {
+        "1": 8
+      }
+    }
+  }
+}
