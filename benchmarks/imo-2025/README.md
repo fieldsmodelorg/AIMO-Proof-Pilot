@@ -21,6 +21,9 @@ Inference was run with the **step225 high** production config
 
 **Majority-vote total: 23 / 42 (54.8%)** (arithmetic mean: 22.75/42).
 
+The 2025 IMO medal boundaries were Bronze 19 / Silver 28 / Gold 35, so **23 is a
+Bronze-medal score**.
+
 ## Grading methodology
 
 Graded with **GPT-5.6-sol** as the autograder against the MathArena `imo_2025`

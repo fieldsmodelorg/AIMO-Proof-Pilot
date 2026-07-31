@@ -16,4 +16,6 @@ Grader: **GPT-5.6-sol**, reasoning **high**, **8 graders/problem**, **majority v
 
 **Majority-vote total: 23 / 42 (54.8%)**  ·  arithmetic-mean total: 22.75 / 42 (54.2%).
 
+2025 IMO medal boundaries: Bronze 19 / Silver 28 / Gold 35 → **23 is a Bronze-medal score**.
+
 Grading is near-deterministic: P2–P6 are unanimous across all 8 graders; only P1 is split (six of eight gave 4).
