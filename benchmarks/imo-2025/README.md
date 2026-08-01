@@ -4,6 +4,9 @@ Evaluation of the **step225** model (Olmo-3.1-32B OPD) on the six **IMO 2025**
 problems, each graded 0–7. The provided proofs are one rollout per problem at the
 **high** inference budget of the generate–verify–refine harness.
 
+Inference was run with the **step225 high** production config
+([`config-model-step225-budget-high.yaml`](../../config-model-step225-budget-high.yaml)).
+
 ## Headline
 
 | Problem | Score /7 | Result |
