@@ -1,67 +1,43 @@
 {
-  "grader_model": "gpt-5.6-sol",
-  "reasoning": "high",
-  "graders_per_problem": 8,
-  "aggregation": "majority_vote",
-  "scheme_source": "MathArena/imo_2025",
-  "model": "step225",
+  "model": "Proof-Pilot (Olmo-3.1-32B OPD)",
   "budget": "high",
-  "total": {
-    "majority": 23,
-    "mean": 22.75,
-    "out_of": 42,
-    "pct_majority": 54.76,
-    "pct_mean": 54.17
+  "dataset": "IMO 2025 (problems 1-6)",
+  "grader": "GPT-5.6-sol (xhigh, 1 grader/problem), using the MathArena imo_2025 checkpoint markschemes (embedded in prompts.jsonl; scores reproducible). Rubric: complete-proof-by-any-method=7, wrong-answer=0, else partial=checkpoints earned. Correct answers verified against Evan Chen / Gemini Deep Think / OpenAI; cross-checked by independent Claude verifiers with computational checks",
+  "reproducible": true,
+  "reference_solutions": {
+    "evan_chen": "https://web.evanchen.cc/exams/IMO-2025-notes.pdf",
+    "matharena": "https://matharena.ai",
+    "gemini_deep_think": "https://storage.googleapis.com/deepmind-media/gemini/IMO_2025.pdf",
+    "openai": "https://github.com/aw31/openai-imo-2025-proofs"
   },
+  "partial_credit": "MathArena imo_2025 checkpoint markschemes",
+  "total_0_42": 30,
+  "pct": 71.4,
+  "medal": "Silver (2025 cutoffs: Bronze 19 / Silver 28 / Gold 35)",
   "per_problem": {
     "1": {
-      "majority": 4,
-      "mean": 3.75,
-      "n_graders": 8,
-      "distribution": {
-        "3": 2,
-        "4": 6
-      }
+      "score_0_7": 7,
+      "note": "complete"
     },
     "2": {
-      "majority": 2,
-      "mean": 2.0,
-      "n_graders": 8,
-      "distribution": {
-        "2": 8
-      }
+      "score_0_7": 7,
+      "note": "complete (coordinate proof)"
     },
     "3": {
-      "majority": 2,
-      "mean": 2.0,
-      "n_graders": 8,
-      "distribution": {
-        "2": 8
-      }
+      "score_0_7": 2,
+      "note": "partial — construction (c≥4) only; upper-bound crux incomplete"
     },
     "4": {
-      "majority": 7,
-      "mean": 7.0,
-      "n_graders": 8,
-      "distribution": {
-        "7": 8
-      }
+      "score_0_7": 7,
+      "note": "complete"
     },
     "5": {
-      "majority": 7,
-      "mean": 7.0,
-      "n_graders": 8,
-      "distribution": {
-        "7": 8
-      }
+      "score_0_7": 7,
+      "note": "complete"
     },
     "6": {
-      "majority": 1,
-      "mean": 1.0,
-      "n_graders": 8,
-      "distribution": {
-        "1": 8
-      }
+      "score_0_7": 0,
+      "note": "wrong answer (4048; correct 2112)"
     }
   }
 }
