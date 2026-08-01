@@ -1,66 +1,75 @@
-# IMO 2025 — step225 (high budget)
+# IMO 2025 — step225 model (high budget)
 
-Evaluation of the Proof-Pilot **step225** checkpoint (high inference budget) on the six
-**IMO 2025** problems, each graded 0–7 against the
-[MathArena](https://matharena.ai) `imo_2025` checkpoint markscheme.
-
-Inference was run with the **step225 high** production config
-([`config-model-step225-budget-high.yaml`](../../config-model-step225-budget-high.yaml)).
+Evaluation of the **step225** model (Olmo-3.1-32B OPD) on the six **IMO 2025**
+problems, each graded 0–7. The provided proofs are one rollout per problem at the
+**high** inference budget of the generate–verify–refine harness.
 
 ## Headline
 
-| Problem | Majority /7 | Mean /7 | Grader distribution |
-|---|--:|--:|---|
-| P1 | **4** | 3.75 | `3`×2 `4`×6 |
-| P2 | **2** | 2.00 | `2`×8 |
-| P3 | **2** | 2.00 | `2`×8 |
-| P4 | **7** | 7.00 | `7`×8 |
-| P5 | **7** | 7.00 | `7`×8 |
-| P6 | **1** | 1.00 | `1`×8 |
-| **Total** | **23 / 42** | 22.75 / 42 | — |
+| Problem | Score /7 | Result |
+|---|--:|---|
+| P1 | **7** | complete — sunny lines, k ∈ {0,1,3} |
+| P2 | **7** | complete **coordinate-geometry** proof of the tangency |
+| P3 | **2** | construction (c ≥ 4) only; upper-bound crux incomplete |
+| P4 | **7** | complete — answer 6·12ᴷ·J, gcd(J,10)=1 |
+| P5 | **7** | complete — game threshold λ = 1/√2 |
+| P6 | **0** | wrong answer (4048; correct 2112) |
+| **Total** | **30 / 42** | |
 
-**Majority-vote total: 23 / 42 (54.8%)** (arithmetic mean: 22.75/42).
+**30 / 42 → Silver** (2025 medal cutoffs: Bronze 19 / Silver 28 / Gold 35).
 
-The 2025 IMO medal boundaries were Bronze 19 / Silver 28 / Gold 35, so **23 is a
-Bronze-medal score**.
+Graded by **GPT-5.6-sol** (xhigh reasoning); partial credit follows the
+[MathArena](https://matharena.ai) `imo_2025` checkpoint markschemes.
 
 ## Grading methodology
 
-Graded with **GPT-5.6-sol** as the autograder against the MathArena `imo_2025`
-markscheme (see `grading/prompt_template.md`):
+Each proof was graded **0–7 by GPT-5.6-sol** (xhigh reasoning, 1 grader/problem) using the
+[MathArena](https://matharena.ai) `imo_2025` **checkpoint markschemes**, which are embedded
+in [`grading/prompts.jsonl`](grading/prompts.jsonl) — so the scores are **reproducible**:
+run those prompts through GPT-5.6-sol (xhigh). The rubric (full text in
+[`grading/prompt_template.md`](grading/prompt_template.md)):
 
-- **Checkpoint scheme, scale 0–7.** Each problem's grading scheme is a set of
-  checkpoints with point values that sum to 7; the grader awards points per checkpoint
-  and sums. This is MathArena's grading method, not a holistic 0–7 judgement.
-- The grader is given the **problem, the model's proof, and the per-problem grading
-  scheme**; it emits per-checkpoint analysis ending in a single
-  `<points>N out of 7</points>` block.
-- **8 graders per problem**, aggregated by **majority vote** (modal score). Reasoning
-  effort **high**.
+- a **complete rigorous proof by any method** scores **7** — a fully-carried-out
+  coordinate/analytic bash counts, even if it matches none of the synthetic checkpoints;
+  minor non-load-bearing errors don't reduce it;
+- otherwise, **partial credit** = the sum of the checkpoints genuinely earned (a valid
+  construction earns its checkpoint even if the rest of the argument is incomplete or
+  fabricated).
 
-**Grader stability.** The autograder is near-deterministic: 5 of 6 problems are
-unanimous across all 8 judgments; only P1 is split (six of eight gave 4). The
-arithmetic-mean total (22.75/42) and majority-vote total (23/42) agree to
-within rounding. This measures grader *self-consistency*, not correctness against a
-human.
+The correct answers were verified against reference solutions from
+[Evan Chen](https://web.evanchen.cc/exams/IMO-2025-notes.pdf),
+[Gemini Deep Think](https://storage.googleapis.com/deepmind-media/gemini/IMO_2025.pdf),
+and [OpenAI](https://github.com/aw31/openai-imo-2025-proofs), and each grade was
+**cross-checked by independent Claude verifiers** that re-derived every finite claim,
+coordinate identity, and game strategy in Python.
+
+## Reading the scores
+
+- **P2 (coordinate proof).** The model solves P2 by a complete coordinate/analytic bash
+  — a legitimate alternative that OpenAI and Gemini also used. A checkpoint-literal
+  autograder under-scores it (~2, matching none of the *synthetic* checkpoints); it is a
+  complete proof → **7**.
+- **P3 (partial).** Right answer (c = 4) and a valid construction (c ≥ 4), but the hard
+  upper-bound crux — the identity-function branch — is "closed" by a false arithmetic
+  step. Only the construction checkpoint is earned → **2** (range 0–4 across graders).
+- **P6 (wrong).** The proof reduces to a fixed diagonal permutation via an invalid
+  "WLOG" (row/column permutations don't preserve rectangles), giving 4048; the correct
+  answer is **2112** = ⌈n + 2√n − 3⌉. This was the hardest problem — neither OpenAI nor
+  Gemini publicly solved it either.
 
 ## Contents
 
-- `solutions.csv` — the 6 model proofs with their majority and mean scores
-  (`Problem ID, score_majority, score_mean_8, proof`).
-- `grading/SUMMARY.md` — the table above plus per-problem grader distributions.
-- `grading/scores.json` — machine-readable aggregates + per-problem scores and
-  distributions.
-- `grading/prompt_template.md` — the exact system + user prompt template and run config.
-- `grading/prompts.jsonl` — one line per problem (`{problem_id, messages}`): the exact
-  `[system, user]` input sent to the grader, embedding the problem, the grading scheme,
-  and the model's solution (reproducibility).
-
-The problems and grading schemes are from
-[MathArena/imo_2025](https://huggingface.co/datasets/MathArena/imo_2025) (see the dataset
-page for licensing).
+- `solutions.csv` — the 6 proofs with per-problem score and note
+  (`Problem ID, score_0_7, note, proof`).
+- `grading/SUMMARY.md` — the score table + notes.
+- `grading/scores.json` — machine-readable per-problem scores + total.
+- `grading/prompt_template.md` — the full grading rubric + prompt template.
+- `grading/prompts.jsonl` — the exact `[system, user]` grading input per problem,
+  **self-contained**: the MathArena checkpoint markscheme (CC-BY) is embedded, so
+  re-running these 6 prompts through GPT-5.6-sol (xhigh) reproduces the scores.
 
 ## Caveats
 
-- Numbers are the **GPT-5.6-sol autograder**, not verified human grades.
-- One rollout per problem (step225, high budget); generation variance is not captured.
+- Scores are **LLM-graded** (GPT-5.6-sol + Claude cross-check), not human coordination;
+  the P3 and one-line P1/P5 calls are the most judgment-dependent.
+- One rollout per problem; generation variance is not captured.
