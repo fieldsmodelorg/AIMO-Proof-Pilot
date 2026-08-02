@@ -35,17 +35,22 @@ of 42).
 
 ## Scores
 
+We evaluated `Proof Pilot (high budget)` and `IMO step225 (high budget)` on the full set of problems. There were lots of technical details P2, P3, P4 and P6 on which models could fail which made it unlikely that an LLM could make sufficient progress on a further run, so we skipped them.
+
 | Model | P1 | P2 | P3 | P4 | P5 | P6 | Total |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Proof Pilot (high) | 7 | 0 | 0 | 7 | 5\* | 0† | **19** |
 | IMO step225 (high) | 7 | 0 | 0 | 7 | 7 | 0† | **21** |
+| `step225_run2` | 7 | — | — | 7 | 7 | — | **21** |
+
+Additionally, we re-evaluated `step225_run3` a third time on problem P5, on which it scored 7.
 
 \* **P5, Proof Pilot** — defaulted to 5 in the total. Without access to the
 official markscheme this score is uncertain: it could reasonably be as low as 2,
 though it is very unlikely to be lower given the score distribution on the
 actual IMO. Even at 2, the total (16) would still be a Bronze-medal score.
 
-† **P6** — both submissions are probable 0s, but each contains some useful
+† **P6** — both `Proof Pilot (high)` and ´IMO step225 (high budget)` submissions are probable 0s, but each contains some useful
 work, so there is a small chance either could score 1.
 
 Plausible ranges: Proof Pilot 16–20, IMO step225 21–22. Both reach a
@@ -53,12 +58,11 @@ Bronze-medal score, with IMO step225 close to (but not reaching) Silver.
 
 Supplementary xhigh reruns (partial submissions, so no meaningful total):
 
-| Submission | P1 | P4 | P5 |
-| --- | --- | --- | --- |
-| `step225_run2` | 7 | 7 | 7 |
-| `step225_run3` | — | — | 7 |
+
 
 ## Per-problem commentary
+
+We analyze the `Proof Pilot (high budget)` and `IMO step225 (high budget)` model.
 
 - **P1** — Both main submissions are complete solutions: 7 each.
 - **P2** — Both score 0. Proof Pilot mis-converts one of the angle relations
