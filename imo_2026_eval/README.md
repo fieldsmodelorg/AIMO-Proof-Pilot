@@ -28,7 +28,7 @@ README.md    # this file
 The submissions have been graded according to broad IMO standards. We have not
 had access to the official IMO markschemes, so we cannot grade against them.
 Where this creates uncertainty, it is flagged explicitly below and in
-`scores.csv`.
+`scores.csv`. The grading was performed by a former IMO medalist.
 
 The IMO 2026 medal boundaries were: **Bronze 16, Silver 23, Gold 29** (out
 of 42).
