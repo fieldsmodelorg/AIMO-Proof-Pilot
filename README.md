@@ -168,7 +168,7 @@ container downloads the checked-in default model pair only when the YAML uses
 the default paths and those assets are missing.
 
 **By default the container runs the committed IMO-2026 set** — the exact 6-problem
-`evaluation/data/imo2026-latex-test.csv` that was run on NII. You do **not** need to
+`evaluation/data/imo2026-latex-test.csv` that was run on the cluster from the [LLMC](https://llmc.nii.ac.jp/en/) at [NII](https://nii.ac.jp/en/). You do **not** need to
 create anything to reproduce our results; leave `/workspace/test.csv` absent and the
 `submission` entrypoint falls back to the committed CSV automatically.
 
