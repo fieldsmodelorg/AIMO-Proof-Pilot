@@ -3,18 +3,20 @@
 FROM ghcr.io/astral-sh/uv:0.11.19 AS uv
 
 # ---------------------------------------------------------------------------
-# Stage: the pinned SGLang runtime (/opt/pp), inherited from a prebuilt base
-# IMAGE in the org container registry -- so the build's runtime dependency is a
-# container registry (org-owned, digest-pinnable), not an external dataset. The
-# final image stays self-contained: no runtime download at build or boot, no
-# HF_TOKEN. Only the (public) model weights are fetched at boot.
+# Stage: the pinned SGLang runtime (/opt/pp). It is REUSED from the existing
+# published release image -- which already bakes /opt/pp -- so the build depends
+# only on the org container registry, not an external dataset, and nothing new
+# has to be built or published. The `COPY --from=runtime /opt/pp` in the final
+# stage lifts ONLY /opt/pp into the fresh image; everything else here is dropped.
 #
-# Publish the base ONCE from the existing bytes -- no rebuild, no GPU, no HF
-# token -- per runtime/PUBLISH.md, then pin RUNTIME_BASE_IMAGE by @sha256 digest.
-# The SGLang attention-sink + DFlash patches live in-repo (sglang_patches/) and
-# are applied on top at container boot, so this base stays unpatched + modifiable.
+# RUNTIME_BASE_IMAGE may be any image that carries a ready /opt/pp; pin it by
+# @sha256 digest for strict reproducibility (see runtime/README.md). The base
+# image must stay published and readable at build time (keep the GHCR package
+# public). The SGLang attention-sink + DFlash patches live in-repo
+# (sglang_patches/) and are applied on top at container boot, so the runtime is
+# still modifiable -- fork the repo, edit the patches/config, rebuild.
 # ---------------------------------------------------------------------------
-ARG RUNTIME_BASE_IMAGE=ghcr.io/fieldsmodelorg/proof-pilot-runtime:v1
+ARG RUNTIME_BASE_IMAGE=ghcr.io/fieldsmodelorg/aimo-proof-pilot:sha-29c2ec5
 FROM ${RUNTIME_BASE_IMAGE} AS runtime
 ARG DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]

@@ -14,7 +14,7 @@ git clone https://github.com/hav4ik/imo-inference /tmp/chankhavu/imo-inference
 cd /tmp/chankhavu/imo-inference
 
 # 2. the runtime -- provide a local archive (extract /opt/pp from the container
-#    base image; see ../runtime/PUBLISH.md), or set HF_REPO=owner/name that hosts it
+#    base image; see ../runtime/README.md), or set HF_REPO=owner/name that hosts it
 PP_ENV_ARCHIVE=/path/to/proof-pilot-env.bin ./install/install_infervenv.sh
 
 # 3. use it -- in EVERY shell
@@ -33,7 +33,7 @@ Defaults assume `PP_BASE=/tmp/chankhavu`; override with `--venv` / `--repo` /
 
 The runtime is **not** built from a requirements file — it's a prebuilt,
 relocatable venv (originally built by Yi-Chia Chen / ycchen). It is distributed
-as a container base image (see [../runtime/PUBLISH.md](../runtime/PUBLISH.md));
+as a container base image (see [../runtime/README.md](../runtime/README.md));
 for a bare-metal install, extract `/opt/pp` from that image into a local
 `proof-pilot-env.bin` and pass it via `PP_ENV_ARCHIVE`.
 

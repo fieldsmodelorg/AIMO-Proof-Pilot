@@ -27,7 +27,7 @@ PYBASE="$RUNTIME/pybase"
 CACHES="$RUNTIME/caches"
 REPO="${REPO:-$BASE/imo-inference}"
 
-# The runtime is distributed as a container base image (see runtime/PUBLISH.md), not
+# The runtime is distributed as a container base image (see runtime/README.md), not
 # an HF dataset. For a bare-metal install, provide the runtime archive locally via
 # PP_ENV_ARCHIVE (extract /opt/pp from the base image and tar it), or set HF_REPO to
 # your own owner/name that hosts proof-pilot-env.bin. No default HF source is set;
@@ -137,7 +137,7 @@ resolve_archive() {
 
     [[ -n "$HF_REPO" ]] || die "no runtime source configured: set PP_ENV_ARCHIVE to a local \
 proof-pilot-env.bin, or HF_REPO=owner/name that hosts it. The runtime now ships as a \
-container base image (see runtime/PUBLISH.md); extract /opt/pp from it for a bare-metal install."
+container base image (see runtime/README.md); extract /opt/pp from it for a bare-metal install."
 
     local url="https://huggingface.co/datasets/$HF_REPO/resolve/$HF_REVISION/$HF_FILE"
     log "downloading $HF_REPO:$HF_FILE (~4.6 GiB, resumable)"

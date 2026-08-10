@@ -17,7 +17,7 @@ DRAFT_MODEL=
 MODEL_REPO="${MODEL_REPO:-fieldsmodelorg/Olmo-3.1-32B-Think-OPD-ProofPilot}"
 MODEL_REVISION="${MODEL_REVISION:-87707b8030800b1e531b78c9823cb80a63d66e5e}"
 # Runtime venv (patched SGLang + kernels). The image BAKES this at /opt/pp from
-# RUNTIME_BASE_IMAGE at build time (see runtime/PUBLISH.md), so the normal boot
+# RUNTIME_BASE_IMAGE at build time (see runtime/README.md), so the normal boot
 # path uses the baked runtime and downloads nothing. RUNTIME_HF_REPO/REVISION are
 # consulted only by the optional RUNTIME_DATASET override path below (unset default).
 RUNTIME_HF_REPO="${RUNTIME_HF_REPO:-}"
@@ -157,7 +157,7 @@ fetch_runtime_payload() {
         rm -rf "$extract_root"
     else
         die "runtime not baked at $RUNTIME_ROOT and no RUNTIME_DATASET override set. "\
-"The image bakes /opt/pp from RUNTIME_BASE_IMAGE at build time (see runtime/PUBLISH.md); "\
+"The image bakes /opt/pp from RUNTIME_BASE_IMAGE at build time (see runtime/README.md); "\
 "rebuild the image, mount a prebuilt /opt/pp, or set RUNTIME_DATASET to a runtime archive."
     fi
 }
