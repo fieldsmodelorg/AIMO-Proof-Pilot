@@ -380,8 +380,8 @@ Commands:
   help        Show this message.
 
 CONFIG must point to an existing YAML file for every command except help.
-Any other command is executed after bootstrap. Persistent runtime, model, cache,
-log, and result data live under /workspace.
+Any other command is executed after bootstrap. Persistent model, cache, log, and
+result data live under /workspace (the runtime is baked into the image at /opt/pp).
 EOF
 }
 

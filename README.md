@@ -140,10 +140,11 @@ applies the checked-in SGLang patches (fast, in-place) and resolves the models.
 
 ### Prepare persistent storage
 
-Mount persistent storage at the internal `/workspace` path. It holds the runtime,
-models, caches, `test.csv`, `submission.csv`, and resumable search artifacts.
-The host path is arbitrary; these examples use `$PWD/workspace`. Allow at least
-200 GB for the checked-in default model pair and runtime.
+Mount persistent storage at the internal `/workspace` path. It holds the models,
+caches, `test.csv`, `submission.csv`, and resumable search artifacts. (The SGLang
+runtime is baked into the image at `/opt/pp`, not under `/workspace`.) The host
+path is arbitrary; these examples use `$PWD/workspace`. Allow at least 200 GB for
+the checked-in default model pair, caches, and artifacts.
 
 Fetch the selected commit configuration, then edit any values needed for the
 run:
@@ -196,8 +197,8 @@ docker run --rm --gpus all --ipc=host --shm-size=32g \
   "$IMAGE" submission
 ```
 
-The command installs the persistent runtime if needed, resolves the configured
-models, applies the selected commit patches, starts and validates SGLang, and
+The command resolves the configured models, applies the selected commit patches,
+starts and validates SGLang, and
 processes input rows sequentially. It writes exactly these columns to
 `$PWD/workspace/submission.csv`:
 

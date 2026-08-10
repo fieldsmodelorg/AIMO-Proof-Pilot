@@ -10,9 +10,9 @@
 # bundled standalone CPython (.runtime/pybase). Relocating = rewriting
 # pyvenv.cfg's `home`. Without that, `import os` dies.
 #
-# Usage:
-#   ./install_infervenv.sh                       # download archive from HF
-#   PP_ENV_ARCHIVE=/path/pp-env.bin ./install_infervenv.sh   # use local archive
+# Usage (needs a runtime archive -- there is no default download source):
+#   PP_ENV_ARCHIVE=/path/proof-pilot-env.bin ./install_infervenv.sh   # local archive
+#   HF_REPO=owner/name ./install_infervenv.sh                         # your own HF host
 #   ./install_infervenv.sh --repo /tmp/chankhavu/imo-inference
 #
 # Re-runnable. Steps are individually skippable via markers; --repatch reapplies
@@ -63,7 +63,7 @@ install_infervenv.sh — proof-pilot inference runtime installer
 
 Environment:
   PP_ENV_ARCHIVE  local proof-pilot-env.bin (skips the HF download)
-  HF_TOKEN        optional; $HF_REPO is public, only needed for a private fork
+  HF_TOKEN        optional; only needed if HF_REPO points at a private repo
   KEEP_ARCHIVE=1  keep the downloaded archive after extraction
 EOF
 }
