@@ -13,6 +13,8 @@ raw/         # the original submission CSVs (id, proof) as downloaded
 grading/     # assessment prompt template, prompt-builder script, and the
              #   official IMO 2026 score distribution
 scores.csv   # machine-readable per-problem scores (with uncertainty notes)
+llm_partial_marks_report.md
+             # spot check of the LLM-awarded partial marks in deedy/imo-2026
 README.md    # this file
 ```
 
@@ -109,6 +111,12 @@ does depend on the strength of the grading model), but LLM-awarded partial
 marks like 1/7 or 3/7, given without access to the markscheme, are guesswork.
 They should be treated with extreme scepticism, and they tend to inflate
 totals.
+
+We've written this up in more detail in
+[`llm_partial_marks_report.md`](llm_partial_marks_report.md) - a spot check of
+the LLM-awarded partial marks in one published comparison
+([deedy/imo-2026](https://github.com/deedy/imo-2026)), with concrete examples
+of marks that would be zeros at the actual IMO.
 
 ## Scores
 
