@@ -79,9 +79,9 @@ search:
 # run command must export HF_TOKEN before sourcing activate-env.sh, which
 # redirects HF_HOME and would otherwise hide a file-based login token.
 traces:
-  enabled: true
+  enabled: false
   # Alias-prefixed (teammates create their own <alias>-* datasets in the org).
-  dataset_repo: imo2026-challenge/chankhavu-imo-reasoning-traces
+  dataset_repo: ""   # set to your own owner/name to enable trace upload
   secrets_file: ""
   interval_seconds: 600
   private: true

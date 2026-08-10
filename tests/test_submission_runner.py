@@ -5,6 +5,8 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+import yaml
+
 
 REPO = Path(__file__).resolve().parents[1]
 HARNESS = REPO / "evaluation" / "harness"
@@ -296,9 +298,10 @@ class _RecordingUploader:
 
 
 class TracesTokenGatingTests(unittest.IsolatedAsyncioTestCase):
-    """config.yaml has traces.enabled=true + empty secrets_file. Whether uploads
-    happen must depend on an AMBIENT token being available: none -> skip (do not
-    crash); present -> upload path runs."""
+    """Trace upload is OFF by default in config.yaml; these tests enable it (with a
+    dataset_repo) so they can exercise the token gating: whether uploads happen must
+    depend on an AMBIENT token being available -- none -> skip (do not crash);
+    present -> upload path runs."""
 
     def setUp(self):
         _RecordingUploader.instances = []
@@ -309,13 +312,20 @@ class TracesTokenGatingTests(unittest.IsolatedAsyncioTestCase):
             input_path = root / "test.csv"
             output_path = root / "submission.csv"
             input_path.write_text("id,problem\n0,Prove the claim.\n", encoding="utf-8")
+            # config.yaml ships with traces disabled; enable it (with a repo) here so
+            # the upload path exists and its token gating is what's under test.
+            cfg = yaml.safe_load((REPO / "config.yaml").read_text(encoding="utf-8"))
+            cfg["traces"]["enabled"] = True
+            cfg["traces"]["dataset_repo"] = "owner/name"
+            config_path = root / "config.yaml"
+            config_path.write_text(yaml.safe_dump(cfg), encoding="utf-8")
             with (
                 patch.object(submission_runner, "AsyncChatClient", _FakeClient),
                 patch.object(submission_runner, "ProblemSearch", _FakeSearch),
                 patch.object(submission_runner, "TraceUploader", _RecordingUploader),
             ):
                 await submission_runner.run_submission(
-                    REPO / "config.yaml", input_path, output_path, root / "artifacts"
+                    config_path, input_path, output_path, root / "artifacts"
                 )
             with output_path.open(newline="", encoding="utf-8") as source:
                 return list(csv.DictReader(source))

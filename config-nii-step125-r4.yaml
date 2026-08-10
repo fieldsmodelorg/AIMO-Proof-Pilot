@@ -64,8 +64,8 @@ search:
   seed: 0
 
 traces:
-  enabled: true
-  dataset_repo: imo2026-challenge/chankhavu-imo-reasoning-traces
+  enabled: false
+  dataset_repo: ""   # set to your own owner/name to enable trace upload
   secrets_file: ""
   interval_seconds: 600
   private: true

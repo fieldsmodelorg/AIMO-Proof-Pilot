@@ -27,10 +27,12 @@ PYBASE="$RUNTIME/pybase"
 CACHES="$RUNTIME/caches"
 REPO="${REPO:-$BASE/imo-inference}"
 
-# chankhavu/proof-pilot-env is PUBLIC -> anonymous download, no HF_TOKEN needed
-# (HF_TOKEN is still honored if set, e.g. for a private fork). Revision + sha256
-# are pinned to the exact runtime the Docker image bakes, so this venv matches it.
-HF_REPO="${HF_REPO:-chankhavu/proof-pilot-env}"
+# The runtime is distributed as a container base image (see runtime/PUBLISH.md), not
+# an HF dataset. For a bare-metal install, provide the runtime archive locally via
+# PP_ENV_ARCHIVE (extract /opt/pp from the base image and tar it), or set HF_REPO to
+# your own owner/name that hosts proof-pilot-env.bin. No default HF source is set;
+# HF_REVISION + sha256 still pin the content when HF_REPO is used.
+HF_REPO="${HF_REPO:-}"
 HF_FILE="${HF_FILE:-proof-pilot-env.bin}"
 HF_REVISION="${HF_REVISION:-5c0bf00bcc38c91b336f99d68aaab6b66aa93c1d}"
 ARCHIVE="${PP_ENV_ARCHIVE:-}"          # local archive path; skips download
@@ -132,6 +134,10 @@ resolve_archive() {
         log "archive already downloaded: $ARCHIVE"
         return
     fi
+
+    [[ -n "$HF_REPO" ]] || die "no runtime source configured: set PP_ENV_ARCHIVE to a local \
+proof-pilot-env.bin, or HF_REPO=owner/name that hosts it. The runtime now ships as a \
+container base image (see runtime/PUBLISH.md); extract /opt/pp from it for a bare-metal install."
 
     local url="https://huggingface.co/datasets/$HF_REPO/resolve/$HF_REVISION/$HF_FILE"
     log "downloading $HF_REPO:$HF_FILE (~4.6 GiB, resumable)"

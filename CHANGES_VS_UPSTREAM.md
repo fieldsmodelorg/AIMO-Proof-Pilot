@@ -72,9 +72,8 @@ proof run. Uploads run in a worker thread (search keeps serving) with only one
 in flight at a time. `SECRETS.*`, `*.tmp`, and `*.token` are never uploaded even
 if they sit under the artifacts dir. The section is validated strictly by
 `eval_config.py` like every other; being optional, existing configs without it
-stay valid. `config.yaml` ships it enabled (targeting
-`chankhavu/imo-reasoning-traces`); `config-dynamic.yaml` / `config-blackwell.yaml`
-omit it.
+stay valid. Trace upload ships **disabled** by default (no dataset target); set
+`traces.enabled: true` + your own `traces.dataset_repo` to upload.
 
 ## Blatant bug fixes (always on, no knob)
 

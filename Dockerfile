@@ -3,43 +3,30 @@
 FROM ghcr.io/astral-sh/uv:0.11.19 AS uv
 
 # ---------------------------------------------------------------------------
-# Stage: bake the pinned SGLang runtime venv into an image layer.
-# The runtime (patched-SGLang venv + kernels) is downloaded, sha256-verified,
-# extracted, relocated, and topped with the pinned PyPI deps ONCE, at build
-# time -- so the final image is self-contained: no runtime download, no
-# HF_TOKEN for the runtime, no per-boot pip install. Only the (public) model
-# weights are fetched at boot.
+# Stage: the pinned SGLang runtime (/opt/pp), inherited from a prebuilt base
+# IMAGE in the org container registry -- so the build's runtime dependency is a
+# container registry (org-owned, digest-pinnable), not an external dataset. The
+# final image stays self-contained: no runtime download at build or boot, no
+# HF_TOKEN. Only the (public) model weights are fetched at boot.
 #
-# Source is the revision-pinned HF mirror; pass an HF token as a build secret
-# (`--secret id=hf_token,env=HF_TOKEN`) if the mirror is private, or make the
-# mirror public and no secret is needed. The sha256 pin freezes the content.
+# Publish the base ONCE from the existing bytes -- no rebuild, no GPU, no HF
+# token -- per runtime/PUBLISH.md, then pin RUNTIME_BASE_IMAGE by @sha256 digest.
+# The SGLang attention-sink + DFlash patches live in-repo (sglang_patches/) and
+# are applied on top at container boot, so this base stays unpatched + modifiable.
 # ---------------------------------------------------------------------------
-FROM nvidia/cuda:13.0.3-devel-ubuntu24.04 AS runtime
+ARG RUNTIME_BASE_IMAGE=ghcr.io/fieldsmodelorg/proof-pilot-runtime:v1
+FROM ${RUNTIME_BASE_IMAGE} AS runtime
 ARG DEBIAN_FRONTEND=noninteractive
-ARG RUNTIME_HF_REPO=chankhavu/proof-pilot-env
-ARG RUNTIME_HF_REVISION=5c0bf00bcc38c91b336f99d68aaab6b66aa93c1d
-ARG RUNTIME_ARCHIVE_SHA256=71190f4f2554c29ec6b99ae6bda7af64f1348876b85cfbdfa1d102f9dfa8c831
-
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends bash ca-certificates curl tar \
-    && rm -rf /var/lib/apt/lists/*
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 COPY --from=uv /uv /usr/local/bin/uv
 COPY evaluation/requirements.txt /tmp/requirements.txt
 
-RUN --mount=type=secret,id=hf_token \
-    set -Eeuo pipefail; \
-    token="$(cat /run/secrets/hf_token 2>/dev/null || true)"; \
-    url="https://huggingface.co/datasets/${RUNTIME_HF_REPO}/resolve/${RUNTIME_HF_REVISION}/proof-pilot-env.bin"; \
-    echo "downloading pinned runtime ${RUNTIME_HF_REPO}@${RUNTIME_HF_REVISION}"; \
-    curl -fL ${token:+-H "Authorization: Bearer ${token}"} "$url" -o /tmp/pp.bin; \
-    echo "${RUNTIME_ARCHIVE_SHA256}  /tmp/pp.bin" | sha256sum -c -; \
-    mkdir -p /opt/pp; \
-    tar -xzf /tmp/pp.bin -C /opt/pp --strip-components=1; \
-    rm -f /tmp/pp.bin; \
+# /opt/pp comes prebuilt + relocated from the base image. Re-assert the pinned
+# PyPI deps so evaluation/requirements.txt stays authoritative, then verify the
+# runtime imports.
+RUN set -Eeuo pipefail; \
     test -x /opt/pp/venv/bin/python; \
     test -x /opt/pp/pybase/bin/python3; \
-    sed -i 's|^home = .*|home = /opt/pp/pybase/bin|' /opt/pp/venv/pyvenv.cfg; \
     UV_LINK_MODE=copy /usr/local/bin/uv pip install \
         --python /opt/pp/venv/bin/python -r /tmp/requirements.txt; \
     touch "/opt/pp/.proof-pilot-deps-$(sha256sum /tmp/requirements.txt | awk '{print $1}')"; \

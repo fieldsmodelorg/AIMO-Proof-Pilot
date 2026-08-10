@@ -20,10 +20,10 @@ README.md    # this file
 
 | Submission | Model / setting | Problems | Config | Source |
 | --- | --- | --- | --- | --- |
-| `imo2026-deploy-budget-high-tournament` | Proof Pilot (high budget) | 1-6 | deploy, high budget | [submission.csv](https://huggingface.co/datasets/imo2026-challenge/chankhavu-imo-reasoning-traces/blob/main/imo2026-deploy-budget-high-tournament/submission.csv) |
-| `imo2026-step225-budget-high-tournament` | IMO step225 (high budget) | 1-6 | step225, high budget | [submission.csv](https://huggingface.co/datasets/imo2026-challenge/chankhavu-imo-reasoning-traces/blob/main/imo2026-step225-budget-high-tournament/submission.csv) |
-| `step225_run2` | IMO step225 (xhigh budget, rerun) | 1, 4, 5 | step225, xhigh budget | [submission.csv](https://huggingface.co/datasets/imo2026-challenge/chankhavu-imo-reasoning-traces/blob/main/imo2026-step225-budget-xhigh-P1P4P5/submission.csv) |
-| `step225_run3` | IMO step225 (xhigh budget, rerun) | 5 | step225, xhigh budget | [submission.csv](https://huggingface.co/datasets/imo2026-challenge/chankhavu-imo-reasoning-traces/blob/main/imo2026-step225-budget-xhigh-P5/submission.csv) |
+| `imo2026-deploy-budget-high-tournament` | Proof Pilot (high budget) | 1-6 | deploy, high budget | [submission.csv](raw/imo2026-deploy-budget-high-tournament_submission.csv) |
+| `imo2026-step225-budget-high-tournament` | IMO step225 (high budget) | 1-6 | step225, high budget | [submission.csv](raw/imo2026-step225-budget-high-tournament_submission.csv) |
+| `step225_run2` | IMO step225 (xhigh budget, rerun) | 1, 4, 5 | step225, xhigh budget | [submission.csv](raw/step225_run2_submission.csv) |
+| `step225_run3` | IMO step225 (xhigh budget, rerun) | 5 | step225, xhigh budget | [submission.csv](raw/step225_run3_submission.csv) |
 
 ## Grading methodology
 

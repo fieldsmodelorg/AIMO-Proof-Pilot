@@ -99,9 +99,9 @@ search:
 # Upload runs every interval_seconds and once at shutdown; errors never abort the
 # run. Remove this whole section to disable.
 traces:
-  enabled: true
+  enabled: false
   # Alias-prefixed so it doesn't collide with teammates' datasets in the org.
-  dataset_repo: imo2026-challenge/chankhavu-imo-reasoning-traces
+  dataset_repo: ""   # set to your own owner/name to enable trace upload
   # "" -> use the ambient HF token (HF_TOKEN env or `hf auth login`).
   secrets_file: ""
   interval_seconds: 600

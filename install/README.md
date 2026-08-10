@@ -13,8 +13,9 @@ can run the image, use that instead; this exists for bare nodes.
 git clone https://github.com/hav4ik/imo-inference /tmp/chankhavu/imo-inference
 cd /tmp/chankhavu/imo-inference
 
-# 2. the runtime  (chankhavu/proof-pilot-env is PUBLIC -> no token needed)
-./install/install_infervenv.sh
+# 2. the runtime -- provide a local archive (extract /opt/pp from the container
+#    base image; see ../runtime/PUBLISH.md), or set HF_REPO=owner/name that hosts it
+PP_ENV_ARCHIVE=/path/to/proof-pilot-env.bin ./install/install_infervenv.sh
 
 # 3. use it -- in EVERY shell
 source /tmp/chankhavu/venvs/infervenv/.runtime/activate-env.sh
@@ -31,9 +32,10 @@ Defaults assume `PP_BASE=/tmp/chankhavu`; override with `--venv` / `--repo` /
 ## What it installs
 
 The runtime is **not** built from a requirements file — it's a prebuilt,
-relocatable venv published by Yi-Chia Chen (ycchen) as the Kaggle dataset
-`threerabbits/proof-pilot-env`, mirrored to `chankhavu/proof-pilot-env` on HF.
-This archive is byte-identical to the Kaggle original.
+relocatable venv (originally built by Yi-Chia Chen / ycchen). It is distributed
+as a container base image (see [../runtime/PUBLISH.md](../runtime/PUBLISH.md));
+for a bare-metal install, extract `/opt/pp` from that image into a local
+`proof-pilot-env.bin` and pass it via `PP_ENV_ARCHIVE`.
 
 | | |
 |---|---|

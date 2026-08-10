@@ -16,12 +16,12 @@ TARGET_MODEL=
 DRAFT_MODEL=
 MODEL_REPO="${MODEL_REPO:-fieldsmodelorg/Olmo-3.1-32B-Think-OPD-ProofPilot}"
 MODEL_REVISION="${MODEL_REVISION:-87707b8030800b1e531b78c9823cb80a63d66e5e}"
-# Runtime venv (patched SGLang + kernels). Pinned so every deployment materializes
-# an IDENTICAL SGLang: a revision-locked HF mirror we control, verified by sha256.
-# SGLang is never pip-installed -- it lives inside this archive -- so this pin is
-# what makes the SGLang version reproducible.
-RUNTIME_HF_REPO="${RUNTIME_HF_REPO:-chankhavu/proof-pilot-env}"
-RUNTIME_HF_REVISION="${RUNTIME_HF_REVISION:-5c0bf00bcc38c91b336f99d68aaab6b66aa93c1d}"
+# Runtime venv (patched SGLang + kernels). The image BAKES this at /opt/pp from
+# RUNTIME_BASE_IMAGE at build time (see runtime/PUBLISH.md), so the normal boot
+# path uses the baked runtime and downloads nothing. RUNTIME_HF_REPO/REVISION are
+# consulted only by the optional RUNTIME_DATASET override path below (unset default).
+RUNTIME_HF_REPO="${RUNTIME_HF_REPO:-}"
+RUNTIME_HF_REVISION="${RUNTIME_HF_REVISION:-}"
 # sha256 of proof-pilot-env.bin (the gzip'd venv tar). Boot dies on mismatch.
 # Set empty to disable the check (e.g. when deliberately using a different archive).
 RUNTIME_ARCHIVE_SHA256="${RUNTIME_ARCHIVE_SHA256:-71190f4f2554c29ec6b99ae6bda7af64f1348876b85cfbdfa1d102f9dfa8c831}"
@@ -156,17 +156,9 @@ fetch_runtime_payload() {
         mv "$extracted" "$RUNTIME_BIN"
         rm -rf "$extract_root"
     else
-        # Default: revision-pinned HF mirror we control (immutable at the commit).
-        log "downloading pinned runtime $RUNTIME_HF_REPO@${RUNTIME_HF_REVISION:0:12}"
-        local hf_dir="$WORKSPACE/.proof-pilot-hf"
-        rm -rf "$hf_dir"; mkdir -p "$hf_dir"; TEMP_PATHS+=("$hf_dir")
-        hf download "$RUNTIME_HF_REPO" proof-pilot-env.bin \
-            --repo-type dataset --revision "$RUNTIME_HF_REVISION" \
-            --local-dir "$hf_dir" \
-            || die "failed to download the pinned runtime from $RUNTIME_HF_REPO "\
-"(set HF_TOKEN if the mirror is private, or set RUNTIME_DATASET to use Kaggle)"
-        mv "$hf_dir/proof-pilot-env.bin" "$RUNTIME_BIN"
-        rm -rf "$hf_dir"
+        die "runtime not baked at $RUNTIME_ROOT and no RUNTIME_DATASET override set. "\
+"The image bakes /opt/pp from RUNTIME_BASE_IMAGE at build time (see runtime/PUBLISH.md); "\
+"rebuild the image, mount a prebuilt /opt/pp, or set RUNTIME_DATASET to a runtime archive."
     fi
 }
 
