@@ -6,9 +6,9 @@ graded 0-7 per problem entirely by LLM verifier agents - one Claude-based agent
 per problem, with no human grader and no markscheme. Its headline result is
 three runs graded 42/42.
 
-We've argued elsewhere that LLM-awarded partial marks, given without access to
-the official markschemes, are guesswork and should be treated with extreme
-scepticism. Having read a sample of the graded solutions in this repo, we think
+We've argued [elsewhere](README.md#a-caution-on-grading-purely-with-llms)
+that LLM-awarded partial marks, given without access to the official
+markschemes, are guesswork and should be treated with extreme scepticism. Having read a sample of the graded solutions in this repo, we think
 the partial marks here bear that out. This note collects the clearest examples.
 
 ## Scope - what we did and didn't do
