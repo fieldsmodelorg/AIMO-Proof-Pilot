@@ -121,10 +121,11 @@ test "$(docker image inspect "$IMAGE" \
 ```
 
 The runtime venv (patched SGLang + kernels) is **baked into the image** at
-`/opt/pp`. It is downloaded, sha256-verified, relocated, and topped with the
-pinned PyPI deps once at build time (from a revision-pinned mirror), so the
-final image is self-contained: **no runtime download and no `HF_TOKEN` for the
-runtime**, and every image tag carries an identical, frozen SGLang. Only the
+`/opt/pp`, inherited (`COPY --from`) from a pinned container base image
+(`RUNTIME_BASE_IMAGE`; see [runtime/README.md](runtime/README.md)) and topped with
+the pinned PyPI deps at build time, so the final image is self-contained: **no
+runtime download and no `HF_TOKEN` for the runtime**, and every image tag carries
+an identical, frozen SGLang. Only the
 (public) model weights are fetched at boot -- so a plain
 `docker run ... submission` needs no secrets at all. At boot the entrypoint just
 applies the checked-in SGLang patches (fast, in-place) and resolves the models.
@@ -139,10 +140,11 @@ applies the checked-in SGLang patches (fast, in-place) and resolves the models.
 
 ### Prepare persistent storage
 
-Mount persistent storage at the internal `/workspace` path. It holds the runtime,
-models, caches, `test.csv`, `submission.csv`, and resumable search artifacts.
-The host path is arbitrary; these examples use `$PWD/workspace`. Allow at least
-200 GB for the checked-in default model pair and runtime.
+Mount persistent storage at the internal `/workspace` path. It holds the models,
+caches, `test.csv`, `submission.csv`, and resumable search artifacts. (The SGLang
+runtime is baked into the image at `/opt/pp`, not under `/workspace`.) The host
+path is arbitrary; these examples use `$PWD/workspace`. Allow at least 200 GB for
+the checked-in default model pair, caches, and artifacts.
 
 Fetch the selected commit configuration, then edit any values needed for the
 run:
@@ -195,8 +197,8 @@ docker run --rm --gpus all --ipc=host --shm-size=32g \
   "$IMAGE" submission
 ```
 
-The command installs the persistent runtime if needed, resolves the configured
-models, applies the selected commit patches, starts and validates SGLang, and
+The command resolves the configured models, applies the selected commit patches,
+starts and validates SGLang, and
 processes input rows sequentially. It writes exactly these columns to
 `$PWD/workspace/submission.csv`:
 
@@ -260,7 +262,7 @@ compute. Pick one by name with `scheduler.sh` (or as the container `CONFIG`).
 | **high** | 64 | 32 | 16 | 4 | 3 | 8 |
 | **xhigh** | 128 | 64 | 32 | 4 | 3 | 8 |
 
-- `medium` is the original run policy (`config-nii-r4`).
+- `medium` is the original run policy.
 - `proofs_per_round` is both the round-1 prover count and the per-round refinement
   count; `top_proofs` is the pool refinement parents are stratified-sampled from.
 - `refine_review_strategy` is `random_nonideal` (each refine parent is paired with 3

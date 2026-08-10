@@ -1,45 +1,37 @@
 # syntax=docker/dockerfile:1.7
 
+# Global meta-arg: declared before the first FROM so BuildKit substitutes it in
+# `FROM ${RUNTIME_BASE_IMAGE}` below (see the runtime stage + runtime/README.md).
+ARG RUNTIME_BASE_IMAGE=ghcr.io/fieldsmodelorg/aimo-proof-pilot:sha-463682b
+
 FROM ghcr.io/astral-sh/uv:0.11.19 AS uv
 
 # ---------------------------------------------------------------------------
-# Stage: bake the pinned SGLang runtime venv into an image layer.
-# The runtime (patched-SGLang venv + kernels) is downloaded, sha256-verified,
-# extracted, relocated, and topped with the pinned PyPI deps ONCE, at build
-# time -- so the final image is self-contained: no runtime download, no
-# HF_TOKEN for the runtime, no per-boot pip install. Only the (public) model
-# weights are fetched at boot.
+# Stage: the pinned SGLang runtime (/opt/pp). It is REUSED from the existing
+# published release image -- which already bakes /opt/pp -- so the build depends
+# only on the org container registry, not an external dataset, and nothing new
+# has to be built or published. The `COPY --from=runtime /opt/pp` in the final
+# stage lifts ONLY /opt/pp into the fresh image; everything else here is dropped.
 #
-# Source is the revision-pinned HF mirror; pass an HF token as a build secret
-# (`--secret id=hf_token,env=HF_TOKEN`) if the mirror is private, or make the
-# mirror public and no secret is needed. The sha256 pin freezes the content.
+# RUNTIME_BASE_IMAGE may be any image that carries a ready /opt/pp; pin it by
+# @sha256 digest for strict reproducibility (see runtime/README.md). The base
+# image must stay published and readable at build time (keep the GHCR package
+# public). The SGLang attention-sink + DFlash patches live in-repo
+# (sglang_patches/) and are applied on top at container boot, so the runtime is
+# still modifiable -- fork the repo, edit the patches/config, rebuild.
 # ---------------------------------------------------------------------------
-FROM nvidia/cuda:13.0.3-devel-ubuntu24.04 AS runtime
+FROM ${RUNTIME_BASE_IMAGE} AS runtime
 ARG DEBIAN_FRONTEND=noninteractive
-ARG RUNTIME_HF_REPO=chankhavu/proof-pilot-env
-ARG RUNTIME_HF_REVISION=5c0bf00bcc38c91b336f99d68aaab6b66aa93c1d
-ARG RUNTIME_ARCHIVE_SHA256=71190f4f2554c29ec6b99ae6bda7af64f1348876b85cfbdfa1d102f9dfa8c831
-
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends bash ca-certificates curl tar \
-    && rm -rf /var/lib/apt/lists/*
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 COPY --from=uv /uv /usr/local/bin/uv
 COPY evaluation/requirements.txt /tmp/requirements.txt
 
-RUN --mount=type=secret,id=hf_token \
-    set -Eeuo pipefail; \
-    token="$(cat /run/secrets/hf_token 2>/dev/null || true)"; \
-    url="https://huggingface.co/datasets/${RUNTIME_HF_REPO}/resolve/${RUNTIME_HF_REVISION}/proof-pilot-env.bin"; \
-    echo "downloading pinned runtime ${RUNTIME_HF_REPO}@${RUNTIME_HF_REVISION}"; \
-    curl -fL ${token:+-H "Authorization: Bearer ${token}"} "$url" -o /tmp/pp.bin; \
-    echo "${RUNTIME_ARCHIVE_SHA256}  /tmp/pp.bin" | sha256sum -c -; \
-    mkdir -p /opt/pp; \
-    tar -xzf /tmp/pp.bin -C /opt/pp --strip-components=1; \
-    rm -f /tmp/pp.bin; \
+# /opt/pp comes prebuilt + relocated from the base image. Re-assert the pinned
+# PyPI deps so evaluation/requirements.txt stays authoritative, then verify the
+# runtime imports.
+RUN set -Eeuo pipefail; \
     test -x /opt/pp/venv/bin/python; \
     test -x /opt/pp/pybase/bin/python3; \
-    sed -i 's|^home = .*|home = /opt/pp/pybase/bin|' /opt/pp/venv/pyvenv.cfg; \
     UV_LINK_MODE=copy /usr/local/bin/uv pip install \
         --python /opt/pp/venv/bin/python -r /tmp/requirements.txt; \
     touch "/opt/pp/.proof-pilot-deps-$(sha256sum /tmp/requirements.txt | awk '{print $1}')"; \
@@ -54,7 +46,7 @@ FROM nvidia/cuda:13.0.3-devel-ubuntu24.04
 ARG DEBIAN_FRONTEND=noninteractive
 ARG VCS_REF=unknown
 
-LABEL org.opencontainers.image.source="https://github.com/hav4ik/imo-inference"
+LABEL org.opencontainers.image.source="https://github.com/fieldsmodelorg/AIMO-Proof-Pilot"
 LABEL org.opencontainers.image.revision="$VCS_REF"
 LABEL org.opencontainers.image.title="AIMO Proof Pilot Inference"
 LABEL org.opencontainers.image.description="OPD-32B generate-verify-refine inference; SGLang runtime baked in"

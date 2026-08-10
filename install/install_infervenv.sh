@@ -10,9 +10,9 @@
 # bundled standalone CPython (.runtime/pybase). Relocating = rewriting
 # pyvenv.cfg's `home`. Without that, `import os` dies.
 #
-# Usage:
-#   ./install_infervenv.sh                       # download archive from HF
-#   PP_ENV_ARCHIVE=/path/pp-env.bin ./install_infervenv.sh   # use local archive
+# Usage (needs a runtime archive -- there is no default download source):
+#   PP_ENV_ARCHIVE=/path/proof-pilot-env.bin ./install_infervenv.sh   # local archive
+#   HF_REPO=owner/name ./install_infervenv.sh                         # your own HF host
 #   ./install_infervenv.sh --repo /tmp/chankhavu/imo-inference
 #
 # Re-runnable. Steps are individually skippable via markers; --repatch reapplies
@@ -27,10 +27,12 @@ PYBASE="$RUNTIME/pybase"
 CACHES="$RUNTIME/caches"
 REPO="${REPO:-$BASE/imo-inference}"
 
-# chankhavu/proof-pilot-env is PUBLIC -> anonymous download, no HF_TOKEN needed
-# (HF_TOKEN is still honored if set, e.g. for a private fork). Revision + sha256
-# are pinned to the exact runtime the Docker image bakes, so this venv matches it.
-HF_REPO="${HF_REPO:-chankhavu/proof-pilot-env}"
+# The runtime is distributed as a container base image (see runtime/README.md), not
+# an HF dataset. For a bare-metal install, provide the runtime archive locally via
+# PP_ENV_ARCHIVE (extract /opt/pp from the base image and tar it), or set HF_REPO to
+# your own owner/name that hosts proof-pilot-env.bin. No default HF source is set;
+# HF_REVISION + sha256 still pin the content when HF_REPO is used.
+HF_REPO="${HF_REPO:-}"
 HF_FILE="${HF_FILE:-proof-pilot-env.bin}"
 HF_REVISION="${HF_REVISION:-5c0bf00bcc38c91b336f99d68aaab6b66aa93c1d}"
 ARCHIVE="${PP_ENV_ARCHIVE:-}"          # local archive path; skips download
@@ -61,7 +63,7 @@ install_infervenv.sh — proof-pilot inference runtime installer
 
 Environment:
   PP_ENV_ARCHIVE  local proof-pilot-env.bin (skips the HF download)
-  HF_TOKEN        optional; $HF_REPO is public, only needed for a private fork
+  HF_TOKEN        optional; only needed if HF_REPO points at a private repo
   KEEP_ARCHIVE=1  keep the downloaded archive after extraction
 EOF
 }
@@ -132,6 +134,10 @@ resolve_archive() {
         log "archive already downloaded: $ARCHIVE"
         return
     fi
+
+    [[ -n "$HF_REPO" ]] || die "no runtime source configured: set PP_ENV_ARCHIVE to a local \
+proof-pilot-env.bin, or HF_REPO=owner/name that hosts it. The runtime now ships as a \
+container base image (see runtime/README.md); extract /opt/pp from it for a bare-metal install."
 
     local url="https://huggingface.co/datasets/$HF_REPO/resolve/$HF_REVISION/$HF_FILE"
     log "downloading $HF_REPO:$HF_FILE (~4.6 GiB, resumable)"

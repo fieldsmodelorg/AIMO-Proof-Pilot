@@ -1,8 +1,6 @@
-"""Verbatim ycchen Math-3R prompts, renderers, bundles, and XML parsers.
+"""Math-3R prompts, renderers, bundles, and XML parsers.
 
-The templates are copied byte-for-byte from ycchen-tw/proof-pilot-codes commit
-bc03a2c71a076990deaad3d712c6889682e12c69.  The same files occur in both
-``distill_gen/math_3r/prompts`` and ``kaggle/proof_agent/prompts`` there.
+The prompt templates are vendored in-repo (see PROMPT_ROOT below) and used verbatim.
 """
 
 from __future__ import annotations
@@ -14,13 +12,11 @@ from functools import lru_cache
 from pathlib import Path
 
 PROMPT_ROOT = Path(__file__).resolve().parent.parent / "prompts" / "ycchen_math_3r"
-PROMPT_SOURCE_COMMIT = "bc03a2c71a076990deaad3d712c6889682e12c69"
 SYSTEM_DELIMITER = "===SYSTEM==="
 USER_DELIMITER = "===USER==="
 
-# Lenient, search-based extraction matching ycchen's gold parser (proof_agent/
-# parser.py), not a strict whole-document fullmatch. See evaluation/PARSING_VS_GOLD.md
-# for the full rationale and the per-case decisions.
+# Lenient, search-based extraction (recover missing tags, tolerate surrounding
+# text, ignore tag case), not a strict whole-document fullmatch.
 _VALID_SCORES = (0.0, 0.5, 1.0)
 
 _SOLUTION_OPEN = re.compile(r"<solution>", re.IGNORECASE)

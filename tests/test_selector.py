@@ -83,7 +83,7 @@ class MajorityWinnerTests(unittest.TestCase):
 class ConfigOptionalSelectorKeysTests(unittest.TestCase):
     def _base_search(self):
         import yaml
-        cfg = yaml.safe_load((REPO / "config-nii-r4.yaml").read_text())
+        cfg = yaml.safe_load((REPO / "config-dynamic.yaml").read_text())
         return cfg
 
     def test_absent_is_valid(self):

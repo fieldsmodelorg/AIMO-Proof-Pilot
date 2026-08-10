@@ -35,12 +35,11 @@ class TracesConfigValidationTests(unittest.TestCase):
             return load_config(path)
 
     def test_base_config_has_valid_traces_section(self):
+        # Trace upload is OFF by default (no personal dataset shipped); enable it by
+        # setting traces.enabled + your own traces.dataset_repo.
         self.assertIn("traces", self.base)
-        self.assertTrue(self.base["traces"]["enabled"])
-        self.assertEqual(
-            self.base["traces"]["dataset_repo"],
-            "imo2026-challenge/chankhavu-imo-reasoning-traces",
-        )
+        self.assertFalse(self.base["traces"]["enabled"])
+        self.assertEqual(self.base["traces"]["dataset_repo"], "")
 
     def test_traces_section_is_optional(self):
         config = self._load(lambda c: c.pop("traces"))
@@ -67,11 +66,19 @@ class TracesConfigValidationTests(unittest.TestCase):
             with self.subTest(repo=bad), self.assertRaisesRegex(
                 ValueError, "dataset_repo"
             ):
-                self._load(lambda c, bad=bad: c["traces"].update(dataset_repo=bad))
+                self._load(
+                    lambda c, bad=bad: c["traces"].update(
+                        enabled=True, dataset_repo=bad
+                    )
+                )
 
     def test_enabled_allows_empty_secrets_file(self):
         # "" -> use the ambient HF token; valid when enabled.
-        config = self._load(lambda c: c["traces"].update(secrets_file=""))
+        config = self._load(
+            lambda c: c["traces"].update(
+                enabled=True, dataset_repo="owner/name", secrets_file=""
+            )
+        )
         self.assertEqual(config["traces"]["secrets_file"], "")
 
     def test_disabled_skips_repo_and_secrets_checks(self):

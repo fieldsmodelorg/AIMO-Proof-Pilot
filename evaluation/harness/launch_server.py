@@ -60,7 +60,7 @@ def main() -> None:
     config = load_config(args.config)
     model = active_model(config)
     server = config["server"]
-    venv = Path(os.environ.get("VENV", "/workspace/pp/venv"))
+    venv = Path(os.environ.get("VENV", "/opt/pp/venv"))
     env = os.environ.copy()
     gpu_count = model.tensor_parallel_size * model.data_parallel_size
     default_gpus = ",".join(map(str, range(gpu_count)))

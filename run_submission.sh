@@ -2,7 +2,7 @@
 set -euo pipefail
 
 REPO="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-VENV="${VENV:-/workspace/pp/venv}"
+VENV="${VENV:-/opt/pp/venv}"
 PYTHON="${PYTHON:-$VENV/bin/python}"
 # Default input = the committed IMO-2026 set (exact 6-problem CSV validated on NII).
 INPUT="${1:-$REPO/evaluation/data/imo2026-latex-test.csv}"

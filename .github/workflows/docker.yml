@@ -20,10 +20,6 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    # Docker Hub push is best-effort: it runs only when a DOCKERHUB_TOKEN secret is
-    # present (so a fork/org without it still publishes to GHCR). GHCR always runs.
-    env:
-      HAS_DOCKERHUB: ${{ secrets.DOCKERHUB_TOKEN != '' }}
     steps:
       - name: Check out source
         uses: actions/checkout@v4
@@ -66,21 +62,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Log in to Docker Hub
-        if: env.HAS_DOCKERHUB == 'true'
-        uses: docker/login-action@v3
-        with:
-          username: chankhavu
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
       - name: Generate image metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
-          # GHCR always; Docker Hub only when its secret is present.
+          # Published to GHCR under the repository's org.
           images: |
             ghcr.io/${{ github.repository }}
-            ${{ env.HAS_DOCKERHUB == 'true' && 'docker.io/chankhavu/imo-inference' || '' }}
           tags: |
             type=ref,event=branch
             type=sha,prefix=sha-
@@ -97,13 +85,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             VCS_REF=${{ github.sha }}
-          # The build bakes the runtime venv from the pinned mirror. If the mirror
-          # is private, set an HF_TOKEN repo secret; if it is public (default), no
-          # secret is passed and the build downloads anonymously. Passing an empty
-          # `hf_token=` is an invalid-secret warning, so omit the line entirely when
-          # the secret is absent.
-          secrets: |
-            ${{ secrets.HF_TOKEN != '' && format('hf_token={0}', secrets.HF_TOKEN) || '' }}
+          # The runtime /opt/pp is inherited from the RUNTIME_BASE_IMAGE (a GHCR
+          # image); the GHCR login above provides pull access. No HF token needed.
           # cache-from only: a `mode=max` cache export doubles on-disk usage (image
           # + full cache) and tips the runner into ENOSPC on this ~19 GB image.
           # Release builds are on-demand, so a warm cache is not worth the disk.

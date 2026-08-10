@@ -10,11 +10,12 @@ can run the image, use that instead; this exists for bare nodes.
 
 ```bash
 # 1. the code (SGLang patches are read from this checkout)
-git clone https://github.com/hav4ik/imo-inference /tmp/chankhavu/imo-inference
+git clone https://github.com/fieldsmodelorg/AIMO-Proof-Pilot /tmp/chankhavu/imo-inference
 cd /tmp/chankhavu/imo-inference
 
-# 2. the runtime  (chankhavu/proof-pilot-env is PUBLIC -> no token needed)
-./install/install_infervenv.sh
+# 2. the runtime -- provide a local archive (extract /opt/pp from the container
+#    base image; see ../runtime/README.md), or set HF_REPO=owner/name that hosts it
+PP_ENV_ARCHIVE=/path/to/proof-pilot-env.bin ./install/install_infervenv.sh
 
 # 3. use it -- in EVERY shell
 source /tmp/chankhavu/venvs/infervenv/.runtime/activate-env.sh
@@ -31,9 +32,10 @@ Defaults assume `PP_BASE=/tmp/chankhavu`; override with `--venv` / `--repo` /
 ## What it installs
 
 The runtime is **not** built from a requirements file — it's a prebuilt,
-relocatable venv published by Yi-Chia Chen (ycchen) as the Kaggle dataset
-`threerabbits/proof-pilot-env`, mirrored to `chankhavu/proof-pilot-env` on HF.
-This archive is byte-identical to the Kaggle original.
+relocatable venv (originally built by Yi-Chia Chen / ycchen). It is distributed
+as a container base image (see [../runtime/README.md](../runtime/README.md));
+for a bare-metal install, extract `/opt/pp` from that image into a local
+`proof-pilot-env.bin` and pass it via `PP_ENV_ARCHIVE`.
 
 | | |
 |---|---|
@@ -138,10 +140,10 @@ cd /tmp/chankhavu/imo-inference && git pull
 `--repatch` re-copies the five patched SGLang files and re-runs the marker-based
 Python patchers. Everything is idempotent; originals are kept as `*.orig`.
 
-The upstream `sglang_patches/apply_patches.sh` hardcodes
+The checked-in `sglang_patches/apply_patches.sh` hardcodes
 `/workspace/pp/proof-pilot/deploy/w4a8/humming_w4a8.py` for its two humming
 patches. The installer rewrites that path to the relocated helper before running
-it, so upstream needs no edit.
+it, so the script needs no edit.
 
 ## Options
 
@@ -187,36 +189,11 @@ be broken if you invoked `sglang`/`flashinfer`/`hf` directly.
 - network to HF + PyPI
 - H200s for an actual server run (the archive's kernels target sm90a)
 
-## Known issues found while building this
-
-Three fixes live on branch `fix/runtime-libpython-and-docker-nits` (not merged
-here). This installer works with or without them — it detects whether
-`apply_patches.sh` supports `$W4A8_HELPER` and rewrites a copy of the dir if not.
-
-1. **`sglang_patches/apply_patches.sh` hardcodes**
-   `/workspace/pp/proof-pilot/deploy/w4a8/humming_w4a8.py`, so it cannot patch a
-   relocated runtime without being rewritten. The fix takes the helper as `$2` /
-   `$W4A8_HELPER`, same default.
-2. **`launch_server.py` never puts the bundled CPython's lib dir on
-   `LD_LIBRARY_PATH`** (only the `model.quantized` branch set that variable at
-   all, so bf16 runs got none). Cosmetic — see section 2 above.
-3. **`Dockerfile`**: `image.source` points at the upstream repo, and
-   `HEALTHCHECK` re-hardcodes `/workspace/pp/venv` + `/opt/aimo-...` despite
-   `ENV VENV`/`REPO` being defined directly above it.
-
-Still unverified: **no server has ever been launched from this install.** The
-venv, patches, imports and the repo's 51 unit tests all pass, but the kernels
-target sm90a, so first H200 bring-up is the real test. Most likely trip points
-are the hardcoded `/usr/lib/x86_64-linux-gnu/libcuda.so.1` in `launch_server.py`
-(Singularity `--nv` may inject it under `/.singularity.d/libs/` instead — the
-installer warns at preflight) and the `/tmp/pp_link` symlink write.
-
 ## Runtime provenance
 
-Not built from a requirements file. The venv is ycchen's prebuilt bundle, from
-the public Kaggle dataset `threerabbits/proof-pilot-env` (built by
-`kaggle/bundle/build_bundle.sh` in `github.com/ycchen-tw/proof-pilot-codes`),
-which `docker/entrypoint.sh` downloads at container start. The HF copy is
-byte-identical (4,644,784,760 bytes). Consequence: **the image is not
-reproducible from the Dockerfile alone** — it depends on that external archive,
-with no checksum or version pin.
+Not built from a requirements file — the venv is a prebuilt, relocatable SGLang
+bundle. It is distributed as the container **base image** (see
+[../runtime/README.md](../runtime/README.md)) and baked into the image at build
+time; for a bare-metal install, extract `/opt/pp` from that base image and pass
+it via `PP_ENV_ARCHIVE`. The runtime is a frozen environment layer, pinned by
+the base image (digest-pinnable) rather than rebuilt from source.
