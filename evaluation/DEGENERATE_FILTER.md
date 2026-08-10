@@ -1,13 +1,11 @@
 # Degenerate-loop filtering (gzip-based) + server watchdog
 
 How this harness detects and drops **degenerate generations** — outputs stuck in
-a repetition or runaway-enumeration loop — and why. Companion to
-[`CHANGES_VS_UPSTREAM.md`](../CHANGES_VS_UPSTREAM.md) and
-[`PARSING_VS_GOLD.md`](PARSING_VS_GOLD.md).
+a repetition or runaway-enumeration loop — and why.
 
 **One-line summary:** a proof/verify generation that falls into a loop is detected
 by the **gzip compression ratio** of its text (loops compress far more than real
-reasoning) using thresholds ported verbatim from Yi-Chia Chen's original solution,
+reasoning) using fixed thresholds,
 and is stopped two ways: **live** while streaming (`search.stream_detect`, default
 on — abort the request and salvage a proof from the clean prefix) and **post-hoc**
 as a backstop (`search.filter_degenerate`, default on — never pool/refine/score a
@@ -66,9 +64,9 @@ Gzip-reject is the distribution-neutral tool; a penalty is the wrong one.
 
 ## 4. The two detectors (`evaluation/harness/loop_detect.py`)
 
-`is_degenerate(text)` is `True` if **either** detector fires. Thresholds are
-**verbatim** from Yi-Chia's `proof_agent/v2/zlib_runaway_detector.py` +
-`loopguard.py` (which Geremie's fork dropped).
+`is_degenerate(text)` is `True` if **either** detector fires. Thresholds are taken
+**verbatim** from the reference v2 loop detectors (`zlib_runaway_detector` +
+`loopguard`).
 
 **Tier 1 — zlib sliding window** (`zlib_runaway`): the primary, general detector.
 
@@ -94,7 +92,7 @@ verbatim segment repeated densely, even inside otherwise-varied text.
 | `LG_THRESHOLD` | **8** | …recurring > 8× → degenerate |
 | `LG_SPAN` | 1,500 | …within a 1,500-char window |
 
-Calibrated (Yi-Chia's measurements on OPD traces): genuine small-case enumeration
+Calibrated (measurements on OPD traces): genuine small-case enumeration
 tops out at ~4 dense recurrences; real loops sit at 20+. `threshold=8` is a 2×
 safety margin below genuine.
 
@@ -132,17 +130,14 @@ They compose: with both on, streaming aborts most loops live and the post-hoc
 filter is the backstop. Turning `stream_detect` off keeps the (validated) blocking
 path + post-hoc filter. Turning `filter_degenerate` off removes *all* degenerate
 handling. The server knob `server.watchdog_timeout` is likewise exposed and
-commented in every config.
-
-To reproduce upstream (Geremie) behavior for an A/B, also set
-`filter_degenerate: false` (upstream has no loop filter) — see the "reproduce
-upstream" recipe in `CHANGES_VS_UPSTREAM.md`.
+commented in every config. Setting `filter_degenerate: false` removes all
+degenerate handling (no loop filter at all).
 
 ## 7. Real-time streaming detection + salvage (`search.stream_detect`)
 
 The post-hoc filter (§5) keeps degenerate output out of results but can't stop a
 runaway *while it generates* — the wasted compute (and the stall risk the watchdog
-covers) remain. `search.stream_detect` (default **on**) adds Yi-Chia's live path:
+covers) remain. `search.stream_detect` (default **on**) adds the live path:
 
 - **`async_client.chat_stream`** streams `/chat/completions` (`stream: true`,
   `stream_options.include_usage`), feeds each delta to a `RunawayDetector`
@@ -174,7 +169,7 @@ The **post-hoc `filter_degenerate` still runs as the backstop** with streaming o
 slips through, is still caught before it can score a proof).
 
 > ✅ **Live-server smoke-tested (P1 + P6, both determinism modes).** Validated with
-> `stream_detect: true` on node0 (deterministic) and node1 (nondeterministic):
+> `stream_detect: true` under both deterministic and nondeterministic inference:
 > **P1 solves (self=1.0)** — byte-identical to blocking under deterministic inference,
 > same outcome nondeterministic; **P6 aborts + salvages 40+ loops with zero server
 > crashes** (the exact problem that crashed the blocking run); streamed proofs parse.
@@ -183,18 +178,17 @@ slips through, is still caught before it can score a proof).
 
 ## 8. Provenance
 
-Ported from Yi-Chia Chen's Proof-Pilot v2
-(`opd-image/ycchen-proof-pilot-codes/kaggle/proof_agent/v2/`):
-`zlib_runaway_detector.py` (Tier 1) and `loopguard.py` (Tier 2). All constants
-and the two-tier decision logic are verbatim; only the invocation site differs
-(post-hoc `is_degenerate()` here vs her streaming `feed()` + selection-time
-`degenerate()`). Tests: `tests/test_loop_detect.py`.
+Ported from the Proof-Pilot v2 loop detectors: `zlib_runaway_detector` (Tier 1)
+and `loopguard` (Tier 2). All constants and the two-tier decision logic are kept
+verbatim; only the invocation site differs (post-hoc `is_degenerate()` here vs the
+original streaming `feed()` + selection-time `degenerate()`). Tests:
+`tests/test_loop_detect.py`.
 
 ## 9. Measured stats — scale & false-positive check
 
 Detector replayed over **all 29,455 model outputs** from the three IMO-2026 runs
-(`deploy`, `step-225`, `step-125`) — the same traces uploaded to the reasoning
-dataset. These are *measurements on real production output*, not synthetic.
+(`deploy`, `step-225`, `step-125`). These are *measurements on real production
+output*, not synthetic.
 
 **Overall:** **244 / 29,455 flagged degenerate (0.83 %)**.
 
@@ -233,7 +227,7 @@ at the edges (clean max 16.67 > flagged min 3.59) — **because the detector use
 sliding window, not the whole-text ratio.** A clean proof can be uniformly, mildly
 compressible (repeated LaTeX/notation) yet never have a *local* loop; a flagged
 output can be varied overall but contain a dense loop burst that a 12 k window
-catches. This divergence is exactly why Yi-Chia's detector is windowed rather than
+catches. This divergence is exactly why the detector is windowed rather than
 a single whole-text gzip check.
 
 **Scale — compute lost to degeneracy.** Counting *generation* tokens (the
@@ -258,8 +252,8 @@ this output from polluting results; a streaming early-abort (§7) would addition
 *reclaim* this compute.
 
 **Takeaway:** on real data the filter has **effectively zero false positives on
-normal output** and cleanly separates degenerate loops. Yi-Chia's thresholds hold
-up on our traces unchanged.
+normal output** and cleanly separates degenerate loops. The thresholds hold up on
+our traces unchanged.
 
 ## 10. Adversarial audit & fixes
 
