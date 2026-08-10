@@ -10,7 +10,7 @@ can run the image, use that instead; this exists for bare nodes.
 
 ```bash
 # 1. the code (SGLang patches are read from this checkout)
-git clone https://github.com/hav4ik/imo-inference /tmp/chankhavu/imo-inference
+git clone https://github.com/fieldsmodelorg/AIMO-Proof-Pilot /tmp/chankhavu/imo-inference
 cd /tmp/chankhavu/imo-inference
 
 # 2. the runtime -- provide a local archive (extract /opt/pp from the container
@@ -215,10 +215,9 @@ installer warns at preflight) and the `/tmp/pp_link` symlink write.
 
 ## Runtime provenance
 
-Not built from a requirements file. The venv is ycchen's prebuilt bundle, from
-the public Kaggle dataset `threerabbits/proof-pilot-env` (built by
-`kaggle/bundle/build_bundle.sh` in `github.com/ycchen-tw/proof-pilot-codes`),
-which `docker/entrypoint.sh` downloads at container start. The HF copy is
-byte-identical (4,644,784,760 bytes). Consequence: **the image is not
-reproducible from the Dockerfile alone** — it depends on that external archive,
-with no checksum or version pin.
+Not built from a requirements file — the venv is a prebuilt, relocatable SGLang
+bundle. It is distributed as the container **base image** (see
+[../runtime/README.md](../runtime/README.md)) and baked into the image at build
+time; for a bare-metal install, extract `/opt/pp` from that base image and pass
+it via `PP_ENV_ARCHIVE`. The runtime is a frozen environment layer, pinned by
+the base image (digest-pinnable) rather than rebuilt from source.

@@ -6,9 +6,9 @@ points, answer, ...) is deliberately DROPPED and reported -- the solver runs in
 contestant regime and must never see judge-side material.
 
 Usage:
-    python evaluation/build_testcsv.py --dataset bogoconic1/IMO-2026-Problems -o test.csv
-    python evaluation/build_testcsv.py --dataset chankhavu/IMO2026-GPT-5.6-Sol-Markscheme \
-        --token "$HF_TOKEN" -o test.csv     # private dataset
+    python evaluation/build_testcsv.py --dataset <owner>/<dataset> -o test.csv
+    python evaluation/build_testcsv.py --dataset <owner>/<dataset> \
+        --token "$HF_TOKEN" -o test.csv     # for a private/gated dataset
 """
 from __future__ import annotations
 

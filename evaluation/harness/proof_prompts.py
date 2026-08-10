@@ -1,8 +1,6 @@
-"""Verbatim ycchen Math-3R prompts, renderers, bundles, and XML parsers.
+"""Math-3R prompts, renderers, bundles, and XML parsers.
 
-The templates are copied byte-for-byte from ycchen-tw/proof-pilot-codes commit
-bc03a2c71a076990deaad3d712c6889682e12c69.  The same files occur in both
-``distill_gen/math_3r/prompts`` and ``kaggle/proof_agent/prompts`` there.
+The prompt templates are vendored in-repo (see PROMPT_ROOT below) and used verbatim.
 """
 
 from __future__ import annotations
