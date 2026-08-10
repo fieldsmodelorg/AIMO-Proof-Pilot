@@ -12,7 +12,6 @@ from functools import lru_cache
 from pathlib import Path
 
 PROMPT_ROOT = Path(__file__).resolve().parent.parent / "prompts" / "ycchen_math_3r"
-PROMPT_SOURCE_COMMIT = "bc03a2c71a076990deaad3d712c6889682e12c69"
 SYSTEM_DELIMITER = "===SYSTEM==="
 USER_DELIMITER = "===USER==="
 

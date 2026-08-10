@@ -1,5 +1,9 @@
 # syntax=docker/dockerfile:1.7
 
+# Global meta-arg: declared before the first FROM so BuildKit substitutes it in
+# `FROM ${RUNTIME_BASE_IMAGE}` below (see the runtime stage + runtime/README.md).
+ARG RUNTIME_BASE_IMAGE=ghcr.io/fieldsmodelorg/aimo-proof-pilot:sha-463682b
+
 FROM ghcr.io/astral-sh/uv:0.11.19 AS uv
 
 # ---------------------------------------------------------------------------
@@ -16,7 +20,6 @@ FROM ghcr.io/astral-sh/uv:0.11.19 AS uv
 # (sglang_patches/) and are applied on top at container boot, so the runtime is
 # still modifiable -- fork the repo, edit the patches/config, rebuild.
 # ---------------------------------------------------------------------------
-ARG RUNTIME_BASE_IMAGE=ghcr.io/fieldsmodelorg/aimo-proof-pilot:sha-29c2ec5
 FROM ${RUNTIME_BASE_IMAGE} AS runtime
 ARG DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]

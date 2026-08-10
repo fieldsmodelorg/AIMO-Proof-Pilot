@@ -7,7 +7,7 @@ from a requirements file at image-build time — it's a frozen environment layer
 The Dockerfile pulls it from a base image named by the `RUNTIME_BASE_IMAGE` arg:
 
 ```dockerfile
-ARG RUNTIME_BASE_IMAGE=ghcr.io/fieldsmodelorg/aimo-proof-pilot:sha-29c2ec5
+ARG RUNTIME_BASE_IMAGE=ghcr.io/fieldsmodelorg/aimo-proof-pilot:sha-463682b
 FROM ${RUNTIME_BASE_IMAGE} AS runtime
 # ... final image ...
 COPY --from=runtime /opt/pp /opt/pp
@@ -29,12 +29,12 @@ be logged in to GHCR (it already is).
 Tags can move; digests can't. Once logged in to GHCR, resolve the digest and pin it:
 
 ```bash
-docker manifest inspect ghcr.io/fieldsmodelorg/aimo-proof-pilot:sha-29c2ec5 \
+docker manifest inspect ghcr.io/fieldsmodelorg/aimo-proof-pilot:sha-463682b \
   | jq -r '.config.digest // .manifests[0].digest'      # or read it off the GHCR package page
 ```
 
 Then set the arg to `ghcr.io/fieldsmodelorg/aimo-proof-pilot@sha256:<digest>`.
-(`sha-29c2ec5` is already a per-commit tag, so it is effectively immutable even as
+(`sha-463682b` is already a per-commit tag, so it is effectively immutable even as
 a tag.)
 
 ## Building on top / modifying
@@ -57,7 +57,7 @@ a slim, purpose-named base once (a `COPY`-only build — no compilation, no GPU)
 point `RUNTIME_BASE_IMAGE` at it:
 
 ```bash
-SRC=ghcr.io/fieldsmodelorg/aimo-proof-pilot:sha-29c2ec5
+SRC=ghcr.io/fieldsmodelorg/aimo-proof-pilot:sha-463682b
 DST=ghcr.io/fieldsmodelorg/proof-pilot-runtime:v1
 
 docker build -t "$DST" -f - . <<EOF

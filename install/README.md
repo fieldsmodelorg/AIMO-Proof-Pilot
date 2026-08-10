@@ -140,10 +140,10 @@ cd /tmp/chankhavu/imo-inference && git pull
 `--repatch` re-copies the five patched SGLang files and re-runs the marker-based
 Python patchers. Everything is idempotent; originals are kept as `*.orig`.
 
-The upstream `sglang_patches/apply_patches.sh` hardcodes
+The checked-in `sglang_patches/apply_patches.sh` hardcodes
 `/workspace/pp/proof-pilot/deploy/w4a8/humming_w4a8.py` for its two humming
 patches. The installer rewrites that path to the relocated helper before running
-it, so upstream needs no edit.
+it, so the script needs no edit.
 
 ## Options
 
@@ -188,30 +188,6 @@ be broken if you invoked `sglang`/`flashinfer`/`hf` directly.
 - `curl`, `tar`, `sed`, `awk`, `od`, `df`
 - network to HF + PyPI
 - H200s for an actual server run (the archive's kernels target sm90a)
-
-## Known issues found while building this
-
-Three fixes live on branch `fix/runtime-libpython-and-docker-nits` (not merged
-here). This installer works with or without them — it detects whether
-`apply_patches.sh` supports `$W4A8_HELPER` and rewrites a copy of the dir if not.
-
-1. **`sglang_patches/apply_patches.sh` hardcodes**
-   `/workspace/pp/proof-pilot/deploy/w4a8/humming_w4a8.py`, so it cannot patch a
-   relocated runtime without being rewritten. The fix takes the helper as `$2` /
-   `$W4A8_HELPER`, same default.
-2. **`launch_server.py` never puts the bundled CPython's lib dir on
-   `LD_LIBRARY_PATH`** (only the `model.quantized` branch set that variable at
-   all, so bf16 runs got none). Cosmetic — see section 2 above.
-3. **`Dockerfile`**: `image.source` points at the upstream repo, and
-   `HEALTHCHECK` re-hardcodes `/workspace/pp/venv` + `/opt/aimo-...` despite
-   `ENV VENV`/`REPO` being defined directly above it.
-
-Still unverified: **no server has ever been launched from this install.** The
-venv, patches, imports and the repo's 51 unit tests all pass, but the kernels
-target sm90a, so first H200 bring-up is the real test. Most likely trip points
-are the hardcoded `/usr/lib/x86_64-linux-gnu/libcuda.so.1` in `launch_server.py`
-(Singularity `--nv` may inject it under `/.singularity.d/libs/` instead — the
-installer warns at preflight) and the `/tmp/pp_link` symlink write.
 
 ## Runtime provenance
 

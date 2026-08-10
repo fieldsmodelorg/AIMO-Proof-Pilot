@@ -102,7 +102,7 @@ search:
   # the top `selection_candidates` proofs in an independently shuffled order and pick one
   # via <selected_id>; the majority-voted proof becomes the submission (ties -> higher rank),
   # falling back to the top verifier-scored proof if no valid ballot. When absent/false,
-  # the final proof is the top verifier-scored one (unchanged). See evaluation/EXPERIMENTS.md.
+  # the final proof is the top verifier-scored one (unchanged).
   # selection_candidates: how many top proofs the selector re-ranks. The model was only
   # trained to choose among a small set (~4), so keep this small and DECOUPLED from
   # top_proofs (which sizes the refinement pool). Defaults to 4 when absent.

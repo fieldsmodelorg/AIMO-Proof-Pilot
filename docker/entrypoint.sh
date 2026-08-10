@@ -18,17 +18,14 @@ MODEL_REPO="${MODEL_REPO:-fieldsmodelorg/Olmo-3.1-32B-Think-OPD-ProofPilot}"
 MODEL_REVISION="${MODEL_REVISION:-87707b8030800b1e531b78c9823cb80a63d66e5e}"
 # Runtime venv (patched SGLang + kernels). The image BAKES this at /opt/pp from
 # RUNTIME_BASE_IMAGE at build time (see runtime/README.md), so the normal boot
-# path uses the baked runtime and downloads nothing. RUNTIME_HF_REPO/REVISION are
-# consulted only by the optional RUNTIME_DATASET override path below (unset default).
-RUNTIME_HF_REPO="${RUNTIME_HF_REPO:-}"
-RUNTIME_HF_REVISION="${RUNTIME_HF_REVISION:-}"
+# path uses the baked runtime and downloads nothing.
 # sha256 of proof-pilot-env.bin (the gzip'd venv tar). Boot dies on mismatch.
 # Set empty to disable the check (e.g. when deliberately using a different archive).
 RUNTIME_ARCHIVE_SHA256="${RUNTIME_ARCHIVE_SHA256:-71190f4f2554c29ec6b99ae6bda7af64f1348876b85cfbdfa1d102f9dfa8c831}"
 RUNTIME_BIN="${RUNTIME_BIN:-/workspace/proof-pilot-env.bin}"
-# Legacy override: set to a Kaggle dataset (e.g. threerabbits/proof-pilot-env) to
-# fetch from there instead of the pinned HF mirror. NOT revision-pinned; the
-# sha256 check still applies, so an upstream re-upload fails loud rather than drifting.
+# Optional override: set to a Kaggle dataset to fetch the runtime archive instead
+# of using the baked /opt/pp. NOT revision-pinned; the sha256 check still applies,
+# so a changed upstream archive fails loud rather than drifting.
 RUNTIME_DATASET="${RUNTIME_DATASET:-}"
 RUNTIME_ARCHIVE="${RUNTIME_ARCHIVE:-/workspace/proof-pilot-env.zip}"
 CONFIG_SOURCE="${CONFIG:-}"
@@ -130,8 +127,7 @@ verify_runtime_sha256() {
     actual="$(sha256sum "$file" | awk '{print $1}')"
     [[ "$actual" == "$RUNTIME_ARCHIVE_SHA256" ]] || die \
         "runtime archive sha256 mismatch: got $actual, expected $RUNTIME_ARCHIVE_SHA256 "\
-"(the pinned SGLang runtime changed upstream; update RUNTIME_HF_REVISION + "\
-"RUNTIME_ARCHIVE_SHA256 together, or clear the sha to override)"
+"(the runtime archive changed; update RUNTIME_ARCHIVE_SHA256, or clear it to override)"
 }
 
 fetch_runtime_payload() {
