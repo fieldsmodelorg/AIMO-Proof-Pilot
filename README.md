@@ -321,3 +321,45 @@ new `ARTIFACTS_DIR`.
 **Server validation reports missing DFlash markers:** inspect the complete log at
 `/workspace/opd32b-eval.log` and confirm that the configured target, draft,
 attention backend, and DFlash settings are compatible.
+
+## Repository layout
+
+A tour of the tree (top level):
+
+```text
+README.md                     this file
+scheduler.sh                  one command to run a full inference — starts the SGLang server,
+                              waits for health, validates the config, then runs the submission
+                              (resumable with --resume)
+run_submission.sh             thin wrapper: run the proof-search harness over an input CSV
+download_models.sh            fetch model weights into /workspace/models (all | step225 | deploy)
+
+config.yaml                   minimal base config (8×H200, DFlash, selector off); targets step-225
+config-model-*-budget-*.yaml  the six production presets — {deploy,step225} × {medium,high,xhigh}
+config-blackwell.yaml         Blackwell (sm120) profile — auto data-parallel, fp8 KV cache
+config-dynamic.yaml           dynamic profile — adapts parallelism to the node's GPU count
+
+evaluation/                   the generate-verify-refine harness and its assets
+  harness/                    proof_search.py (the search loop), eval_config.py, launch_server.py,
+                              run_submission.py, the LLM selector, loop detection, trace uploader
+  harness_vllm/               alternative vLLM-backed runner (fallback backend)
+  data/                       the IMO-2026 test set (CSV + rendered PDF)
+  prompts/                    the proof-generation / verification prompt set
+  DEGENERATE_FILTER.md        how degenerate generations are detected and dropped
+
+Dockerfile                    multi-stage build; inherits the baked SGLang runtime at /opt/pp
+docker/                       entrypoint.sh (serve | bootstrap | validate) + inspect_config.py
+install/                      install the inference venv on bare nodes + verify_models.py
+runtime/                      how the baked SGLang runtime image is built / reused
+
+sglang_patches/               SGLang source patches — attention sink, DFlash speculative decoding,
+                              W4A8 — plus apply_patches.sh
+vllm_patches/                 the same attention-sink + DFlash support as an installable vLLM plugin
+
+benchmarks/                   IMO-2025 and ProofBench-V2 solution sets + grading prompts/scores
+imo_2026_eval/                IMO-2026 results — raw submissions, typeset PDFs, grading + scores
+proof_pilot_kaggle/           Kaggle competition materials — prompts, solutions, grades, markschemes
+
+tests/                        the pytest suite (selector, traces, submission runner, patches)
+.github/workflows/            container build + publish CI
+```
