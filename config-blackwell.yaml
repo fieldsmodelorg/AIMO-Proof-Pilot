@@ -15,7 +15,7 @@
 schema_version: 12
 
 models:
-  bf16_target: /workspace/models/opd-32b-deploy
+  bf16_target: /workspace/models/opd-32b-bf16-step-225
   quantized_target: /workspace/original/models/opd-32b-v33-s200-gptq-w4a16
   bf16_draft: /workspace/models/dflash-32b-draft-v2test-phaseL
   quantized_draft: /workspace/original/models/dflash-32b-draft-v2test-phaseL-int4mlp

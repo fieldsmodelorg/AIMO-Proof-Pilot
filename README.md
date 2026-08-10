@@ -156,7 +156,8 @@ curl -fsSL \
   -o "$PWD/workspace/config.yaml"
 ```
 
-`config.yaml` is the minimal base (8×H200, DFlash, selector **off**). For the LLM
+`config.yaml` is the minimal base (8×H200, DFlash, selector **off**) and targets the
+**step-225** checkpoint by default. For the LLM
 final-solution selector and the tuned search budgets, use the production configs —
 the `config-model-{deploy,step225}-budget-{medium,high,xhigh}.yaml` presets in the
 repo root (see [Budget presets](#budget-presets)) — or set `search.llm_selector: true`
@@ -222,6 +223,7 @@ The current `main` defaults are:
 | Setting | Value |
 |---|---|
 | Hardware | 8 x NVIDIA H200 |
+| Default target | step-225 (`opd-32b-bf16-step-225`, OPD-IMO `f14030d3`) |
 | Model mode | BF16 target and BF16 DFlash draft |
 | Parallelism | TP2 x DP4 |
 | Attention | FA3, page size 1, non-deterministic inference |

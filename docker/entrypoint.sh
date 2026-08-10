@@ -10,12 +10,18 @@ HF_HOME="${HF_HOME:-/workspace/.hf_home}"
 VENV="${VENV:-$RUNTIME_ROOT/venv}"
 STATE_DIR=/workspace/.proof-pilot
 MODEL_ROOT=/workspace/models
-DEFAULT_TARGET_MODEL="$MODEL_ROOT/opd-32b-deploy"
+DEFAULT_TARGET_MODEL="$MODEL_ROOT/opd-32b-bf16-step-225"
 DEFAULT_DRAFT_MODEL="$MODEL_ROOT/dflash-32b-draft-v2test-phaseL"
 TARGET_MODEL=
 DRAFT_MODEL=
-MODEL_REPO="${MODEL_REPO:-fieldsmodelorg/Olmo-3.1-32B-Think-OPD-ProofPilot}"
-MODEL_REVISION="${MODEL_REVISION:-87707b8030800b1e531b78c9823cb80a63d66e5e}"
+# Default target = the step-225 checkpoint (best IMO result), served from the
+# OPD-IMO repo. The shared DFlash draft ships ONLY in the OPD-ProofPilot repo, so
+# target and draft come from two different repos (see ensure_models). Override any
+# of these four to serve a different checkpoint without editing this file.
+MODEL_REPO="${MODEL_REPO:-fieldsmodelorg/Olmo-3.1-32B-Think-OPD-IMO}"
+MODEL_REVISION="${MODEL_REVISION:-f14030d3c65e1ed59e4e70477297053fc9a75151}"
+DRAFT_REPO="${DRAFT_REPO:-fieldsmodelorg/Olmo-3.1-32B-Think-OPD-ProofPilot}"
+DRAFT_REVISION="${DRAFT_REVISION:-87707b8030800b1e531b78c9823cb80a63d66e5e}"
 # Runtime venv (patched SGLang + kernels). The image BAKES this at /opt/pp from
 # RUNTIME_BASE_IMAGE at build time (see runtime/README.md), so the normal boot
 # path uses the baked runtime and downloads nothing.
@@ -257,7 +263,9 @@ uses_default_models() {
 }
 
 ensure_models() {
-    local expected_source="$MODEL_REPO@$MODEL_REVISION"
+    # The default target and the shared draft live in different repos, so the
+    # state key records both -- changing either forces a reconcile.
+    local expected_source="$MODEL_REPO@$MODEL_REVISION+$DRAFT_REPO@$DRAFT_REVISION"
     local recorded_source=
     if [[ -f "$STATE_DIR/model-revision" ]]; then
         recorded_source="$(<"$STATE_DIR/model-revision")"
@@ -271,9 +279,14 @@ ensure_models() {
             log "reconciling default model assets with $expected_source"
             hf download "$MODEL_REPO" \
                 --revision "$MODEL_REVISION" \
-                --include "opd-32b-deploy/*" \
-                --include "dflash-32b-draft-v2test-phaseL/*" \
+                --include "$(basename "$DEFAULT_TARGET_MODEL")/*" \
                 --local-dir "$MODEL_ROOT"
+            if [[ -n "$DRAFT_MODEL" ]]; then
+                hf download "$DRAFT_REPO" \
+                    --revision "$DRAFT_REVISION" \
+                    --include "$(basename "$DEFAULT_DRAFT_MODEL")/*" \
+                    --local-dir "$MODEL_ROOT"
+            fi
         fi
         printf "%s\n" "$expected_source" > "$STATE_DIR/model-revision"
     fi
