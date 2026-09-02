@@ -74,6 +74,7 @@ RUN apt-get update \
         tar \
         tini \
         unzip \
+        ninja-build \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=uv /uv /uvx /usr/local/bin/
