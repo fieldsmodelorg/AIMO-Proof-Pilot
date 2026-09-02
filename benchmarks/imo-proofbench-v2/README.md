@@ -1,6 +1,6 @@
-# IMO-ProofBench-V2 — step225 (medium budget)
+# IMO-ProofBench-V2 — FM-Pochi-32B (step225), medium budget
 
-Evaluation of the Proof-Pilot **step225** checkpoint (medium inference budget) on
+Evaluation of **FM-Pochi-32B (step225)** (medium inference budget) on
 [IMO-ProofBench-V2](https://github.com/google-deepmind/superhuman/tree/main/imobench)
 (Luong et al., 2025, [arXiv:2511.01846](https://arxiv.org/abs/2511.01846)) — 60
 olympiad problems (30 Basic + 30 Advanced), each graded 0–7.

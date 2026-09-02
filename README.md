@@ -6,6 +6,24 @@ writes `submission.csv` without calling an external grader. The checked-in
 configuration uses eight H200 GPUs as four TP2 replicas, BF16 target and draft
 weights, DFlash speculative decoding, and FlashAttention 3.
 
+## Why H200
+
+[`FM-Pochi-32B`](https://huggingface.co/fieldsmodelorg/FM-Pochi-32B) is **not**
+stock `Olmo-3.1-32B-Think`. The architecture was changed during training — most
+significantly it uses **attention sinks**, which no upstream inference stack
+implements for this model. Serving it therefore needs custom **FlashAttention-3
+kernels** plus a required SGLang model patch that computes the sinks in-kernel
+(shipped in [`sglang_patches/`](sglang_patches/), applied at boot by the
+launchers). Running an unpatched stack loads the weights happily and then
+silently produces wrong numerics — see the warning under
+[Docker usage](#docker-usage).
+
+Those kernels are built for **Hopper (`sm90a`)**, which is why inference targets
+**H200**. That is also the only hardware this stack has been tested on: every
+result in this repository was produced on 8×H200, and no other GPU is validated.
+A Blackwell profile ([`config-blackwell.yaml`](config-blackwell.yaml)) is
+included for convenience but is not part of the tested path.
+
 > ### 📦 Prebuilt image
 > **`ghcr.io/fieldsmodelorg/aimo-proof-pilot:sha-463682b`** &nbsp;·&nbsp; built from `main` [`463682b`](https://github.com/fieldsmodelorg/AIMO-Proof-Pilot/commit/463682bbf4137dac6366246ee7aefa1b0d0a4a68) &nbsp;·&nbsp; [package on GHCR](https://github.com/fieldsmodelorg/AIMO-Proof-Pilot/pkgs/container/aimo-proof-pilot)
 > ```bash
