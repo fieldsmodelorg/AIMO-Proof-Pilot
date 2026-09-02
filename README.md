@@ -75,8 +75,15 @@ un-gated HuggingFace repos (pinned to a fixed revision for reproducibility):
 | role | local folder | source repo (revision) |
 |---|---|---|
 | **deploy** target — *FM-Pochi-32B-ProofPilot* | `opd-32b-deploy` | `fieldsmodelorg/FM-Pochi-32B-ProofPilot` (`87707b80`) |
-| **step-225** target — *FM-Pochi-32B (step225)* | `opd-32b-bf16-step-225` | `fieldsmodelorg/FM-Pochi-32B` (`f14030d3`) |
+| **step-225** target — *FM-Pochi-32B* | `opd-32b-bf16-step-225` | `fieldsmodelorg/FM-Pochi-32B` (`f14030d3`) |
 | DFlash **draft** (shared) | `dflash-32b-draft-v2test-phaseL` | `fieldsmodelorg/FM-Pochi-32B-ProofPilot` (`87707b80`) |
+
+Each source repo holds several checkpoints as subfolders, so the repo name alone
+does not identify a model — the **local folder** column is also the subfolder name
+inside the repo. The recommended target is the `opd-32b-bf16-step-225` subfolder of
+`FM-Pochi-32B`, written **FM-Pochi-32B (step225)** throughout this README; the
+deploy target is the `opd-32b-deploy` subfolder of `FM-Pochi-32B-ProofPilot`, which
+also ships the shared DFlash draft.
 
 `./download_models.sh` (default `all`) fetches both targets + draft; pass `step225`
 for just the step-225 target + draft, or `deploy` for just the deploy target +
