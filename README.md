@@ -14,15 +14,22 @@ significantly it uses **attention sinks**, which no upstream inference stack
 implements for this model. Serving it therefore needs custom **FlashAttention-3
 kernels** plus a required SGLang model patch that computes the sinks in-kernel
 (shipped in [`sglang_patches/`](sglang_patches/), applied at boot by the
-launchers). Running an unpatched stack loads the weights happily and then
-silently produces wrong numerics — see the warning under
+launchers; the same support is packaged for vLLM in
+[`vllm_patches/`](vllm_patches/)). Running an unpatched stack loads the weights
+happily and then silently produces wrong numerics — see the warning under
 [Docker usage](#docker-usage).
 
-Those kernels are built for **Hopper (`sm90a`)**, which is why inference targets
-**H200**. That is also the only hardware this stack has been tested on: every
-result in this repository was produced on 8×H200, and no other GPU is validated.
-A Blackwell profile ([`config-blackwell.yaml`](config-blackwell.yaml)) is
-included for convenience but is not part of the tested path.
+FA3 is Hopper-only and the shipped kernels are built for **`sm90a`**, so the
+full-speed path — BF16 target + DFlash speculative decoding + FA3 — runs on
+**H200**. That is the only hardware we have tested: every result in this
+repository was produced on 8×H200.
+
+A Blackwell (sm120) inference profile is included as
+[`config-blackwell.yaml`](config-blackwell.yaml). It reaches sink-correct
+attention through the **triton** backend instead of FA3, but runs **without
+DFlash speculative decoding** — TP=2 + DFlash + triton is supported by no
+current code path — and uses an fp8 KV cache. Treat it as a working fallback,
+not as a configuration whose numbers we have validated.
 
 > ### 📦 Prebuilt image
 > **`ghcr.io/fieldsmodelorg/aimo-proof-pilot:sha-463682b`** &nbsp;·&nbsp; built from `main` [`463682b`](https://github.com/fieldsmodelorg/AIMO-Proof-Pilot/commit/463682bbf4137dac6366246ee7aefa1b0d0a4a68) &nbsp;·&nbsp; [package on GHCR](https://github.com/fieldsmodelorg/AIMO-Proof-Pilot/pkgs/container/aimo-proof-pilot)
