@@ -15,12 +15,12 @@ DEFAULT_DRAFT_MODEL="$MODEL_ROOT/dflash-32b-draft-v2test-phaseL"
 TARGET_MODEL=
 DRAFT_MODEL=
 # Default target = the step-225 checkpoint (best IMO result), served from the
-# FM-Pochi-32B repo. The shared DFlash draft ships ONLY in the
+# FM-Pochi-32B-IMO26 repo. The shared DFlash draft ships ONLY in the
 # FM-Pochi-32B-ProofPilot repo, so target and draft come from two different
 # repos (see ensure_models).
 # Override any of these four to serve a different checkpoint without editing
 # this file.
-MODEL_REPO="${MODEL_REPO:-fieldsmodelorg/FM-Pochi-32B}"
+MODEL_REPO="${MODEL_REPO:-fieldsmodelorg/FM-Pochi-32B-IMO26}"
 MODEL_REVISION="${MODEL_REVISION:-f14030d3c65e1ed59e4e70477297053fc9a75151}"
 DRAFT_REPO="${DRAFT_REPO:-fieldsmodelorg/FM-Pochi-32B-ProofPilot}"
 DRAFT_REVISION="${DRAFT_REVISION:-87707b8030800b1e531b78c9823cb80a63d66e5e}"

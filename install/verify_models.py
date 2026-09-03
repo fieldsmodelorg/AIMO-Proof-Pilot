@@ -31,7 +31,7 @@ import urllib.error
 from pathlib import Path
 
 # Map a local subfolder name -> (hf repo, path-in-repo). Every bf16 target
-# checkpoint (step-* and merged-*) lives in the FM-Pochi-32B repo under an
+# checkpoint (step-* and merged-*) lives in the FM-Pochi-32B-IMO26 repo under an
 # identically named subfolder (handled below); a few specials are pinned in KNOWN.
 KNOWN = {
     "opd-32b-deploy": ("fieldsmodelorg/FM-Pochi-32B-ProofPilot", "opd-32b-deploy"),
@@ -40,7 +40,7 @@ KNOWN = {
         "dflash-32b-draft-v2test-phaseL",
     ),
 }
-IMO_REPO = "fieldsmodelorg/FM-Pochi-32B"
+IMO_REPO = "fieldsmodelorg/FM-Pochi-32B-IMO26"
 
 DEFAULT_ROOT = "/tmp/chankhavu/models"
 CHUNK = 16 * 1024 * 1024

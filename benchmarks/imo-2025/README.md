@@ -1,6 +1,6 @@
-# IMO 2025 — FM-Pochi-32B (step225), high budget
+# IMO 2025 — FM-Pochi-32B-IMO26 (step225), high budget
 
-Evaluation of **FM-Pochi-32B (step225)** on the six **IMO 2025**
+Evaluation of **FM-Pochi-32B-IMO26 (step225)** on the six **IMO 2025**
 problems, each graded 0–7. The provided proofs are one rollout per problem at the
 **high** inference budget of the generate–verify–refine harness.
 

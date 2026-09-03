@@ -8,10 +8,10 @@ weights, DFlash speculative decoding, and FlashAttention 3.
 
 ## Why H200
 
-[`FM-Pochi-32B`](https://huggingface.co/fieldsmodelorg/FM-Pochi-32B) is **not**
-stock `Olmo-3.1-32B-Think`. The architecture was changed during training — most
-significantly it uses **attention sinks**, which no upstream inference stack
-implements for this model. Serving it therefore needs custom **FlashAttention-3
+[`FM-Pochi-32B-IMO26`](https://huggingface.co/fieldsmodelorg/FM-Pochi-32B-IMO26)
+is **not** stock `Olmo-3.1-32B-Think`. The architecture was changed during
+training — most significantly it uses **attention sinks**, which no upstream
+inference stack implements for this model. Serving it therefore needs custom **FlashAttention-3
 kernels** plus a required SGLang model patch that computes the sinks in-kernel
 (shipped in [`sglang_patches/`](sglang_patches/), applied at boot by the
 launchers; the same support is packaged for vLLM in
@@ -68,8 +68,9 @@ docker run --rm -it --gpus all --ipc=host --shm-size=32g \
 # ./download_models.sh step225      # just the step-225 target + draft (skip deploy)
 ```
 
-**3. Run inference.** The recommended best setting is **FM-Pochi-32B (step225)** —
-the step-225 checkpoint — at the **xhigh** budget:
+**3. Run inference.** The recommended best setting is
+**FM-Pochi-32B-IMO26 (step225)** — the step-225 checkpoint — at the **xhigh**
+budget:
 
 ```bash
 ./scheduler.sh config-model-step225-budget-xhigh.yaml /workspace/runs/step225-xhigh
@@ -100,15 +101,15 @@ un-gated HuggingFace repos (pinned to a fixed revision for reproducibility):
 | role | local folder | source repo (revision) |
 |---|---|---|
 | **deploy** target — *FM-Pochi-32B-ProofPilot* | `opd-32b-deploy` | `fieldsmodelorg/FM-Pochi-32B-ProofPilot` (`87707b80`) |
-| **step-225** target — *FM-Pochi-32B* | `opd-32b-bf16-step-225` | `fieldsmodelorg/FM-Pochi-32B` (`f14030d3`) |
+| **step-225** target — *FM-Pochi-32B-IMO26* | `opd-32b-bf16-step-225` | `fieldsmodelorg/FM-Pochi-32B-IMO26` (`f14030d3`) |
 | DFlash **draft** (shared) | `dflash-32b-draft-v2test-phaseL` | `fieldsmodelorg/FM-Pochi-32B-ProofPilot` (`87707b80`) |
 
 Each source repo holds several checkpoints as subfolders, so the repo name alone
 does not identify a model — the **local folder** column is also the subfolder name
 inside the repo. The recommended target is the `opd-32b-bf16-step-225` subfolder of
-`FM-Pochi-32B`, written **FM-Pochi-32B (step225)** throughout this README; the
-deploy target is the `opd-32b-deploy` subfolder of `FM-Pochi-32B-ProofPilot`, which
-also ships the shared DFlash draft.
+`FM-Pochi-32B-IMO26`, written **FM-Pochi-32B-IMO26 (step225)** throughout this
+README; the deploy target is the `opd-32b-deploy` subfolder of
+`FM-Pochi-32B-ProofPilot`, which also ships the shared DFlash draft.
 
 `./download_models.sh` (default `all`) fetches both targets + draft; pass `step225`
 for just the step-225 target + draft, or `deploy` for just the deploy target +
@@ -123,11 +124,11 @@ budget (exact knobs in [Budget presets](#budget-presets)):
 | checkpoint | medium | high | xhigh |
 |---|---|---|---|
 | **deploy** | [`…deploy-budget-medium`](config-model-deploy-budget-medium.yaml) | [`…deploy-budget-high`](config-model-deploy-budget-high.yaml) | [`…deploy-budget-xhigh`](config-model-deploy-budget-xhigh.yaml) |
-| **step-225** (best) — *FM-Pochi-32B (step225)* | [`…step225-budget-medium`](config-model-step225-budget-medium.yaml) | [`…step225-budget-high`](config-model-step225-budget-high.yaml) | [**`…step225-budget-xhigh`**](config-model-step225-budget-xhigh.yaml) |
+| **step-225** (best) — *FM-Pochi-32B-IMO26 (step225)* | [`…step225-budget-medium`](config-model-step225-budget-medium.yaml) | [`…step225-budget-high`](config-model-step225-budget-high.yaml) | [**`…step225-budget-xhigh`**](config-model-step225-budget-xhigh.yaml) |
 
-`step-225` — released as **FM-Pochi-32B (step225)** — is the strongest checkpoint
-and `xhigh` the largest budget, so **`config-model-step225-budget-xhigh.yaml`** is
-the recommended best setting.
+`step-225` — released as **FM-Pochi-32B-IMO26 (step225)** — is the strongest
+checkpoint and `xhigh` the largest budget, so
+**`config-model-step225-budget-xhigh.yaml`** is the recommended best setting.
 
 ## Docker usage
 
@@ -256,7 +257,7 @@ The current `main` defaults are:
 | Setting | Value |
 |---|---|
 | Hardware | 8 x NVIDIA H200 |
-| Default target | FM-Pochi-32B (step225) — `opd-32b-bf16-step-225` @ `f14030d3` |
+| Default target | FM-Pochi-32B-IMO26 (step225) — `opd-32b-bf16-step-225` @ `f14030d3` |
 | Model mode | BF16 target and BF16 DFlash draft |
 | Parallelism | TP2 x DP4 |
 | Attention | FA3, page size 1, non-deterministic inference |
