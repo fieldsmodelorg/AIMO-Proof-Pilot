@@ -4,7 +4,8 @@ This repository packages the generate-verify-refine proof harness as a Docker
 image. The submission path reads `test.csv`, runs the selected harness, and
 writes `submission.csv` without calling an external grader. The checked-in
 configuration uses eight H200 GPUs as four TP2 replicas, BF16 target and draft
-weights, DFlash speculative decoding, and FlashAttention 3.
+weights, DFlash speculative decoding, and FlashAttention 3. Inference has only
+been tested on H200.
 
 > ### 📦 Prebuilt image
 > **`ghcr.io/fieldsmodelorg/aimo-proof-pilot:sha-463682b`** &nbsp;·&nbsp; built from `main` [`463682b`](https://github.com/fieldsmodelorg/AIMO-Proof-Pilot/commit/463682bbf4137dac6366246ee7aefa1b0d0a4a68) &nbsp;·&nbsp; [package on GHCR](https://github.com/fieldsmodelorg/AIMO-Proof-Pilot/pkgs/container/aimo-proof-pilot)
@@ -146,8 +147,7 @@ Those patches are not optional. Neither checkpoint is stock
 implements, so the Olmo3Sink model patch below and the custom FlashAttention-3
 kernels baked into the runtime are what make their outputs numerically correct
 (the same support is packaged for vLLM in [`vllm_patches/`](vllm_patches/)).
-Those kernels are compiled for Hopper (`sm90a`) — the generation H200 belongs
-to — and every result in this repository was produced on 8×H200.
+Those kernels are compiled for Hopper (`sm90a`) — the H200 GPU generation.
 
 > **Always launch through the `serve`/`submission` entrypoint or `scheduler.sh`.**
 > The SGLang patches (including the **required** Olmo3Sink model patch) are applied
