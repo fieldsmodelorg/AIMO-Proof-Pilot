@@ -4,8 +4,9 @@ Evaluation of **FM-Pochi-32B-IMO26 (step225)** on the six **IMO 2025**
 problems, each graded 0–7. The provided proofs are one rollout per problem at the
 **high** inference budget of the generate–verify–refine harness.
 
-Inference was run with the **step225 high** production config
-([`config-model-step225-budget-high.yaml`](../../config-model-step225-budget-high.yaml)).
+Inference was run with this checkpoint's **high**-budget production config,
+[`config-model-step225-budget-high.yaml`](../../config-model-step225-budget-high.yaml)
+(`step225` is its preset name).
 
 ## Headline
 

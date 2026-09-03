@@ -92,8 +92,11 @@ target checkpoint plus ~5 GB for the draft (so ~135 GB for the default `all`).
 
 ### Production configs
 
-Six presets, `config-model-<model>-budget-<budget>.yaml`, that vary only the search
-budget (exact knobs in [Budget presets](#budget-presets)):
+Six presets, `config-model-<model>-budget-<budget>.yaml`, that vary only the
+search budget (exact knobs in [Budget presets](#budget-presets)). `<model>` is
+the checkpoint's short name — `deploy` for FM-Pochi-32B-ProofPilot (deploy),
+`step225` for FM-Pochi-32B-IMO26 (step225) — the same token `download_models.sh`
+takes as its argument:
 
 | checkpoint | medium | high | xhigh |
 |---|---|---|---|

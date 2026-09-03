@@ -5,8 +5,9 @@ Evaluation of **FM-Pochi-32B-IMO26 (step225)** (medium inference budget) on
 (Luong et al., 2025, [arXiv:2511.01846](https://arxiv.org/abs/2511.01846)) — 60
 olympiad problems (30 Basic + 30 Advanced), each graded 0–7.
 
-Inference was run with the **step225 medium** production config
-([`config-model-step225-budget-medium.yaml`](../../config-model-step225-budget-medium.yaml)).
+Inference was run with this checkpoint's **medium**-budget production config,
+[`config-model-step225-budget-medium.yaml`](../../config-model-step225-budget-medium.yaml)
+(`step225` is its preset name).
 
 ## Headline
 
