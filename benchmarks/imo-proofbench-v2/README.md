@@ -1,13 +1,15 @@
 # IMO-ProofBench-V2 — FM-Pochi-32B-IMO26 (step225), medium budget
 
-Evaluation of **FM-Pochi-32B-IMO26 (step225)** (medium inference budget) on
+Evaluation of **FM-Pochi-32B-IMO26 (step225)** on
 [IMO-ProofBench-V2](https://github.com/google-deepmind/superhuman/tree/main/imobench)
 (Luong et al., 2025, [arXiv:2511.01846](https://arxiv.org/abs/2511.01846)) — 60
-olympiad problems (30 Basic + 30 Advanced), each graded 0–7.
+olympiad problems (30 Basic + 30 Advanced), each graded 0–7. The model is a
+proof model trained from `Olmo-3.1-32B-Think`; see
+[Models](../../README.md#models).
 
-Inference was run with this checkpoint's **medium**-budget production config,
+Inference was run with the **medium**-budget production config
 [`config-model-step225-budget-medium.yaml`](../../config-model-step225-budget-medium.yaml)
-(`step225` is its preset name).
+— `step225` is this checkpoint's token in the preset filenames.
 
 ## Headline
 

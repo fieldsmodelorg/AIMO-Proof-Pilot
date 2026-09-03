@@ -39,8 +39,8 @@ docker run --rm -it --gpus all --ipc=host --shm-size=32g \
 **2. Download the model weights** (public repos, no token needed):
 
 ```bash
-./download_models.sh                # deploy + step-225 + shared draft  ->  /workspace/models
-# ./download_models.sh step225      # just the step-225 target + draft (skip deploy)
+./download_models.sh                # both targets + shared draft  ->  /workspace/models
+# ./download_models.sh step225      # just the step225 target + draft (skip deploy)
 ```
 
 **3. Run inference.** The recommended best setting is
@@ -72,11 +72,11 @@ or `source` its `activate-env.sh` and set `PYTHON`; everything else is identical
 `download_models.sh` fetches these into `/workspace/models/` from public,
 un-gated HuggingFace repos (pinned to a fixed revision for reproducibility):
 
-| role | local folder | source repo (revision) |
+| model | local folder | source repo (revision) |
 |---|---|---|
 | **FM-Pochi-32B-ProofPilot (deploy)** | `opd-32b-deploy` | `fieldsmodelorg/FM-Pochi-32B-ProofPilot` (`87707b80`) |
 | **FM-Pochi-32B-IMO26 (step225)** | `opd-32b-bf16-step-225` | `fieldsmodelorg/FM-Pochi-32B-IMO26` (`f14030d3`) |
-| DFlash **draft** (shared) | `dflash-32b-draft-v2test-phaseL` | `fieldsmodelorg/FM-Pochi-32B-ProofPilot` (`87707b80`) |
+| DFlash **draft**, shared by both targets | `dflash-32b-draft-v2test-phaseL` | `fieldsmodelorg/FM-Pochi-32B-ProofPilot` (`87707b80`) |
 
 Each source repo holds several checkpoints as subfolders, so the repo name alone
 does not identify a model — the **local folder** column is also the subfolder name
@@ -94,14 +94,13 @@ target checkpoint plus ~5 GB for the draft (so ~135 GB for the default `all`).
 
 Six presets, `config-model-<model>-budget-<budget>.yaml`, that vary only the
 search budget (exact knobs in [Budget presets](#budget-presets)). `<model>` is
-the checkpoint's short name — `deploy` for FM-Pochi-32B-ProofPilot (deploy),
-`step225` for FM-Pochi-32B-IMO26 (step225) — the same token `download_models.sh`
-takes as its argument:
+the parenthesised short name from the table above — `deploy` or `step225` — and
+the same token `download_models.sh` takes as its argument:
 
 | checkpoint | medium | high | xhigh |
 |---|---|---|---|
 | **FM-Pochi-32B-ProofPilot (deploy)** | [`…deploy-budget-medium`](config-model-deploy-budget-medium.yaml) | [`…deploy-budget-high`](config-model-deploy-budget-high.yaml) | [`…deploy-budget-xhigh`](config-model-deploy-budget-xhigh.yaml) |
-| **FM-Pochi-32B-IMO26 (step225)** (best) | [`…step225-budget-medium`](config-model-step225-budget-medium.yaml) | [`…step225-budget-high`](config-model-step225-budget-high.yaml) | [**`…step225-budget-xhigh`**](config-model-step225-budget-xhigh.yaml) |
+| **FM-Pochi-32B-IMO26 (step225)** | [`…step225-budget-medium`](config-model-step225-budget-medium.yaml) | [`…step225-budget-high`](config-model-step225-budget-high.yaml) | [**`…step225-budget-xhigh`**](config-model-step225-budget-xhigh.yaml) |
 
 **FM-Pochi-32B-IMO26 (step225)** is the strongest checkpoint and `xhigh` the
 largest budget, so **`config-model-step225-budget-xhigh.yaml`** is the
@@ -141,12 +140,14 @@ an identical, frozen SGLang. Only the
 `docker run ... submission` needs no secrets at all. At boot the entrypoint just
 applies the checked-in SGLang patches (fast, in-place) and resolves the models.
 
-Those patches are not optional. `FM-Pochi-32B-IMO26` is not stock
-`Olmo-3.1-32B-Think`: it was trained with **attention sinks**, which upstream
-SGLang does not implement, so the model patch and the custom FlashAttention-3
-kernels in the baked runtime are what make its numerics correct. Those kernels
-are built for Hopper (`sm90a`), and every result in this repository was produced
-on 8×H200.
+Those patches are not optional. Neither checkpoint is stock
+`Olmo-3.1-32B-Think`, the open model they were trained from: both use
+**attention sinks**, an architectural change no upstream inference stack
+implements, so the Olmo3Sink model patch below and the custom FlashAttention-3
+kernels baked into the runtime are what make their outputs numerically correct
+(the same support is packaged for vLLM in [`vllm_patches/`](vllm_patches/)).
+Those kernels are compiled for Hopper (`sm90a`) — the generation H200 belongs
+to — and every result in this repository was produced on 8×H200.
 
 > **Always launch through the `serve`/`submission` entrypoint or `scheduler.sh`.**
 > The SGLang patches (including the **required** Olmo3Sink model patch) are applied
@@ -241,7 +242,7 @@ The current `main` defaults are:
 | Setting | Value |
 |---|---|
 | Hardware | 8 x NVIDIA H200 |
-| Default target | FM-Pochi-32B-IMO26 (step225) — `opd-32b-bf16-step-225` @ `f14030d3` |
+| Default target | FM-Pochi-32B-IMO26 (step225) — `opd-32b-bf16-step-225` (`f14030d3`) |
 | Model mode | BF16 target and BF16 DFlash draft |
 | Parallelism | TP2 x DP4 |
 | Attention | FA3, page size 1, non-deterministic inference |
@@ -353,7 +354,7 @@ scheduler.sh                  one command to run a full inference — starts the
 run_submission.sh             thin wrapper: run the proof-search harness over an input CSV
 download_models.sh            fetch model weights into /workspace/models (all | step225 | deploy)
 
-config.yaml                   minimal base config (8×H200, DFlash, selector off); targets step-225
+config.yaml                   minimal base config (8×H200, DFlash, selector off); targets step225
 config-model-*-budget-*.yaml  the six production presets — {deploy,step225} × {medium,high,xhigh}
 config-blackwell.yaml         Blackwell (sm120) profile — auto data-parallel, fp8 KV cache
 config-dynamic.yaml           dynamic profile — adapts parallelism to the node's GPU count

@@ -24,8 +24,8 @@ README.md    # this file
 | --- | --- | --- | --- | --- |
 | `imo2026-deploy-budget-high-tournament` | FM-Pochi-32B-ProofPilot (deploy) | 1-6 | high | [submission.csv](raw/imo2026-deploy-budget-high-tournament_submission.csv) |
 | `imo2026-step225-budget-high-tournament` | FM-Pochi-32B-IMO26 (step225) | 1-6 | high | [submission.csv](raw/imo2026-step225-budget-high-tournament_submission.csv) |
-| `step225_run2` | FM-Pochi-32B-IMO26 (step225) | 1, 4, 5 | xhigh (rerun) | [submission.csv](raw/step225_run2_submission.csv) |
-| `step225_run3` | FM-Pochi-32B-IMO26 (step225) | 5 | xhigh (rerun) | [submission.csv](raw/step225_run3_submission.csv) |
+| `step225_run2` (rerun) | FM-Pochi-32B-IMO26 (step225) | 1, 4, 5 | xhigh | [submission.csv](raw/step225_run2_submission.csv) |
+| `step225_run3` (rerun) | FM-Pochi-32B-IMO26 (step225) | 5 | xhigh | [submission.csv](raw/step225_run3_submission.csv) |
 
 ## Grading methodology
 
@@ -126,11 +126,11 @@ lots of technical details in P2, P3 and P6 on which the models could fail, which
 made it unlikely that an LLM could make sufficient progress on a further run, so
 we skipped them in the reruns.
 
-| Model | P1 | P2 | P3 | P4 | P5 | P6 | Total |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| FM-Pochi-32B-ProofPilot (deploy) | 7 | 0 | 0 | 7 | 5\* | 0† | **19** |
-| FM-Pochi-32B-IMO26 (step225) | 7 | 0 | 0 | 7 | 7 | 0† | **21** |
-| `step225_run2` | 7 | - | - | 7 | 7 | - | **21** |
+| Model | Budget | P1 | P2 | P3 | P4 | P5 | P6 | Total |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| FM-Pochi-32B-ProofPilot (deploy) | high | 7 | 0 | 0 | 7 | 5\* | 0† | **19** |
+| FM-Pochi-32B-IMO26 (step225) | high | 7 | 0 | 0 | 7 | 7 | 0† | **21** |
+| FM-Pochi-32B-IMO26 (step225), `step225_run2` | xhigh | 7 | - | - | 7 | 7 | - | **21** |
 
 Additionally, we re-evaluated `step225_run3` a third time on problem P5, on
 which it scored 7.
@@ -176,7 +176,7 @@ We analyse **FM-Pochi-32B-ProofPilot (deploy)** and **FM-Pochi-32B-IMO26
   uncertain: the score would very likely be in the range 2-5, with 5 the most
   likely.
 - **P6** - Both submissions contain fundamental errors and are incomplete,
-  though each has some useful ideas (particularly FM-Pochi-32B-IMO26 (step225)).
+  though each has some useful ideas — particularly FM-Pochi-32B-IMO26 (step225).
   The bar for a partial mark on a hard problem is usually reasonably high, but
   73 contestants earned one this year, so there is a small chance of a 1. The
   most likely mark for both is 0.
