@@ -27,6 +27,11 @@ README.md    # this file
 | `step225_run2` (rerun) | FM-Pochi-32B-IMO26 (step225) | 1, 4, 5 | xhigh | [submission.csv](raw/step225_run2_submission.csv) |
 | `step225_run3` (rerun) | FM-Pochi-32B-IMO26 (step225) | 5 | xhigh | [submission.csv](raw/step225_run3_submission.csv) |
 
+Both are checkpoints of the same 32B proof model, run through the same
+generate–verify–refine harness — see [Models](../README.md#models). The budget
+column names a [production preset](../README.md#production-configs): the runs
+above used `config-model-{deploy,step225}-budget-{high,xhigh}.yaml`.
+
 ## Grading methodology
 
 The submissions have been graded according to broad IMO standards. We've not had
