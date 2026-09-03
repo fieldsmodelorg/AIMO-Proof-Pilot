@@ -44,8 +44,7 @@ docker run --rm -it --gpus all --ipc=host --shm-size=32g \
 ```
 
 **3. Run inference.** The recommended best setting is
-**FM-Pochi-32B-IMO26 (step225)** — the step-225 checkpoint — at the **xhigh**
-budget:
+**FM-Pochi-32B-IMO26 (step225)** at the **xhigh** budget:
 
 ```bash
 ./scheduler.sh config-model-step225-budget-xhigh.yaml /workspace/runs/step225-xhigh
@@ -75,21 +74,21 @@ un-gated HuggingFace repos (pinned to a fixed revision for reproducibility):
 
 | role | local folder | source repo (revision) |
 |---|---|---|
-| **deploy** target — *FM-Pochi-32B-ProofPilot* | `opd-32b-deploy` | `fieldsmodelorg/FM-Pochi-32B-ProofPilot` (`87707b80`) |
-| **step-225** target — *FM-Pochi-32B-IMO26* | `opd-32b-bf16-step-225` | `fieldsmodelorg/FM-Pochi-32B-IMO26` (`f14030d3`) |
+| **FM-Pochi-32B-ProofPilot (deploy)** | `opd-32b-deploy` | `fieldsmodelorg/FM-Pochi-32B-ProofPilot` (`87707b80`) |
+| **FM-Pochi-32B-IMO26 (step225)** | `opd-32b-bf16-step-225` | `fieldsmodelorg/FM-Pochi-32B-IMO26` (`f14030d3`) |
 | DFlash **draft** (shared) | `dflash-32b-draft-v2test-phaseL` | `fieldsmodelorg/FM-Pochi-32B-ProofPilot` (`87707b80`) |
 
 Each source repo holds several checkpoints as subfolders, so the repo name alone
 does not identify a model — the **local folder** column is also the subfolder name
-inside the repo. The recommended target is the `opd-32b-bf16-step-225` subfolder of
-`FM-Pochi-32B-IMO26`, written **FM-Pochi-32B-IMO26 (step225)** throughout this
-README; the deploy target is the `opd-32b-deploy` subfolder of
-`FM-Pochi-32B-ProofPilot`, which also ships the shared DFlash draft.
+inside the repo. **FM-Pochi-32B-IMO26 (step225)** is the `opd-32b-bf16-step-225`
+subfolder of `FM-Pochi-32B-IMO26`; **FM-Pochi-32B-ProofPilot (deploy)** is the
+`opd-32b-deploy` subfolder of `FM-Pochi-32B-ProofPilot`, which also ships the
+shared DFlash draft.
 
-`./download_models.sh` (default `all`) fetches both targets + draft; pass `step225`
-for just the step-225 target + draft, or `deploy` for just the deploy target +
-draft. Budget on disk: roughly ~64 GB per target checkpoint plus ~5 GB for the
-draft (so ~135 GB for the default `all`).
+`./download_models.sh` (default `all`) fetches both targets + draft; pass
+`step225` for just FM-Pochi-32B-IMO26 (step225) + draft, or `deploy` for just
+FM-Pochi-32B-ProofPilot (deploy) + draft. Budget on disk: roughly ~64 GB per
+target checkpoint plus ~5 GB for the draft (so ~135 GB for the default `all`).
 
 ### Production configs
 
@@ -98,12 +97,12 @@ budget (exact knobs in [Budget presets](#budget-presets)):
 
 | checkpoint | medium | high | xhigh |
 |---|---|---|---|
-| **deploy** | [`…deploy-budget-medium`](config-model-deploy-budget-medium.yaml) | [`…deploy-budget-high`](config-model-deploy-budget-high.yaml) | [`…deploy-budget-xhigh`](config-model-deploy-budget-xhigh.yaml) |
-| **step-225** (best) — *FM-Pochi-32B-IMO26 (step225)* | [`…step225-budget-medium`](config-model-step225-budget-medium.yaml) | [`…step225-budget-high`](config-model-step225-budget-high.yaml) | [**`…step225-budget-xhigh`**](config-model-step225-budget-xhigh.yaml) |
+| **FM-Pochi-32B-ProofPilot (deploy)** | [`…deploy-budget-medium`](config-model-deploy-budget-medium.yaml) | [`…deploy-budget-high`](config-model-deploy-budget-high.yaml) | [`…deploy-budget-xhigh`](config-model-deploy-budget-xhigh.yaml) |
+| **FM-Pochi-32B-IMO26 (step225)** (best) | [`…step225-budget-medium`](config-model-step225-budget-medium.yaml) | [`…step225-budget-high`](config-model-step225-budget-high.yaml) | [**`…step225-budget-xhigh`**](config-model-step225-budget-xhigh.yaml) |
 
-`step-225` — released as **FM-Pochi-32B-IMO26 (step225)** — is the strongest
-checkpoint and `xhigh` the largest budget, so
-**`config-model-step225-budget-xhigh.yaml`** is the recommended best setting.
+**FM-Pochi-32B-IMO26 (step225)** is the strongest checkpoint and `xhigh` the
+largest budget, so **`config-model-step225-budget-xhigh.yaml`** is the
+recommended best setting.
 
 ## Docker usage
 
@@ -172,8 +171,8 @@ curl -fsSL \
   -o "$PWD/workspace/config.yaml"
 ```
 
-`config.yaml` is the minimal base (8×H200, DFlash, selector **off**) and targets the
-**step-225** checkpoint by default. For the LLM
+`config.yaml` is the minimal base (8×H200, DFlash, selector **off**) and targets
+**FM-Pochi-32B-IMO26 (step225)** by default. For the LLM
 final-solution selector and the tuned search budgets, use the production configs —
 the `config-model-{deploy,step225}-budget-{medium,high,xhigh}.yaml` presets in the
 repo root (see [Budget presets](#budget-presets)) — or set `search.llm_selector: true`
@@ -286,7 +285,8 @@ compute. Pick one by name with `scheduler.sh` (or as the container `CONFIG`).
 - `refine_review_strategy` is `random_nonideal` (each refine parent is paired with 3
   reviews drawn from its `<1`-score verifications).
 - `max_rounds` counts round 1 (generation): `4` = 1 gen + 3 refine, `8` = 1 gen + 7 refine.
-- Two checkpoints (`deploy`, `step225`) × three budgets = the six configs.
+- Two checkpoints — FM-Pochi-32B-ProofPilot (deploy) and FM-Pochi-32B-IMO26
+  (step225) — × three budgets = the six configs.
 
 ## Resume and outputs
 
